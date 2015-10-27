@@ -4,7 +4,6 @@ import (
 	"net/http"
 )
 
-
 // type Todo struct {
 // 	Id        int       `json:"id"`
 // 	Name      string    `json:"name"`
@@ -48,7 +47,8 @@ var todoRoutes = Routes{
 //Route handler
 func todoIndex(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprint(w, "Welcome!\n")
-	GetHandler(w, TodoURL + r.URL.String(), r)
+	//TODO: THIS API CALL IS A SPECIAL CASE
+	GetHandler(w, TodoURL, r)
 }
 
 func TodoAll(w http.ResponseWriter, r *http.Request) {

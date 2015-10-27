@@ -2,14 +2,12 @@ package main
 
 import (
 	"net/http"
+
 	"github.com/gorilla/mux"
-	"fmt"
 )
 
 func RegisterAPIs() {
 	routes = append(routes, todoRoutes...)
-
-	fmt.Println(routes)
 }
 
 func NewRouter() *mux.Router {
