@@ -1,0 +1,283 @@
+{
+	"element": "category",
+	"meta": {
+		"classes": [
+			"api"
+		],
+		"title": "To Do API"
+	},
+	"content": [{
+		"element": "copy",
+		"content": "A simple To do api implimented in Go\n\n"
+	}, {
+		"element": "category",
+		"meta": {
+			"classes": [
+				"resourceGroup"
+			],
+			"title": ""
+		},
+		"content": [{
+			"element": "resource",
+			"meta": {
+				"title": "Root"
+			},
+			"attributes": {
+				"href": "/"
+			},
+			"content": [{
+				"element": "transition",
+				"meta": {
+					"title": "home"
+				},
+				"content": [{
+					"element": "copy",
+					"content": "Get the welcome message\n\n"
+				}, {
+					"element": "httpTransaction",
+					"content": [{
+						"element": "httpRequest",
+						"attributes": {
+							"method": "GET"
+						},
+						"content": []
+					}, {
+						"element": "httpResponse",
+						"attributes": {
+							"statusCode": "200",
+							"headers": {
+								"element": "httpHeaders",
+								"content": [{
+									"element": "member",
+									"content": {
+										"key": {
+											"element": "string",
+											"content": "Content-Type"
+										},
+										"value": {
+											"element": "string",
+											"content": "text/plain"
+										}
+									}
+								}]
+							}
+						},
+						"content": [{
+							"element": "asset",
+							"meta": {
+								"classes": "messageBody"
+							},
+							"attributes": {
+								"contentType": "text/plain"
+							},
+							"content": "    Welcome!\n\n"
+						}]
+					}]
+				}]
+			}]
+		}, {
+			"element": "resource",
+			"meta": {
+				"title": "Todos"
+			},
+			"attributes": {
+				"href": "/todos"
+			},
+			"content": [{
+				"element": "transition",
+				"meta": {
+					"title": "Retrive Todos"
+				},
+				"content": [{
+					"element": "copy",
+					"content": "retrieves all Todo tasks\n\n"
+				}, {
+					"element": "httpTransaction",
+					"content": [{
+						"element": "httpRequest",
+						"attributes": {
+							"method": "GET"
+						},
+						"content": []
+					}, {
+						"element": "httpResponse",
+						"attributes": {
+							"statusCode": "200",
+							"headers": {
+								"element": "httpHeaders",
+								"content": [{
+									"element": "member",
+									"content": {
+										"key": {
+											"element": "string",
+											"content": "Content-Type"
+										},
+										"value": {
+											"element": "string",
+											"content": "application/json"
+										}
+									}
+								}]
+							}
+						},
+						"content": [{
+							"element": "asset",
+							"meta": {
+								"classes": "messageBody"
+							},
+							"attributes": {
+								"contentType": "application/json"
+							},
+							"content": "    [\n        {\n            \"id\":1,\n            \"name\":\"Write presentation\",\n            \"completed\":false,\n            \"due\":\"0001-01-01T00:00:00Z\"\n        },\n        {\n            \"id\":2,\n            \"name\":\"Host meetup\",\n            \"completed\":false,\n            \"due\":\"0001-01-01T00:00:00Z\"\n        },{\n            \"id\":3,\n            \"name\":\"New Todo\",\n            \"completed\":false,\n            \"due\":\"0001-01-01T00:00:00Z\"\n        }\n    ]\n\n"
+						}]
+					}]
+				}]
+			}, {
+				"element": "transition",
+				"meta": {
+					"title": "Create New Todo"
+				},
+				"content": [{
+					"element": "copy",
+					"content": "create a new todo task\n\n+ Name (string) - The thing to do\n"
+				}, {
+					"element": "httpTransaction",
+					"content": [{
+						"element": "httpRequest",
+						"attributes": {
+							"method": "POST",
+							"title": "",
+							"headers": {
+								"element": "httpHeaders",
+								"content": [{
+									"element": "member",
+									"content": {
+										"key": {
+											"element": "string",
+											"content": "Content-Type"
+										},
+										"value": {
+											"element": "string",
+											"content": "application/json"
+										}
+									}
+								}]
+							}
+						},
+						"content": [{
+							"element": "asset",
+							"meta": {
+								"classes": "messageBody"
+							},
+							"attributes": {
+								"contentType": "application/json"
+							},
+							"content": "    {\n        \"name\": \"Learn Go\"\n    }\n"
+						}]
+					}, {
+						"element": "httpResponse",
+						"attributes": {
+							"statusCode": "201",
+							"headers": {
+								"element": "httpHeaders",
+								"content": [{
+									"element": "member",
+									"content": {
+										"key": {
+											"element": "string",
+											"content": "Content-Type"
+										},
+										"value": {
+											"element": "string",
+											"content": "application/json"
+										}
+									}
+								}, {
+									"element": "member",
+									"content": {
+										"key": {
+											"element": "string",
+											"content": "Location"
+										},
+										"value": {
+											"element": "string",
+											"content": "/todos"
+										}
+									}
+								}]
+							}
+						},
+						"content": [{
+							"element": "asset",
+							"meta": {
+								"classes": "messageBody"
+							},
+							"attributes": {
+								"contentType": "application/json"
+							},
+							"content": "    {\n        \"id\":4,\n        \"name\":\"Learn Go\",\n        \"completed\":false,\n        \"due\":\"0001-01-01T00:00:00Z\"\n    }\n"
+						}]
+					}]
+				}]
+			}]
+		}, {
+			"element": "resource",
+			"meta": {
+				"title": "Todo"
+			},
+			"attributes": {
+				"href": "/todos/{todoId}"
+			},
+			"content": [{
+				"element": "transition",
+				"meta": {
+					"title": "Retrive Todo"
+				},
+				"content": [{
+					"element": "copy",
+					"content": "retrieves a Todo task by *id*\n"
+				}, {
+					"element": "httpTransaction",
+					"content": [{
+						"element": "httpRequest",
+						"attributes": {
+							"method": "GET"
+						},
+						"content": []
+					}, {
+						"element": "httpResponse",
+						"attributes": {
+							"statusCode": "200",
+							"headers": {
+								"element": "httpHeaders",
+								"content": [{
+									"element": "member",
+									"content": {
+										"key": {
+											"element": "string",
+											"content": "Content-Type"
+										},
+										"value": {
+											"element": "string",
+											"content": "application/json"
+										}
+									}
+								}]
+							}
+						},
+						"content": [{
+							"element": "asset",
+							"meta": {
+								"classes": "messageBody"
+							},
+							"attributes": {
+								"contentType": "application/json"
+							},
+							"content": "    {\n        \"id\":1,\n        \"name\":\"Write presentation\",\n        \"completed\":false,\n        \"due\":\"0001-01-01T00:00:00Z\"\n    }\n\n"
+						}]
+					}]
+				}]
+			}]
+		}]
+	}]
+}
