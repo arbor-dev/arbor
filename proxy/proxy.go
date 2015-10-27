@@ -1,4 +1,4 @@
-package main
+package proxy
 
 import (
 	"encoding/json"
@@ -9,10 +9,6 @@ import (
 
 var JSONHeader string = "application/json; charset=UTF-8"
 var TEXTHeader string = "text/plain; charset=utf-8"
-
-func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Welcome!\n")
-}
 
 func GETHandler(w http.ResponseWriter, url string, r *http.Request) {
 	response, err := http.Get(url)

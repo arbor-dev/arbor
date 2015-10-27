@@ -3,17 +3,19 @@ package main
 import (
 	"net/http"
 
+	"github.com/acm-uiuc/groot/services"
+
 	"github.com/gorilla/mux"
 )
 
 func RegisterAPIs() {
-	routes = append(routes, todoRoutes...)
+	services.Routes = append(services.Routes, services.TodoRoutes...)
 }
 
 func NewRouter() *mux.Router {
 
 	router := mux.NewRouter()
-	for _, route := range routes {
+	for _, route := range services.Routes {
 		var handler http.Handler
 
 		handler = route.HandlerFunc

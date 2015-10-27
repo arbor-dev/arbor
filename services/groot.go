@@ -1,6 +1,7 @@
-package main
+package services
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -11,13 +12,17 @@ type Route struct {
 	HandlerFunc http.HandlerFunc
 }
 
-type Routes []Route
+type RouteCollection []Route
 
-var routes = Routes{
+var Routes = RouteCollection{
 	Route{
 		"Index",
 		"GET",
 		"/",
 		Index,
 	},
+}
+
+func Index(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Welcome!\n")
 }
