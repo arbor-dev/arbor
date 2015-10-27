@@ -48,7 +48,7 @@ var todoRoutes = Routes{
 func todoIndex(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprint(w, "Welcome!\n")
 	//TODO: THIS API CALL IS A SPECIAL CASE
-	GetHandler(w, TodoURL, r)
+	GETHandler(w, TodoURL, r)
 }
 
 func TodoAll(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +57,7 @@ func TodoAll(w http.ResponseWriter, r *http.Request) {
 	// if err := json.NewEncoder(w).Encode(todos); err != nil {
 	// 	panic(err)
 	// }
-	//GetHandler(TodoURL + r.URL)
+	GETHandler(w, TodoURL+r.URL.String(), r)
 }
 
 func TodoShow(w http.ResponseWriter, r *http.Request) {
