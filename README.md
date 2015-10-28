@@ -25,7 +25,8 @@ AS OF 10/28/15
  *  Will call the service and return the result to the client.
  **/
  func GET(w http.ResponseWriter, url string, r *http.Request)
-
+```
+```go
  /**
   *  Pass the http Request from the client and the ResponseWriter it expects
   *  Pass the target url of the backend service (not the url the client called)
