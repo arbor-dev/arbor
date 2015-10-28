@@ -11,20 +11,28 @@ It provides the following capabilities:
 
 
 
-## RUNNING GROOT AS OF 10/27/15
+## RUNNING GROOT AS OF 10/28/15
 
 Add the API spec in a new file (ex. todo.go) in the services package
 
 There is a set of proxy api calls defined in the proxy package that will route call to the backend services
 
-AS OF 10/27/15
+AS OF 10/28/15
 ```go
 /**
  *  Pass the http Request from the client and the ResponseWriter it expects
  *  Pass the target url of the backend service (not the url the client called)
  *  Will call the service and return the result to the client.
  **/
- func GETHandler(w http.ResponseWriter, url string, r *http.Request)
+ func GET(w http.ResponseWriter, url string, r *http.Request)
+
+ /**
+  *  Pass the http Request from the client and the ResponseWriter it expects
+  *  Pass the target url of the backend service (not the url the client called)
+  *  Passes the encoded json(only format currently supported) to the service.
+  *  Will call the service and return the result to the client.
+  **/
+  func POST(w http.ResponseWriter, url string, r *http.Request)
 ```
 
 install the proxy and services packages

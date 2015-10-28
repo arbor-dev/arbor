@@ -40,17 +40,17 @@ var TodoRoutes = RouteCollection{
 //Route handler
 func todoIndex(w http.ResponseWriter, r *http.Request) {
 	//TODO: THIS API CALL IS A SPECIAL CASE
-	proxy.GETHandler(w, TodoURL, r)
+	proxy.GET(w, TodoURL, r)
 }
 
 func TodoAll(w http.ResponseWriter, r *http.Request) {
-	proxy.GETHandler(w, TodoURL+r.URL.String(), r)
+	proxy.GET(w, TodoURL+r.URL.String(), r)
 }
 
 func TodoShow(w http.ResponseWriter, r *http.Request) {
-	proxy.GETHandler(w, TodoURL+r.URL.String(), r)
+	proxy.GET(w, TodoURL+r.URL.String(), r)
 }
 
 func TodoCreate(w http.ResponseWriter, r *http.Request) {
-	//proxy.POSTHandler()
+	proxy.POST(w, TodoURL+r.URL.String(), r)
 }
