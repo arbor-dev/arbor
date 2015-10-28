@@ -21,15 +21,6 @@ func GET(w http.ResponseWriter, url string, r *http.Request) {
 
 	switch {
 
-	case contains(TEXTHeader, res.Header["Content-Type"]):
-		if err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
-			return
-		}
-		fmt.Fprintf(w, "%s\n", string(contents))
-		break
-
 	case contains(JSONHeader, res.Header["Content-Type"]):
 		var data interface{}
 		err = json.Unmarshal(contents, &data)
@@ -47,6 +38,26 @@ func GET(w http.ResponseWriter, url string, r *http.Request) {
 			return
 		}
 		break
+	case contains(TEXTHeader, res.Header["Content-Type"]):
+		if err != nil {
+			InvalidGET(w, err)
+			log.Println(err)
+			return
+		}
+
+		fmt.Fprintf(w, "%s\n", string(contents))
+		break
+
+	default:
+		if err != nil {
+			InvalidGET(w, err)
+			log.Println(err)
+			return
+		}
+
+		fmt.Fprintf(w, "%s\n", string(contents))
+		break
+
 	}
 }
 
