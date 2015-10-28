@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func GETHandler(w http.ResponseWriter, url string, r *http.Request) {
+func GET(w http.ResponseWriter, url string, r *http.Request) {
 	res, err := http.Get(url)
 	if err != nil {
 		InvalidGET(w, err)
