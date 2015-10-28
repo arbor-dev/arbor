@@ -4,10 +4,10 @@ Groot is the next generation web application serving the UIUC Chapter of ACM.
 It is the replacement for liquid which goes defunct 1/1/2016.
 The groot repo itself is an API Gateway written in Fall of 2015
 It provides the following capabilities:
-	- Easy registration of services
-	- Universal Authentication for the entire application
-	- Proxying API calls
-	- Managing inter-service communication
+  * Easy registration of services
+  * Universal Authentication for the entire application
+  * Proxying API calls
+  * Managing inter-service communication
 
 
 
