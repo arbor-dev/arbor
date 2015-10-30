@@ -39,11 +39,9 @@ AS OF 10/28/15
 install the proxy and services packages
 
 ```sh
-cd proxy
-go install
+go get install github.com/acm-uiuc/groot/proxy
 
-cd ../services
-go install
+go get install github.com/acm-uiuc/groot/services
 ```
 
 run the server
