@@ -21,62 +21,72 @@ func GET(w http.ResponseWriter, url string, r *http.Request) {
 	contents, err := ioutil.ReadAll(res.Body)
 
 	switch {
+		case contains(JSONHeader, res.Header["Content-Type"]):
+			jsonGET(w, url, r, contents)
+			break
+		case contains(TEXTHeader, res.Header["Content-Type"]):
+			textGET(w, url, r, contents)
+			break
 
-	case contains(JSONHeader, res.Header["Content-Type"]):
-		var data interface{}
-		err = json.Unmarshal(contents, &data)
-		if err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
-			return
-		}
-
-		w.Header().Set("Content-Type", JSONHeader)
-		w.WriteHeader(http.StatusOK)
-		if err := json.NewEncoder(w).Encode(data); err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
-			return
-		}
-		break
-	case contains(TEXTHeader, res.Header["Content-Type"]):
-		if err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
-			return
-		}
-
-		fmt.Fprintf(w, "%s\n", string(contents))
-		break
-
-	case contains(XMLHeader, res.Header["Content-Type"]):
-		var data interface{}
-		err = xml.Unmarshal(contents, &data)
-		if err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
-			return
-		}
-
-		w.Header().Set("Content-Type", XMLHeader)
-		w.WriteHeader(http.StatusOK)
-		if err := xml.NewEncoder(w).Encode(data); err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
-			return
-		}
-		break
-	default:
-		if err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
-			return
-		}
-
-		fmt.Fprintf(w, "%s\n", string(contents))
-		break
-
+		case contains(XMLHeader, res.Header["Content-Type"]):
+			xmlGET(w, url, r, contents)
+			break
+		default:
+			if err != nil {
+				InvalidGET(w, err)
+				log.Println(err)
+				return
+			}
+			fmt.Fprintf(w, "%s\n", string(contents))
+			break
 	}
+}
+
+func jsonGET(w http.ResponseWriter, url string, r *http.Request, contents []byte) {
+	var data interface{}
+	err := json.Unmarshal(contents, &data)
+	if err != nil {
+		InvalidGET(w, err)
+		log.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", JSONHeader)
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		InvalidGET(w, err)
+		log.Println(err)
+		return
+	}
+}
+
+func xmlGET(w http.ResponseWriter, url string, r *http.Request, contents []byte) {
+	var data interface{}
+	err := xml.Unmarshal(contents, &data)
+	if err != nil {
+		InvalidGET(w, err)
+		log.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", XMLHeader)
+	w.WriteHeader(http.StatusOK)
+	if err := xml.NewEncoder(w).Encode(data); err != nil {
+		InvalidGET(w, err)
+		log.Println(err)
+		return
+	}
+}
+
+func textGET(w http.ResponseWriter, url string, r *http.Request, contents []byte) {
+	var err error
+	if err != nil {
+		InvalidGET(w, err)
+		log.Println(err)
+		return
+	}
+
+	fmt.Fprintf(w, "%s\n", string(contents))
 }
 
 func InvalidGET(w http.ResponseWriter, err error) {

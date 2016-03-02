@@ -12,6 +12,7 @@ func RegisterAPIs() {
 	services.Routes = append(services.Routes, services.TodoRoutes...)
 	services.Routes = append(services.Routes, services.GrandpaRoutes...)
 	services.Routes = append(services.Routes, services.BearsRoutes...)
+	services.Routes = append(services.Routes, services.TestRoutes...)
 }
 
 func NewRouter() *mux.Router {

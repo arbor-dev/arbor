@@ -3,6 +3,7 @@ package proxy
 import (
 	"bytes"
 	"encoding/json"
+	//"encoding/xml"
 	"io"
 	"io/ioutil"
 	"log"
@@ -18,7 +19,7 @@ func PUT(w http.ResponseWriter, url string, r *http.Request) {
 	}
 	if err := r.Body.Close(); err != nil {
 		InvalidPUT(w, err)
-		log.Println(err)
+		log.Printf("Failed Reception:%v", err)
 		return
 	}
 
@@ -28,7 +29,7 @@ func PUT(w http.ResponseWriter, url string, r *http.Request) {
 	resp, err := client.Do(req)
 	if err != nil {
 		InvalidPUT(w, err)
-		log.Println(err)
+		log.Printf("Failed request: %v", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -36,21 +37,22 @@ func PUT(w http.ResponseWriter, url string, r *http.Request) {
 	contents, err := ioutil.ReadAll(resp.Body)
 	var data interface{}
 	err = json.Unmarshal(contents, &data)
+	log.Println(data)
 	if err != nil {
 		InvalidPUT(w, err)
-		log.Println(err)
+		log.Printf("Failed decode %v", err)
 		return
 	}
 
-	if resp.StatusCode != http.StatusCreated {
+	if resp.StatusCode != http.StatusOK {
 		InvalidPUT(w, err)
-		log.Println(err)
+		log.Printf("Failed server %v", err)
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		InvalidGET(w, err)
-		log.Println(err)
+		InvalidPUT(w, err)
+		log.Printf("Failed encode %v", err)
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
