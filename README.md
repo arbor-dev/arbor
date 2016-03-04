@@ -35,13 +35,31 @@ AS OF 10/28/15
   **/
   func POST(w http.ResponseWriter, url string, r *http.Request)
 ```
+```go
+ /**
+  *  Pass the http Request from the client and the ResponseWriter it expects
+  *  Pass the target url of the backend service (not the url the client called)
+  *  Passes the encoded json(only format currently supported) to the service.
+  *  Will call the service and return the result to the client.
+  **/
+  func PUT(w http.ResponseWriter, url string, r *http.Request)
+```
+```go
+/**
+ *  Pass the http Request from the client and the ResponseWriter it expects
+ *  Pass the target url of the backend service (not the url the client called)
+ *  Will call the service and return the result to the client.
+ **/
+ func DELETE(w http.ResponseWriter, url string, r *http.Request)
+```
+
 
 install the proxy and services packages
 
 ```sh
-go get install github.com/acm-uiuc/groot/proxy
+go install github.com/acm-uiuc/groot/proxy
 
-go get install github.com/acm-uiuc/groot/services
+go install github.com/acm-uiuc/groot/services
 ```
 
 run the server
