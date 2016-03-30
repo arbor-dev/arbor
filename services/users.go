@@ -12,7 +12,7 @@ var UsersURL string = "http://localhost:4567"
 var UsersRoutes = RouteCollection{
 	Route{
 		"GetAllUsers",
-		"POST",
+		"GET",
 		"/users",
 		GetAllUsers,
 	},

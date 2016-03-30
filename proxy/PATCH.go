@@ -28,6 +28,7 @@ func PATCH(w http.ResponseWriter, url string, r *http.Request) {
 
 func InvalidPATCH(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(422) // unprocessable entity
 	data := map[string]interface{}{"Code": 400, "Text": "Unprocessable Entity", "Specfically": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
