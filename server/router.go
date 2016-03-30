@@ -2,18 +2,9 @@ package main
 
 import (
 	"net/http"
-
-	"github.com/acm-uiuc/groot/services"
-
 	"github.com/gorilla/mux"
+	"github.com/acm-uiuc/groot/services"
 )
-
-func RegisterAPIs() {
-	services.Routes = append(services.Routes, services.TodoRoutes...)
-	services.Routes = append(services.Routes, services.GrandpaRoutes...)
-	services.Routes = append(services.Routes, services.BearsRoutes...)
-	services.Routes = append(services.Routes, services.TestRoutes...)
-}
 
 func NewRouter() *mux.Router {
 
