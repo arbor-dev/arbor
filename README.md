@@ -24,7 +24,7 @@ AS OF 10/28/15
  *  Pass the target url of the backend service (not the url the client called)
  *  Will call the service and return the result to the client.
  **/
- func GET(w http.ResponseWriter, url string, r *http.Request)
+ func GET(w http.ResponseWriter, url string, format string, r *http.Request)
 ```
 ```go
  /**
@@ -33,7 +33,7 @@ AS OF 10/28/15
   *  Passes the encoded json(only format currently supported) to the service.
   *  Will call the service and return the result to the client.
   **/
-  func POST(w http.ResponseWriter, url string, r *http.Request)
+  func POST(w http.ResponseWriter, url string, format string, r *http.Request)
 ```
 ```go
  /**
@@ -42,7 +42,7 @@ AS OF 10/28/15
   *  Passes the encoded json(only format currently supported) to the service.
   *  Will call the service and return the result to the client.
   **/
-  func PUT(w http.ResponseWriter, url string, r *http.Request)
+  func PUT(w http.ResponseWriter, url string, format string, r *http.Request)
 ```
 ```go
 /**
@@ -50,7 +50,7 @@ AS OF 10/28/15
  *  Pass the target url of the backend service (not the url the client called)
  *  Will call the service and return the result to the client.
  **/
- func DELETE(w http.ResponseWriter, url string, r *http.Request)
+ func DELETE(w http.ResponseWriter, url string, format string, r *http.Request)
 ```
 
 

@@ -9,9 +9,9 @@ import (
 	"net/http"
 )
 
-func GET(w http.ResponseWriter, url string, r *http.Request) {
+func GET(w http.ResponseWriter, url string, format string, r *http.Request) {
 	res, err := http.Get(url)
-	log.Println(res)
+	log.Println(res.StatusCode)
 	if err != nil  || res.StatusCode != http.StatusOK {
 		InvalidGET(w, err)
 		log.Println(err)
@@ -23,16 +23,16 @@ func GET(w http.ResponseWriter, url string, r *http.Request) {
 
 	switch {
 		case contains(JSONHeader, res.Header["Content-Type"]):
-			jsonGET(w, url, r, contents)
+			jsonGET(w, url, contents)
 			break
 		case contains(TEXTHeader, res.Header["Content-Type"]):
-			textGET(w, url, r, contents)
+			textGET(w, url, contents)
 			break
 		case contains(HTMLHeader, res.Header["Content-Type"]):
-			textGET(w, url, r, contents)
+			textGET(w, url, contents)
 			break
 		case contains(XMLHeader, res.Header["Content-Type"]):
-			xmlGET(w, url, r, contents)
+			xmlGET(w, url, contents)
 			break
 		default:
 			if err != nil {
@@ -40,12 +40,12 @@ func GET(w http.ResponseWriter, url string, r *http.Request) {
 				log.Println(err)
 				return
 			}
-			textGET(w, url, r, contents)
+			textGET(w, url, contents)
 			break
 	}
 }
 
-func jsonGET(w http.ResponseWriter, url string, r *http.Request, contents []byte) {
+func jsonGET(w http.ResponseWriter, url string, contents []byte) {
 	var data interface{}
 	err := json.Unmarshal(contents, &data)
 	if err != nil {
@@ -64,7 +64,7 @@ func jsonGET(w http.ResponseWriter, url string, r *http.Request, contents []byte
 	}
 }
 
-func xmlGET(w http.ResponseWriter, url string, r *http.Request, contents []byte) {
+func xmlGET(w http.ResponseWriter, url string, contents []byte) {
 	var data interface{}
 	err := xml.Unmarshal(contents, &data)
 	if err != nil {
@@ -76,14 +76,14 @@ func xmlGET(w http.ResponseWriter, url string, r *http.Request, contents []byte)
 	w.Header().Set("Content-Type", XMLHeader)
 	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(http.StatusOK)
-	if err := xml.NewEncoder(w).Encode(data); err != nil {
+	if err := json.NewEncoder(w).Encode(data); err != nil {
 		InvalidGET(w, err)
 		log.Println(err)
 		return
 	}
 }
 
-func textGET(w http.ResponseWriter, url string, r *http.Request, contents []byte) {
+func textGET(w http.ResponseWriter, url string, contents []byte) {
 	var err error
 	if err != nil {
 		InvalidGET(w, err)

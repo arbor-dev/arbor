@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func DELETE(w http.ResponseWriter, url string, r *http.Request) {
+func DELETE(w http.ResponseWriter, url string, format string, r *http.Request) {
 	req, err := http.NewRequest("DELETE", url, nil)
 	client := &http.Client{}
 	resp, err := client.Do(req)

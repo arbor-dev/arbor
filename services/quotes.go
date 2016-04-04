@@ -8,6 +8,9 @@ import (
 //Location
 var QuotesURL string = "http://localhost:9494"
 
+//Client Data Type
+var QuoteFormat string = "JSON"
+
 //API Interface
 var QuotesRoutes = RouteCollection{
 	Route{
@@ -44,21 +47,21 @@ var QuotesRoutes = RouteCollection{
 
 //Route handler
 func GetAllQuotes(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, QuotesURL+r.URL.String(), r)
+	proxy.GET(w, QuotesURL+r.URL.String(), QuoteFormat, r)
 }
 
 func DeleteQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, QuotesURL+r.URL.String(), r)
+	proxy.DELETE(w, QuotesURL+r.URL.String(), QuoteFormat, r)
 }
 
 func GetQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, QuotesURL+r.URL.String(), r)
+	proxy.GET(w, QuotesURL+r.URL.String(), QuoteFormat, r)
 }
 
 func CreateQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, QuotesURL+r.URL.String(), r)
+	proxy.POST(w, QuotesURL+r.URL.String(), QuoteFormat, r)
 }
 
 func UpdateQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, QuotesURL+r.URL.String(), r)
+	proxy.PUT(w, QuotesURL+r.URL.String(), QuoteFormat, r)
 }
