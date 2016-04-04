@@ -11,7 +11,8 @@ import (
 
 func GET(w http.ResponseWriter, url string, r *http.Request) {
 	res, err := http.Get(url)
-	if err != nil {
+	log.Println(res)
+	if err != nil  || res.StatusCode != http.StatusOK {
 		InvalidGET(w, err)
 		log.Println(err)
 		return
@@ -98,7 +99,7 @@ func InvalidGET(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(http.StatusNotFound)
-	data := map[string]interface{}{"Code": http.StatusNotFound, "Text": "Not Found", "Specfically": err}
+	data := map[string]interface{}{"Code": http.StatusNotFound, "Text": "Not Found", "server-err": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		panic(err)
 	}

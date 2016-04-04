@@ -60,5 +60,5 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, UsersURL+r.URL.String(), r)
+	proxy.PUT(w, UsersURL+r.URL.String(), r)
 }
