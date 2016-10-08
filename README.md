@@ -66,6 +66,7 @@ go install github.com/acm-uiuc/groot/services
 ```
 
 run the server
+(make sure you're on IllinoisNet or on the university VPN before running)
 
 ```sh
 go run ./server/*.go
