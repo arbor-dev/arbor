@@ -21,9 +21,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
     client := &http.Client{}
 	res, err := client.Do(req)
 
-	//res, err := http.Get(url)
-
-    log.Println(res.StatusCode)
+	if err != nil  || res.StatusCode != http.StatusOK {
 		InvalidGET(w, err)
 		log.Println(err)
 		return
