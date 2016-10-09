@@ -8,7 +8,7 @@ import (
 //Location
 const HardwareURL string = "http://localhost:4523/api/v1.0"
 
-//Client Data Type
+//Service Data Type
 const HardwareFormat string = "JSON"
 
 //API Interface

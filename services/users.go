@@ -8,7 +8,7 @@ import (
 //Location
 const UsersURL string = "http://localhost:4567"
 
-//Client Data Type
+//Service Data Type
 const UserFormat string = "XML"
 
 //API Interface
