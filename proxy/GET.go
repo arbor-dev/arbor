@@ -10,9 +10,20 @@ import (
 )
 
 func GET(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
-	res, err := http.Get(url)
-	log.Println(res.StatusCode)
-	if err != nil  || res.StatusCode != http.StatusOK {
+    req, err := http.NewRequest("GET", url, nil)
+    if format == "JSON" {
+	    req.Header.Set("Content-Type", JSONHeader)
+	    req.Header.Set("Accept", "application/json")
+    }
+    if token != "" {
+	     req.Header.Set("Authorization", "Basic " + token)
+    }
+    client := &http.Client{}
+	res, err := client.Do(req)
+
+	//res, err := http.Get(url)
+
+    log.Println(res.StatusCode)
 		InvalidGET(w, err)
 		log.Println(err)
 		return

@@ -3,65 +3,28 @@ package services
 import (
 	"net/http"
 	"github.com/acm-uiuc/groot/proxy"
+    "github.com/acm-uiuc/groot/secrets"
 )
 
 //Location
-const UsersURL string = "http://localhost:4567"
+const UsersURL string = secrets.CrowdURL
+
+const UserToken string = secrets.CrowdToken
 
 //Service Data Type
-const UserFormat string = "XML"
+const UserFormat string = "JSON"
 
 //API Interface
 var UsersRoutes = RouteCollection{
-	Route{
-		"GetAllUsers",
-		"GET",
-		"/users",
-		GetAllUsers,
-	},
     Route{
-		"DeleteUser",
-		"DELETE",
-		"/users/{netid}",
-		DeleteUser,
-	},
-    Route{
-		"GetUser",
-		"GET",
-		"/users/{netid}",
-		GetUser,
-	},
-    Route{
-		"CreateUser",
-		"POST",
-		"/users",
-		CreateUser,
-	},
-    Route{
-		"UpdateUser",
-		"PUT",
-		"/users/{netid}",
-		UpdateUser,
-	},
+        "GetUser",
+        "GET",
+        "/user",
+        GetUser,
+    },
 }
 
 //Route handler
-func GetAllUsers(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, UsersURL+r.URL.String(), UserFormat, "", r)
-}
-
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, UsersURL+r.URL.String(), UserFormat, "", r)
-}
-
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, UsersURL+r.URL.String(), UserFormat, "", r)
-}
-
-func CreateUser(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, UsersURL+r.URL.String(), UserFormat, "", r)
-}
-
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, UsersURL+r.URL.String(), UserFormat, "", r)
+	proxy.GET(w, UsersURL+r.URL.String(), UserFormat, UserToken, r)
 }

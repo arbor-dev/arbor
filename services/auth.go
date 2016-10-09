@@ -8,10 +8,10 @@ import (
 )
 
 //Location
-const AuthURL string = secrets.AuthURL;
+const AuthURL string = secrets.CrowdURL;
 
 //token
-const AuthToken string = secrets.AuthToken;
+const AuthToken string = secrets.CrowdToken;
 
 //Service Data Type
 const AuthFormat string = "JSON"
