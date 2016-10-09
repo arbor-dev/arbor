@@ -25,35 +25,40 @@ AS OF 10/28/15
 /**
  *  Pass the http Request from the client and the ResponseWriter it expects
  *  Pass the target url of the backend service (not the url the client called)
+ *  Pass the format of the service
+ *  Pass a authorization token (optional)
  *  Will call the service and return the result to the client.
  **/
- func GET(w http.ResponseWriter, url string, format string, r *http.Request)
+ func GET(w http.ResponseWriter, url string, format string, token string, r *http.Request)
 ```
 ```go
  /**
   *  Pass the http Request from the client and the ResponseWriter it expects
   *  Pass the target url of the backend service (not the url the client called)
   *  Passes the encoded json(only format currently supported) to the service.
+  *  Pass a authorization token (optional)
   *  Will call the service and return the result to the client.
   **/
-  func POST(w http.ResponseWriter, url string, format string, r *http.Request)
+  func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request)
 ```
 ```go
  /**
   *  Pass the http Request from the client and the ResponseWriter it expects
   *  Pass the target url of the backend service (not the url the client called)
   *  Passes the encoded json(only format currently supported) to the service.
+  *  Pass a authorization token (optional)
   *  Will call the service and return the result to the client.
   **/
-  func PUT(w http.ResponseWriter, url string, format string, r *http.Request)
+  func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request)
 ```
 ```go
 /**
  *  Pass the http Request from the client and the ResponseWriter it expects
  *  Pass the target url of the backend service (not the url the client called)
+ *  Pass a authorization token (optional)
  *  Will call the service and return the result to the client.
  **/
- func DELETE(w http.ResponseWriter, url string, format string, r *http.Request)
+ func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request)
 ```
 
 All secret data should be kept in a file called secrets.go in the secrets directory 
