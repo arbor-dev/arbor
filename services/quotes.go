@@ -6,10 +6,10 @@ import (
 )
 
 //Location
-var QuotesURL string = "http://localhost:9494"
+const QuotesURL string = "http://localhost:9494"
 
-//Client Data Type
-var QuoteFormat string = "JSON"
+//Service Data Type
+const QuoteFormat string = "JSON"
 
 //API Interface
 var QuotesRoutes = RouteCollection{

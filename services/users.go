@@ -6,10 +6,10 @@ import (
 )
 
 //Location
-var UsersURL string = "http://localhost:4567"
+const UsersURL string = "http://localhost:4567"
 
 //Client Data Type
-var UserFormat string = "XML"
+const UserFormat string = "XML"
 
 //API Interface
 var UsersRoutes = RouteCollection{
