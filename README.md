@@ -56,11 +56,14 @@ AS OF 10/28/15
  func DELETE(w http.ResponseWriter, url string, format string, r *http.Request)
 ```
 
+All secret data should be kept in a file called secrets.go in the secrets directory 
 
 install the proxy and services packages
 
 ```sh
 go install github.com/acm-uiuc/groot/proxy
+
+go install github.com/acm-uiuc/groot/secrets
 
 go install github.com/acm-uiuc/groot/services
 ```
