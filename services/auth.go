@@ -13,9 +13,6 @@ const AuthURL string = secrets.AuthURL;
 //Service Data Type
 const AuthFormat string = "JSON"
 
-//Service Data Type
-var AuthFormat string = "JSON"
-
 //API Interface
 var AuthRoutes = RouteCollection{
 	Route{
