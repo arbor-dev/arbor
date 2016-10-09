@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func PATCH(w http.ResponseWriter, url string, format string, r *http.Request) {
+func PATCH(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		InvalidPUT(w, err)

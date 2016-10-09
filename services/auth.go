@@ -10,6 +10,9 @@ import (
 //Location
 const AuthURL string = secrets.AuthURL;
 
+//token
+const AuthToken string = secrets.AuthToken;
+
 //Service Data Type
 const AuthFormat string = "JSON"
 
@@ -18,7 +21,7 @@ var AuthRoutes = RouteCollection{
 	Route{
 		"NewSession",
 		"POST",
-		"/authentication",
+		"/session",
 		NewSession,
 	},
 	Route{
@@ -52,21 +55,21 @@ var AuthRoutes = RouteCollection{
 func NewSession(w http.ResponseWriter, r *http.Request) {
 	//Auth: THIS API CALL IS A SPECIAL CASE
 	// log.Printf("new session called")
-	proxy.POST(w, AuthURL+r.URL.String(), AuthFormat, r)
+	proxy.POST(w, AuthURL+r.URL.String(), AuthFormat, AuthToken, r)
 }
 
 func EndUsersSessions(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, AuthURL+r.URL.String(), AuthFormat, r)
+	proxy.DELETE(w, AuthURL+r.URL.String(), AuthFormat, AuthToken, r)
 }
 
 func GetAuthenticatedUser(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, AuthURL+r.URL.String(), AuthFormat, r)
+	proxy.GET(w, AuthURL+r.URL.String(), AuthFormat, AuthToken, r)
 }
 
 func ValidateSession(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, AuthURL+r.URL.String(), AuthFormat, r)
+	proxy.POST(w, AuthURL+r.URL.String(), AuthFormat, AuthToken, r)
 }
 
 func EndSession(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, AuthURL+r.URL.String(), AuthFormat, r)
+	proxy.DELETE(w, AuthURL+r.URL.String(), AuthFormat, AuthToken, r)
 }

@@ -4,29 +4,29 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
-	"errors"
 	"io"
 	"io/ioutil"
 	"log"
+	"errors"
 	"net/http"
 )
 
-func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
+func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 	if format != "XML" && format != "JSON" { //TODO: Support Post form data
 		err := errors.New("ERROR: unsupported data encoding")
-		InvalidPUT(w, err)
+		InvalidPOST(w, err)
 		log.Println(err)
 		return
 	}
 	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		InvalidPUT(w, err)
+		InvalidPOST(w, err)
 		log.Println(err)
 		return
 	}
 	if err := r.Body.Close(); err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed Reception:%v", err)
+		InvalidPOST(w, err)
+		log.Println(err)
 		return
 	}
 
@@ -40,78 +40,76 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 
 	switch format {
 		case "XML":
-			xmlPUT(w, url, data)
+			xmlPOST(w, url, data)
 			return
 		case "JSON":
-			jsonPUT(w, url, data)
+			jsonPOST(w, url, token, data)
 			return
 		default:
-			InvalidPUT(w, err)
+			InvalidPOST(w, err)
 			log.Println("Unsupported Data Encoding")
 			return
 	}
 }
 
-func InvalidPUT(w http.ResponseWriter, err error) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
-	w.WriteHeader(422) // unprocessable entity
-	data := map[string]interface{}{"Code": 400, "Text": "Unprocessable Entity", "Specfically": err}
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		panic(err)
-	}
-}
-func jsonPUT(w http.ResponseWriter, url string, data interface{}) {
+func jsonPOST(w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := json.Marshal(data)
 	if err != nil {
-		InvalidPOST(w, err)
+		log.Println("#1")
 		log.Println(err)
 		return
 	}
-	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", JSONHeader)
-	client := &http.Client{}
+	req.Header.Set("Accept", "application/json")
+    if token != "" {
+	     req.Header.Set("Authorization", "Basic " + token)
+    }
+    client := &http.Client{}
 	resp, err := client.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK  {
-		InvalidPUT(w, err)
-		log.Printf("Failed request: %v", err)
+	if err != nil {
+		log.Println(resp.StatusCode)
+		InvalidPOST(w, err)
+		log.Println(err)
 		return
-	}
+	} else if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+        log.Println("ERROR: REQUEST FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode));
+    }
 	defer resp.Body.Close()
 
 	contents, err := ioutil.ReadAll(resp.Body)
 	var serverData interface{}
 	err = json.Unmarshal(contents, &serverData)
 	if err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed decode %v", err)
+		InvalidPOST(w, err)
+		log.Println(err)
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed encode %v", err)
+		InvalidGET(w, err)
+		log.Println(err)
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
 	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 }
 
-func xmlPUT(w http.ResponseWriter, url string, data interface{}) {
+func xmlPOST(w http.ResponseWriter, url string, data interface{}) {
 	content, err := xml.Marshal(data)
 	if err != nil {
 		InvalidPOST(w, err)
 		log.Println(err)
 		return
 	}
-	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", XMLHeader)
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK  {
-		InvalidPUT(w, err)
-		log.Printf("Failed request: %v", err)
+	if err != nil || resp.StatusCode != http.StatusCreated {
+		InvalidPOST(w, err)
+		log.Println(err)
 		return
 	}
 	defer resp.Body.Close()
@@ -120,17 +118,27 @@ func xmlPUT(w http.ResponseWriter, url string, data interface{}) {
 	var serverData interface{}
 	err = xml.Unmarshal(contents, &serverData)
 	if err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed decode %v", err)
+		InvalidPOST(w, err)
+		log.Println(err)
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed encode %v", err)
+		InvalidGET(w, err)
+		log.Println(err)
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
+	w.Header().Set("Access-Control-Allow-Origin", "AccessControlPolicy")
+	w.WriteHeader(http.StatusCreated)
+}
+
+func InvalidPOST(w http.ResponseWriter, err error) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(422) // unprocessable entity
+	data := map[string]interface{}{"Code": 422, "Text": "Unprocessable Entity", "Specfically": err}
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		panic(err)
+	}
 }

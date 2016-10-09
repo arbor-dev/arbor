@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func GET(w http.ResponseWriter, url string, format string, r *http.Request) {
+func GET(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 	res, err := http.Get(url)
 	log.Println(res.StatusCode)
 	if err != nil  || res.StatusCode != http.StatusOK {

@@ -47,21 +47,21 @@ var QuotesRoutes = RouteCollection{
 
 //Route handler
 func GetAllQuotes(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, QuotesURL+r.URL.String(), QuoteFormat, r)
+	proxy.GET(w, QuotesURL+r.URL.String(), QuoteFormat, "", r)
 }
 
 func DeleteQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, QuotesURL+r.URL.String(), QuoteFormat, r)
+	proxy.DELETE(w, QuotesURL+r.URL.String(), QuoteFormat, "", r)
 }
 
 func GetQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, QuotesURL+r.URL.String(), QuoteFormat, r)
+	proxy.GET(w, QuotesURL+r.URL.String(), QuoteFormat, "", r)
 }
 
 func CreateQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, QuotesURL+r.URL.String(), QuoteFormat, r)
+	proxy.POST(w, QuotesURL+r.URL.String(), QuoteFormat, "", r)
 }
 
 func UpdateQuote(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, QuotesURL+r.URL.String(), QuoteFormat, r)
+	proxy.PUT(w, QuotesURL+r.URL.String(), QuoteFormat, "", r)
 }
