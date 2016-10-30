@@ -35,13 +35,13 @@ var HardwareRoutes = RouteCollection {
 
 //Route handler
 func NewItem(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, AuthURL+r.URL.String(), AuthFormat, "", r)
+	proxy.POST(w, HardwareURL+r.URL.String(), HardwareFormat, "", r)
 }
 
 func DeleteItem(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, AuthURL+r.URL.String(), AuthFormat, "", r)
+	proxy.DELETE(w, HardwareURL+r.URL.String(), HardwareFormat, "", r)
 }
 
 func UpdateItem(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, AuthURL+r.URL.String(), AuthFormat, "", r)
+	proxy.PUT(w, HardwareURL+r.URL.String(), HardwareFormat, "", r)
 }
