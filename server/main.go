@@ -12,6 +12,8 @@ func main() {
 
 	services.RegisterAPIs()
 
+	log.Println(services.Routes)
+
 	router := NewRouter()
 
 	log.Println("I AM GROOT! [Server is listening on :8000]")

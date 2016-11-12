@@ -17,12 +17,12 @@ var GroupsRoutes = RouteCollection {
 		"GetGroupTypes",
 		"GET",
 		"/groups",
-		GetGroupsTypes,
+		GetGroupTypes,
 	},
 	Route{
 		"GetGroups",
 		"GET",
-		"/groups/:groupType",
+		"/groups/{groupType}",
 		GetGroups,
 	},
 	Route{
@@ -34,24 +34,24 @@ var GroupsRoutes = RouteCollection {
 	Route{
 		"IsMember",
 		"GET",
-		"groups/{groupType}/{groupName}?isMember={netid}",
+		"/groups/{groupType}/{groupName}?isMember={netid}",
 		IsMember,
 	},
 }
 
 //Route handler
 func GetGroupTypes(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, AuthURL+r.URL.String(), AuthFormat, "", r)
+	proxy.GET(w, GroupsURL+r.URL.String(), GroupsFormat, "", r)
 }
 
 func GetGroups(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, AuthURL+r.URL.String(), AuthFormat, "", r)
+	proxy.GET(w, GroupsURL+r.URL.String(), GroupsFormat, "", r)
 }
 
 func GetGroup(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, AuthURL+r.URL.String(), AuthFormat, "", r)
+	proxy.GET(w, GroupsURL+r.URL.String(), GroupsFormat, "", r)
 }
 
 func IsMember(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, AuthURL+r.URL.String(), AuthFormat, "", r)
+	proxy.GET(w, GroupsURL+r.URL.String(), GroupsFormat, "", r)
 }
