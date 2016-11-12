@@ -11,9 +11,6 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	services.RegisterAPIs()
-
-	log.Println(services.Routes)
-
 	router := NewRouter()
 
 	log.Println("I AM GROOT! [Server is listening on :8000]")
