@@ -32,10 +32,10 @@ var GroupsRoutes = RouteCollection {
 		GetGroup,
 	},
 	Route{
-		"IsMember",
+		"IsGroupMember",
 		"GET",
 		"/groups/{groupType}/{groupName}?isMember={netid}",
-		IsMember,
+		IsGroupMember,
 	},
 }
 
@@ -52,6 +52,6 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 	proxy.GET(w, GroupsURL+r.URL.String(), GroupsFormat, "", r)
 }
 
-func IsMember(w http.ResponseWriter, r *http.Request) {
+func IsGroupMember(w http.ResponseWriter, r *http.Request) {
 	proxy.GET(w, GroupsURL+r.URL.String(), GroupsFormat, "", r)
 }

@@ -3,7 +3,6 @@ package services
 import (
 	"net/http"
 	"github.com/acm-uiuc/groot/proxy"
-    "github.com/acm-uiuc/groot/secrets"
 )
 
 //Location
@@ -13,7 +12,7 @@ const MembersURL string = "http://localhost:8001"
 const MembersFormat string = "JSON"
 
 //API Interface
-var MemberRoutes = RouteCollection{
+var MembersRoutes = RouteCollection{
     Route{
         "PreMembers",
         "POST",
@@ -54,25 +53,25 @@ var MemberRoutes = RouteCollection{
 
 //Route handler
 func PreMembers(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, UsersURL+r.URL.String(), UserFormat, "", r)
+	proxy.POST(w, MembersURL+r.URL.String(), MembersFormat, "", r)
 }
 
 func CurrentMembers(w http.ResponseWriter, r *http.Request) {
-    proxy.POST(w, UsersURL+r.URL.String(), UserFormat, "", r)
+    proxy.POST(w, MembersURL+r.URL.String(), MembersFormat, "", r)
 }
 
 func MemberInfo(w http.ResponseWriter, r *http.Request) {
-    proxy.POST(w, UsersURL+r.URL.String(), UserFormat, "", r)
+    proxy.POST(w, MembersURL+r.URL.String(), MembersFormat, "", r)
 }
 
 func IsMember(w http.ResponseWriter, r *http.Request) {
-    proxy.POST(w, UsersURL+r.URL.String(), UserFormat, "", r)
+    proxy.POST(w, MembersURL+r.URL.String(), MembersFormat, "", r)
 }
 
 func NewMember(w http.ResponseWriter, r *http.Request) {
-    proxy.POST(w, UsersURL+r.URL.String(), UserFormat, "", r)
+    proxy.POST(w, MembersURL+r.URL.String(), MembersFormat, "", r)
 }
 
 func ConfirmMember(w http.ResponseWriter, r *http.Request) {
-    proxy.POST(w, UsersURL+r.URL.String(), UserFormat, "", r)
+    proxy.POST(w, MembersURL+r.URL.String(), MembersFormat, "", r)
 }
