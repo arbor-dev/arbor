@@ -30,6 +30,15 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	defer res.Body.Close()
 	contents, err := ioutil.ReadAll(res.Body)
 
+	origin := r.Header.Get("Origin")
+
+	//TODO: FIGURE OUT ORIGIN RULES
+	if origin != "" {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+	    w.Header().Set("Access-Control-Allow-Methods", "GET")
+	    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+
 	switch {
 		case contains(JSONHeader, res.Header["Content-Type"]):
 			jsonGET(w, url, contents)
@@ -64,7 +73,6 @@ func jsonGET(w http.ResponseWriter, url string, contents []byte) {
 	}
 
 	w.Header().Set("Content-Type", JSONHeader)
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		InvalidGET(w, err)
@@ -83,7 +91,6 @@ func xmlGET(w http.ResponseWriter, url string, contents []byte) {
 	}
 
 	w.Header().Set("Content-Type", XMLHeader)
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		InvalidGET(w, err)
@@ -99,14 +106,12 @@ func textGET(w http.ResponseWriter, url string, contents []byte) {
 		log.Println(err)
 		return
 	}
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	fmt.Fprintf(w, "%s\n", string(contents))
 }
 
 func InvalidGET(w http.ResponseWriter, err error) {
 	// If we didn't find it, 404
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(http.StatusNotFound)
 	data := map[string]interface{}{"Code": http.StatusNotFound, "Text": "Not Found", "server-err": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {

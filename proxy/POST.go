@@ -38,6 +38,15 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 		return
 	}
 
+	origin := r.Header.Get("Origin")
+
+	//TODO: FIGURE OUT ORIGIN RULES
+	if origin != "" {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+	    w.Header().Set("Access-Control-Allow-Methods", "POST")
+	    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+
 	switch format {
 		case "XML":
 			xmlPOST(w, url, data)
@@ -92,7 +101,6 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -129,13 +137,11 @@ func xmlPOST(w http.ResponseWriter, url string, data interface{}) {
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
-	w.Header().Set("Access-Control-Allow-Origin", "AccessControlPolicy")
 	w.WriteHeader(http.StatusCreated)
 }
 
 func InvalidPOST(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
 	w.WriteHeader(422) // unprocessable entity
 	data := map[string]interface{}{"Code": 422, "Text": "Unprocessable Entity", "Specfically": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {

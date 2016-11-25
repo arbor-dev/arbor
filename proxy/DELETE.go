@@ -18,7 +18,14 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Access-Control-Allow-Origin", AccessControlPolicy)
+	origin := r.Header.Get("Origin")
+
+	//TODO: FIGURE OUT ORIGIN RULES
+	if origin != "" {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+	    w.Header().Set("Access-Control-Allow-Methods", "GET")
+	    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
 }
 
 func InvalidDELETE(w http.ResponseWriter, err error) {
