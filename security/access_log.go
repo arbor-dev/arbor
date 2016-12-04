@@ -19,19 +19,32 @@ import (
 )
 
 const AccessLogLocation string = config.AccessLogLocation
-var AccessLog os.File 
+var AccessLog *os.File 
 
 func logInit() {
-	AccessLog, err := os.OpenFile(AccessLogLocation, os.O_APPEND|os.O_WRONLY, 0600)		
+	_, err := os.Stat(AccessLogLocation)
+
+	if os.IsNotExist(err) {
+		AccessLog, err = os.Create(AccessLogLocation) 
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	AccessLog, err = os.OpenFile(AccessLogLocation, os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer AccessLog.Close()
 }
 
 func appendLog(name string, token string) (error) {
 	t := time.Now().Local()
 	str := fmt.Sprintf("%s %s %s", t.Format("2006-01-02 15:04:05 +0800"), name, token)
-	_, err := AccessLog.WriteString(str)
+	_, err := (*AccessLog).WriteString(str)
+	err = (*AccessLog).Sync()
 	return err
 } 
+
+func logClose() {
+	(*AccessLog).Close()
+}

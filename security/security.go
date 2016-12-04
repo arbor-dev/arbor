@@ -13,7 +13,15 @@ package security
 import (
 )
 
+var enabled = false
+
 func Init() {
+	enabled = true
 	storeInit()
 	logInit()
+}
+
+func Close() {
+	storeClose()
+	logClose()
 } 

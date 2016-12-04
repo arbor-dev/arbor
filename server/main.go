@@ -20,8 +20,12 @@ import (
 )
 
 func main() {
-	if len(os.Args) == 2 && (os.Args[1] == "--register-client" || os.Args[1] == "-r") {
+	if len(os.Args) == 3 && (os.Args[1] == "--register-client" || os.Args[1] == "-r") {
 		RegisterClient(os.Args[2])
+	} else if len(os.Args) == 3 && (os.Args[1] == "--check-registration" || os.Args[1] == "-c") {
+		CheckRegistration(os.Args[2])
+	} else if len(os.Args) == 2 && (os.Args[1] == "--unsecured" || os.Args[1] == "-u") {
+		StartUnsecuredServer() 
 	} else if len(os.Args) > 1 {
 		fmt.Println("Invalid Command")
 	} else {
@@ -36,14 +40,34 @@ func RegisterClient(name string) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("Client: " + name + " has been granted authorization token: " + token)
+	fmt.Println("Client " + name + " has been granted authorization token: " + token)
+
+	defer security.Close()
+}
+
+func CheckRegistration(token string) {
+	security.Init()
+	fmt.Println(security.IsAuthorizedClient(token))
+	defer security.Close()
 }
 
 func StartServer() {
 
+	security.Init()
+
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	security.Init()
+	services.RegisterAPIs()
+	router := NewRouter()
+
+	log.Println("I AM GROOT! [Server is listening on :8000]")
+	log.Fatal(http.ListenAndServe(":8000", router))
+
+	defer security.Close()
+}
+
+func StartUnsecuredServer() {
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	services.RegisterAPIs()
 	router := NewRouter()

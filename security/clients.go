@@ -11,23 +11,13 @@
 package security 
 
 import (
-	"log"
 	"fmt"
-	"time"
 	"github.com/boltdb/bolt"
 	"github.com/acm-uiuc/groot/config"
 )
 
 const ClientRegistryLocation string = config.ClientRegistryLocation
 var ClientRegistryStore *bolt.DB
-
-func storeInit() {
-	ClientRegistryStore, err := bolt.Open(ClientRegistryLocation, 0600, &bolt.Options{Timeout: 1 * time.Second})
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer ClientRegistryStore.Close()
-} 
 
 func AddClient(name string) (string, error) {
 	token, err := generateRandomString(32)
@@ -42,6 +32,10 @@ func AddClient(name string) (string, error) {
 }
 
 func IsAuthorizedClient(token string) (bool, error) {
+	if !enabled {
+		return true, nil
+	}
+
 	name, err :=  get([]byte(token))
 	if err != nil {
 		return false, err
