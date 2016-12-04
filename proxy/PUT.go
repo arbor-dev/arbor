@@ -22,6 +22,13 @@ import (
 )
 
 func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
+
+	if !verifyAuthorization(r) {
+		w.WriteHeader(403)
+		log.Println("Unauthorized Access from " + r.RemoteAddr)
+		return
+	}
+
 	if format != "XML" && format != "JSON" { //TODO: Support Post form data
 		err := errors.New("ERROR: unsupported data encoding")
 		InvalidPUT(w, err)
@@ -80,6 +87,7 @@ func InvalidPUT(w http.ResponseWriter, err error) {
 		panic(err)
 	}
 }
+
 func jsonPUT(w http.ResponseWriter, url string, data interface{}) {
 	content, err := json.Marshal(data)
 	if err != nil {

@@ -13,6 +13,8 @@ package proxy
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+	"github.com/acm-uiuc/groot/security"
 )
 
 func contains(a string, list []string) bool {
@@ -60,3 +62,15 @@ func extract(a interface{}, b string) (val string, err error) {
 	}
 
 }
+
+func verifyAuthorization(r *http.Request) (bool) {
+	authToken := r.Header.Get("Authorization")
+	if authToken == "" {
+		return false
+	}
+	auth, err := security.IsAuthorizedClient(authToken)
+	if err != nil {
+		return false
+	}
+	return auth
+}	

@@ -21,6 +21,13 @@ import (
 )
 
 func PATCH(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
+
+	if !verifyAuthorization(r) {
+		w.WriteHeader(403)
+		log.Println("Unauthorized Access from " + r.RemoteAddr)
+		return
+	}
+
 	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		InvalidPUT(w, err)

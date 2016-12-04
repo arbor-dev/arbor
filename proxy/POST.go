@@ -22,6 +22,13 @@ import (
 )
 
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
+
+	if !verifyAuthorization(r) {
+		w.WriteHeader(403)
+		log.Println("Unauthorized Access from " + r.RemoteAddr)
+		return
+	}
+
 	if format != "XML" && format != "JSON" { //TODO: Support Post form data
 		err := errors.New("ERROR: unsupported data encoding")
 		InvalidPOST(w, err)

@@ -20,6 +20,13 @@ import (
 )
 
 func GET(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
+
+	if !verifyAuthorization(r) {
+		w.WriteHeader(403)
+		log.Println("Unauthorized Access from " + r.RemoteAddr)
+		return
+	}
+
     req, err := http.NewRequest("GET", url, nil)
     if format == "JSON" {
 	    req.Header.Set("Content-Type", JSONHeader)
