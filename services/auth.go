@@ -11,17 +11,17 @@
 package services
 
 import (
-	// "log"
+	"fmt"
 	"github.com/acm-uiuc/groot/proxy"
-	"github.com/acm-uiuc/groot/secrets"
+	"github.com/acm-uiuc/groot/config"
 	"net/http"
 )
 
 //Location
-const AuthURL string = secrets.CrowdURL;
+const AuthURL string = config.CrowdURL;
 
 //token
-const AuthToken string = secrets.CrowdToken;
+const AuthToken string = config.CrowdToken;
 
 //Service Data Type
 const AuthFormat string = "JSON"
@@ -65,6 +65,7 @@ var AuthRoutes = RouteCollection{
 func NewSession(w http.ResponseWriter, r *http.Request) {
 	//Auth: THIS API CALL IS A SPECIAL CASE
 	// log.Printf("new session called")
+	fmt.Println(*r)
 	proxy.POST(w, AuthURL+r.URL.String(), AuthFormat, AuthToken, r)
 }
 

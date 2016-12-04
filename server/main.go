@@ -11,14 +11,39 @@
 package main
 
 import (
+	"os"
 	"log"
+	"fmt"
 	"net/http"
 	"github.com/acm-uiuc/groot/services"
+	"github.com/acm-uiuc/groot/security"
 )
 
 func main() {
+	if len(os.Args) == 2 && (os.Args[1] == "--register-client" || os.Args[1] == "-r") {
+		RegisterClient(os.Args[2])
+	} else if len(os.Args) > 1 {
+		fmt.Println("Invalid Command")
+	} else {
+		StartServer()
+	}
+}
+
+func RegisterClient(name string) {
+	security.Init()
+	token, err := security.AddClient(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Client: " + name + " has been granted authorization token: " + token)
+}
+
+func StartServer() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
+	security.Init()
 
 	services.RegisterAPIs()
 	router := NewRouter()

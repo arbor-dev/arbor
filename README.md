@@ -14,7 +14,7 @@ Groot provides a JSON face to any service. When registering as service specify t
 
 
 
-## RUNNING GROOT AS OF 10/28/15
+## RUNNING GROOT
 
 Add the API spec in a new file (ex. todo.go) in the services package
 
