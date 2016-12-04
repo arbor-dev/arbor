@@ -11,12 +11,15 @@
 package security
 
 import (
+       "fmt"
+       "strconv"
 )
 
 var enabled = false
 
 func Init() {
 	enabled = true
+	fmt.Println(strconv.AppendBool([]byte("Security Package:"), enabled))
 	storeInit()
 	logInit()
 }

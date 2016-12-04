@@ -32,6 +32,7 @@ func AddClient(name string) (string, error) {
 }
 
 func IsAuthorizedClient(token string) (bool, error) {
+     fmt.Println(enabled)
 	if !enabled {
 		return true, nil
 	}
