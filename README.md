@@ -61,9 +61,21 @@ AS OF 10/28/15
  func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request)
 ```
 
-All secret data should be kept in a file called config.go in the secrets directory
+All secret data should be kept in a file called config.go in the config directory
 
-install the proxy and services packages
+Install Dependencies [First time setup]
+
+```sh
+go get github.com/gorilla/mux
+
+go get github.com/bolt-db/bolt
+
+go install github.com/gorilla/mux
+
+go install github.com/boltdb/bolt
+```
+
+install packages
 
 ```sh
 go install github.com/acm-uiuc/groot/proxy
