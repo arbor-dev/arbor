@@ -71,6 +71,8 @@ go install github.com/acm-uiuc/groot/proxy
 go install github.com/acm-uiuc/groot/config
 
 go install github.com/acm-uiuc/groot/services
+
+go install github.com/acm-uiuc/groot/security
 ```
 
 run the server
