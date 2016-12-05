@@ -1,8 +1,8 @@
 /**
 * Copyright © 2016, ACM@UIUC
 *
-* This file is part of the Groot Project.  
-* 
+* This file is part of the Groot Project.
+*
 * The Groot Project is open source software, released under the University of
 * Illinois/NCSA Open Source License. You should have received a copy of
 * this license in a file with the distribution.
@@ -11,21 +11,22 @@
 package security
 
 import (
+	"fmt"
 	"github.com/acm-uiuc/groot/config"
+	"log"
 	"os"
 	"time"
-	"fmt"
-	"log"
 )
 
 const AccessLogLocation string = config.AccessLogLocation
-var AccessLog *os.File 
 
-func logInit() {
+var AccessLog *os.File
+
+func logOpen() {
 	_, err := os.Stat(AccessLogLocation)
 
 	if os.IsNotExist(err) {
-		AccessLog, err = os.Create(AccessLogLocation) 
+		AccessLog, err = os.Create(AccessLogLocation)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -37,13 +38,13 @@ func logInit() {
 	}
 }
 
-func appendLog(name string, token string) (error) {
+func appendLog(name string, token string) error {
 	t := time.Now().Local()
-	str := fmt.Sprintf("%s %s %s", t.Format("2006-01-02 15:04:05 +0800"), name, token)
+	str := fmt.Sprintf("%s %s %s\n", t.Format("2006-01-02 15:04:05 +0800"), name, token)
 	_, err := (*AccessLog).WriteString(str)
 	err = (*AccessLog).Sync()
 	return err
-} 
+}
 
 func logClose() {
 	(*AccessLog).Close()
