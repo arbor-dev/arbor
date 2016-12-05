@@ -92,3 +92,25 @@ run the server
 ```sh
 go run ./server/*.go
 ```
+compile the service 
+
+```sh
+go build -o groot [PATH TO GROOT]/server
+```
+
+## CLI 
+```sh
+groot [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
+```
+
+-r | --register-client *client_name*
+> registers a client, generates a token
+
+-c | --check-registration *token*
+> checks if a token is valid and returns name of client
+
+-u | --unsecured
+> runs groot without the security layer 
+
+*without args* 
+> runs groot with the security layer
