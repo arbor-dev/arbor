@@ -5,7 +5,7 @@ It is the replacement for liquid which goes defunct 1/1/2016.
 The groot repo itself is an API Gateway written in Fall of 2015
 It provides the following capabilities:
   * Easy registration of services
-  * Universal Authentication for the entire application
+  * Universal Authentication for the entire application - via an external authentication provided (Atlassian crowd)
   * Proxying API calls
   * Managing inter-service communication
 
