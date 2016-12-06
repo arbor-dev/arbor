@@ -5,7 +5,7 @@ It is the replacement for liquid which goes defunct 1/1/2016.
 The groot repo itself is an API Gateway written in Fall of 2015
 It provides the following capabilities:
   * Easy registration of services
-  * Universal Authentication for the entire application
+  * Universal Authentication for the entire application - via an external authentication provided (Atlassian crowd)
   * Proxying API calls
   * Managing inter-service communication
 
@@ -61,9 +61,21 @@ AS OF 10/28/15
  func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request)
 ```
 
-All secret data should be kept in a file called config.go in the secrets directory
+All secret data should be kept in a file called config.go in the config directory
 
-install the proxy and services packages
+Install Dependencies [First time setup]
+
+```sh
+go get github.com/gorilla/mux
+
+go get github.com/bolt-db/bolt
+
+go install github.com/gorilla/mux
+
+go install github.com/boltdb/bolt
+```
+
+install packages
 
 ```sh
 go install github.com/acm-uiuc/groot/proxy
@@ -71,11 +83,34 @@ go install github.com/acm-uiuc/groot/proxy
 go install github.com/acm-uiuc/groot/config
 
 go install github.com/acm-uiuc/groot/services
+
+go install github.com/acm-uiuc/groot/security
 ```
 
 run the server
-(make sure you're on IllinoisNet or on the university VPN before running)
 
 ```sh
 go run ./server/*.go
 ```
+compile the service 
+
+```sh
+go build -o groot [PATH TO GROOT]/server
+```
+
+## CLI 
+```sh
+groot [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
+```
+
+-r | --register-client *client_name*
+> registers a client, generates a token
+
+-c | --check-registration *token*
+> checks if a token is valid and returns name of client
+
+-u | --unsecured
+> runs groot without the security layer 
+
+*without args* 
+> runs groot with the security layer
