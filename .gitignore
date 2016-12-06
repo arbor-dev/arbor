@@ -25,5 +25,6 @@ _testmain.go
 
 *.DS_Store
 
+build
 
 config/config.go
