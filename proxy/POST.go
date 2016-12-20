@@ -115,7 +115,7 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		InvalidGET(w, err)
+		InvalidPOST(w, err)
 		log.Println(err)
 		return
 	}
