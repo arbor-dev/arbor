@@ -94,7 +94,9 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
     client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println(resp.StatusCode)
+		if resp.StatusCode != nil {
+			log.Println(resp.StatusCode)
+		}
 		InvalidPOST(w, err)
 		log.Println(err)
 		return
