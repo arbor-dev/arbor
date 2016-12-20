@@ -45,7 +45,7 @@ var RecruitersRoutes = RouteCollection{
     },
     Route {
     	"DeleteJob",
-    	"DELETE",
+     	"DELETE",
     	"/jobs",
     	DeleteJob,
     },
