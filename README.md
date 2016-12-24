@@ -68,7 +68,7 @@ Install Dependencies [First time setup]
 ```sh
 go get github.com/gorilla/mux
 
-go get github.com/bolt-db/bolt
+go get github.com/boltdb/bolt
 
 go install github.com/gorilla/mux
 
