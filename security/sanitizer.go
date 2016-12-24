@@ -11,14 +11,24 @@
 package security
 
 import (
-	//	"net/http"
-	// "html"
+	//"html"
+	"net/http"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"strings"
 )
 
-//func SanitizeRequest(*r http.Request) {
-
-//}
-
-func RemoveHTML(str string) {
+func SanitizeRequest(r *http.Request) {
+	
+	content, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	fmt.Println("Sanitizer " + string(content));
+	r.Body = ioutil.NopCloser(strings.NewReader(string(content)))
+	r.ContentLength = int64(len(content))	
 
 }
+
+
+
+
+ 

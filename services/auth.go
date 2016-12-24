@@ -11,7 +11,6 @@
 package services
 
 import (
-	"fmt"
 	"github.com/acm-uiuc/groot/proxy"
 	"github.com/acm-uiuc/groot/config"
 	"net/http"
@@ -63,9 +62,6 @@ var AuthRoutes = RouteCollection{
 //Route handler
 // w = writer, r = reader
 func NewSession(w http.ResponseWriter, r *http.Request) {
-	//Auth: THIS API CALL IS A SPECIAL CASE
-	// log.Printf("new session called")
-	fmt.Println(*r)
 	proxy.POST(w, AuthURL+r.URL.String(), AuthFormat, AuthToken, r)
 }
 

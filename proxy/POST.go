@@ -23,6 +23,8 @@ import (
 
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
+	sanitizeRequest(r)
+
 	if !verifyAuthorization(r) {
 		w.WriteHeader(403)
 		log.Println("Unauthorized Access from " + r.RemoteAddr)
@@ -94,7 +96,7 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
     client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		if resp.StatusCode != nil {
+		if resp != nil {
 			log.Println(resp.StatusCode)
 		}
 		InvalidPOST(w, err)

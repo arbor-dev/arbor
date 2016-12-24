@@ -72,3 +72,7 @@ func verifyAuthorization(r *http.Request) bool {
 	}
 	return auth
 }
+
+func sanitizeRequest(r *http.Request) {
+	security.SanitizeRequest(r)
+}
