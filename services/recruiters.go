@@ -11,6 +11,7 @@
 package services
 
 import (
+        "fmt"
 	"net/http"
 	"github.com/acm-uiuc/groot/proxy"
 )
@@ -70,7 +71,7 @@ var RecruitersRoutes = RouteCollection{
     Route {
     	"NewResume",
     	"POST",
-    	"/resume",
+    	"/resumes",
     	NewResume,
     },
     Route {
@@ -147,6 +148,7 @@ func GetUnapprovedResumes(w http.ResponseWriter, r *http.Request) {
 }
 
 func NewResume(w http.ResponseWriter, r *http.Request) {
+        fmt.Println(*r)
 	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
