@@ -104,15 +104,22 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 		return
 	} else if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
         log.Println("ERROR: REQUEST FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode));
+    	InvalidPOST(w, err)
+    	return
     }
+
 	defer resp.Body.Close()
 
 	contents, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Failed to read response")
+	}
+
 	var serverData interface{}
 	err = json.Unmarshal(contents, &serverData)
 	if err != nil {
 		InvalidPOST(w, err)
-		log.Println(err)
+		log.Println("ERROR: Failed to unmarshal json " + string(err.Error()))
 		return
 	}
 

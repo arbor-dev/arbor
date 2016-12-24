@@ -54,9 +54,6 @@ func CheckRegistration(token string) {
 func StartServer() {
 
 	security.Init()
-
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-
 	services.RegisterAPIs()
 	router := NewRouter()
 
@@ -67,8 +64,6 @@ func StartServer() {
 }
 
 func StartUnsecuredServer() {
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-
 	services.RegisterAPIs()
 	router := NewRouter()
 
