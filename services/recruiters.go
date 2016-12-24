@@ -70,7 +70,7 @@ var RecruitersRoutes = RouteCollection{
     Route {
     	"NewResume",
     	"POST",
-    	"/resume",
+    	"/resumes",
     	NewResume,
     },
     Route {
