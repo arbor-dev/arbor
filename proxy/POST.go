@@ -132,7 +132,8 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 	}
 
 	w.Header().Set("Content-Type", JSONHeader)
-	w.WriteHeader(http.StatusCreated)
+	//NOTE: Apparently not needed but add back in if things break
+	//w.WriteHeader(http.StatusCreated)
 }
 
 func xmlPOST(w http.ResponseWriter, url string, data interface{}) {
