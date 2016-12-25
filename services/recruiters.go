@@ -13,7 +13,6 @@ package services
 import (
 	"net/http"
 	"github.com/acm-uiuc/groot/proxy"
-	"github.com/acm-uiuc/groot/security"
 )
 
 //Location
@@ -148,7 +147,6 @@ func GetUnapprovedResumes(w http.ResponseWriter, r *http.Request) {
 }
 
 func NewResume(w http.ResponseWriter, r *http.Request) {
-	security.SanitizeRequest(r)
 	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 

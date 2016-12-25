@@ -112,7 +112,9 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		InvalidPOST(w, err)
 		log.Println("Failed to read response")
+		return
 	}
 
 	var serverData interface{}
@@ -128,6 +130,7 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 		log.Println(err)
 		return
 	}
+
 	w.Header().Set("Content-Type", JSONHeader)
 	w.WriteHeader(http.StatusCreated)
 }
