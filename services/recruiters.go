@@ -32,88 +32,76 @@ var RecruitersRoutes = RouteCollection{
     	GetJobs,
     },
     Route {
-    	"NewJob",
+    	"CreateJob",
     	"POST",
     	"/jobs",
-    	NewJob,
+    	CreateJob,
     },
     Route {
-    	"UpdateJob",
+    	"ApproveJob",
     	"PUT",
-    	"/job/status",
-    	UpdateJob,
+    	"/jobs/{job_id}/approve",
+    	ApproveJob,
     },
     Route {
     	"DeleteJob",
      	"DELETE",
-    	"/jobs",
+    	"/jobs/{job_id}",
     	DeleteJob,
     },
     Route {
     	"RecruiterLogin",
-    	"GET",
+    	"POST",
     	"/recruiters/login",
     	RecruiterLogin,
     },
     Route {
-    	"NewRecruiter",
+    	"CreateRecruiter",
     	"POST",
-    	"/recruiters/new",
-    	NewRecruiter,
+    	"/recruiters",
+    	CreateRecruiter,
     },
     Route {
-    	"GetUnapprovedResumes",
-    	"GET",
-    	"/resumes/unapproved",
-    	GetUnapprovedResumes,
+    	"UpdateRecruiter",
+    	"PUT",
+    	"/recruiters/{recruiter_id}",
+    	UpdateRecruiter,
     },
     Route {
-    	"NewResume",
+    	"ResetRecruiter",
     	"POST",
-    	"/resumes",
-    	NewResume,
+    	"/recruiters/{recruiter_id}/reset_password",
+    	ResetRecruiter,
     },
     Route {
-    	"ApproveResume",
+    	"GetStudents",
+    	"GET",
+    	"/students",
+    	GetStudents,
+    },
+    Route {
+    	"CreateStudent",
+    	"POST",
+    	"/students",
+    	CreateStudent,
+    },
+    Route {
+    	"ApproveStudent",
     	"PUT",
-    	"/resumes/approve",
-    	ApproveResume,
+    	"/students/{netid}/approve",
+    	ApproveStudent,
     },
     Route {
-    	"DeleteResume",
+    	"GetStudent",
+    	"GET",
+    	"/students/{netid}",
+    	GetStudent,
+    },
+    Route {
+    	"DeleteStudent",
     	"DELETE",
-    	"/resumes/approve",
-    	DeleteResume,
-    },
-    Route {
-    	"GetUsers",
-    	"GET",
-    	"/users",
-    	GetUsers,
-   	},
-    Route {
-    	"GetUser",
-    	"GET",
-    	"/users/{netid}",
-    	GetUser,
-    },
-    Route {
-    	"UpdateUser",
-    	"PUT",
-    	"/users/{netid}",
-    	UpdateUser,
-    },
-    Route {
-    	"DeleteUser",
-    	"DELETE",
-    	"/users/{netid}",
-    	DeleteUser,
-    },
-    Route {
-    	"SearchUsers",
-    	"GET",
-    	"/users/search",
-    	SearchUsers,
+    	"/students/{netid}",
+    	DeleteStudent,
     },
 }
 
@@ -122,11 +110,11 @@ func GetJobs(w http.ResponseWriter, r *http.Request) {
 	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
-func NewJob(w http.ResponseWriter, r *http.Request) {
+func CreateJob(w http.ResponseWriter, r *http.Request) {
 	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
-func UpdateJob(w http.ResponseWriter, r *http.Request) {
+func ApproveJob(w http.ResponseWriter, r *http.Request) {
 	proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
@@ -135,45 +123,37 @@ func DeleteJob(w http.ResponseWriter, r *http.Request) {
 }
 
 func RecruiterLogin(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
-}
-
-func NewRecruiter(w http.ResponseWriter, r *http.Request) {
 	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
-func GetUnapprovedResumes(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
-}
-
-func NewResume(w http.ResponseWriter, r *http.Request) {
+func CreateRecruiter(w http.ResponseWriter, r *http.Request) {
 	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
-func ApproveResume(w http.ResponseWriter, r *http.Request) {
+func UpdateRecruiter(w http.ResponseWriter, r *http.Request) {
+	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func ResetRecruiter(w http.ResponseWriter, r *http.Request) {
+	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func CreateStudent(w http.ResponseWriter, r *http.Request) {
+	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func ApproveStudent(w http.ResponseWriter, r *http.Request) {
 	proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
-func DeleteResume(w http.ResponseWriter, r *http.Request) {
+func GetStudents(w http.ResponseWriter, r *http.Request) {
+	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func GetStudent(w http.ResponseWriter, r *http.Request) {
+	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func DeleteStudent(w http.ResponseWriter, r *http.Request) {
 	proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
-}
-
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
-}
-
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
-}
-
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
-}
-
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
-}
-
-func SearchUsers(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
