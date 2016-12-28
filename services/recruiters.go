@@ -13,12 +13,13 @@ package services
 import (
 	"net/http"
 	"github.com/acm-uiuc/groot/proxy"
+	"github.com/acm-uiuc/groot/config"
 )
 
 //Location
 const RecruiterURL string = "http://localhost:4567"
 
-const RecruiterToken string = ""
+const RecruiterToken string = config.RecruiterToken
 
 //Service Data Type
 const RecruiterFormat string = "JSON"
