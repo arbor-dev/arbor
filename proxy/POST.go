@@ -103,9 +103,9 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 		log.Println(err)
 		return
 	} else if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
-        log.Println("ERROR: REQUEST FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode));
-    	InvalidPOST(w, err)
-    	return
+      log.Println("ERROR: SERVICE FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode));
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(resp.StatusCode)
     }
 
 	defer resp.Body.Close()
