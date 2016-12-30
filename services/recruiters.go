@@ -51,6 +51,12 @@ var RecruitersRoutes = RouteCollection{
     	DeleteJob,
     },
     Route {
+    	"GetRecruiters",
+    	"GET",
+    	"/recruiters",
+    	GetRecruiters,
+    },
+    Route {
     	"RecruiterLogin",
     	"POST",
     	"/recruiters/login",
@@ -123,6 +129,10 @@ func DeleteJob(w http.ResponseWriter, r *http.Request) {
 	proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
+func GetRecruiters(w http.ResponseWriter, r *http.Request) {
+	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
 func RecruiterLogin(w http.ResponseWriter, r *http.Request) {
 	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
@@ -132,7 +142,7 @@ func CreateRecruiter(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateRecruiter(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+	proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func ResetRecruiter(w http.ResponseWriter, r *http.Request) {
