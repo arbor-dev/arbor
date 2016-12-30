@@ -56,7 +56,7 @@ var MembersRoutes = RouteCollection{
     Route{
         "ConfirmMember",
         "POST",
-        "/users/paid",
+        "/user/paid",
         ConfirmMember,
     },
 }
