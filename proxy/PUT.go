@@ -67,10 +67,10 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 
 	switch format {
 		case "XML":
-			xmlPUT(w, url, data)
+			xmlPUT(r, w, url, token, data)
 			return
 		case "JSON":
-			jsonPUT(w, url, data)
+			jsonPUT(r, w, url, token, data)
 			return
 		default:
 			InvalidPUT(w, err)
@@ -88,7 +88,7 @@ func InvalidPUT(w http.ResponseWriter, err error) {
 	}
 }
 
-func jsonPUT(w http.ResponseWriter, url string, data interface{}) {
+func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := json.Marshal(data)
 	if err != nil {
 		InvalidPOST(w, err)
@@ -97,6 +97,18 @@ func jsonPUT(w http.ResponseWriter, url string, data interface{}) {
 	}
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", JSONHeader)
+	if token != "" {
+		req.Header.Set("Authorization", "Basic " + token)
+  }
+	netid := r.Header.Get("NETID")
+	if netid != "" {
+		req.Header.Set("Netid", netid)
+	}
+	session_token := r.Header.Get("TOKEN")
+	if session_token != "" {
+		req.Header.Set("Token", session_token)
+	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK  {
@@ -124,7 +136,7 @@ func jsonPUT(w http.ResponseWriter, url string, data interface{}) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func xmlPUT(w http.ResponseWriter, url string, data interface{}) {
+func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := xml.Marshal(data)
 	if err != nil {
 		InvalidPOST(w, err)
@@ -133,6 +145,9 @@ func xmlPUT(w http.ResponseWriter, url string, data interface{}) {
 	}
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", XMLHeader)
+	if token != "" {
+		req.Header.Set("Authorization", "Basic " + token)
+  }
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK  {

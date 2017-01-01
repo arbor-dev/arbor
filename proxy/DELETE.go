@@ -13,6 +13,7 @@ package proxy
 import (
 	"encoding/json"
 	"log"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -25,16 +26,45 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 	}
 
 	req, err := http.NewRequest("DELETE", url, nil)
+	if token != "" {
+		req.Header.Set("Authorization", "Basic " + token)
+  }
+	netid := r.Header.Get("NETID")
+	if netid != "" {
+		req.Header.Set("Netid", netid)
+	}
+	session_token := r.Header.Get("TOKEN")
+	if session_token != "" {
+		req.Header.Set("Token", session_token)
+	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 
-	if resp.StatusCode != http.StatusOK {
+	if err != nil || resp.StatusCode != http.StatusOK {
 		InvalidDELETE(w, err)
 		log.Printf("Failed server %v", err)
 		return
 	}
+	defer resp.Body.Close()
 
+	contents, err := ioutil.ReadAll(resp.Body)
+	var serverData interface{}
+	err = json.Unmarshal(contents, &serverData)
+	if err != nil {
+		InvalidPUT(w, err)
+		log.Printf("Failed decode %v", err)
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(serverData); err != nil {
+		InvalidPUT(w, err)
+		log.Printf("Failed encode %v", err)
+		return
+	}
+	w.Header().Set("Content-Type", JSONHeader)
 	w.WriteHeader(http.StatusOK)
+	
 	origin := r.Header.Get("Origin")
 
 	//TODO: FIGURE OUT ORIGIN RULES
