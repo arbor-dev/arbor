@@ -1,4 +1,5 @@
 package config
 
 const AuthURL string = "SECRET_SERVER"
+const AuthPrefix string = "Basic "
 const RecruiterToken string = "SECRET_RECRUITER_TOKEN"

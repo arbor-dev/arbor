@@ -14,6 +14,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"github.com/acm-uiuc/groot/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -29,15 +30,21 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		return
 	}
 
-    req, err := http.NewRequest("GET", url, nil)
-    if format == "JSON" {
-	    req.Header.Set("Content-Type", JSONHeader)
-	    req.Header.Set("Accept", "application/json")
-    }
-    if token != "" {
-	     req.Header.Set("Authorization", "Basic " + token)
-    }
-    client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if format == "JSON" {
+		req.Header.Set("Content-Type", JSONHeader)
+		req.Header.Set("Accept", "application/json")
+	}
+
+	for k, vs := range r.Header {
+		req.Header[k] = make([]string, len(vs))
+		copy(req.Header[k], vs)
+	}
+	if token != "" {
+		req.Header.Set("Authorization", config.AuthPrefix + token)
+	}
+	
+	client := &http.Client{}
 	res, err := client.Do(req)
 
 	if err != nil  || res.StatusCode != http.StatusOK {

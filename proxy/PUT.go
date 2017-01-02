@@ -15,6 +15,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"github.com/acm-uiuc/groot/config"
 	"io"
 	"io/ioutil"
 	"log"
@@ -96,17 +97,14 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 		return
 	}
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
+	
+	for k, vs := range r.Header {
+		req.Header[k] = make([]string, len(vs))
+		copy(req.Header[k], vs)
+	}
 	req.Header.Set("Content-Type", JSONHeader)
 	if token != "" {
-		req.Header.Set("Authorization", "Basic " + token)
-  }
-	netid := r.Header.Get("NETID")
-	if netid != "" {
-		req.Header.Set("Netid", netid)
-	}
-	session_token := r.Header.Get("TOKEN")
-	if session_token != "" {
-		req.Header.Set("Token", session_token)
+		req.Header.Set("Authorization", config.AuthPrefix + token)
 	}
 
 	client := &http.Client{}
@@ -145,9 +143,15 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 	}
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", XMLHeader)
+
+	for k, vs := range r.Header {
+		req.Header[k] = make([]string, len(vs))
+		copy(req.Header[k], vs)
+	}
 	if token != "" {
-		req.Header.Set("Authorization", "Basic " + token)
-  }
+		req.Header.Set("Authorization", config.AuthPrefix + token)
+	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK  {

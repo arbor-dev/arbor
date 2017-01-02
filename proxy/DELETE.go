@@ -12,8 +12,9 @@ package proxy
 
 import (
 	"encoding/json"
-	"log"
+	"github.com/acm-uiuc/groot/config"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -26,16 +27,13 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 	}
 
 	req, err := http.NewRequest("DELETE", url, nil)
-	if token != "" {
-		req.Header.Set("Authorization", "Basic " + token)
-  }
-	netid := r.Header.Get("NETID")
-	if netid != "" {
-		req.Header.Set("Netid", netid)
+	for k, vs := range r.Header {
+		req.Header[k] = make([]string, len(vs))
+		copy(req.Header[k], vs)
 	}
-	session_token := r.Header.Get("TOKEN")
-	if session_token != "" {
-		req.Header.Set("Token", session_token)
+
+	if token != "" {
+		req.Header.Set("Authorization", config.AuthPrefix + token)
 	}
 
 	client := &http.Client{}
