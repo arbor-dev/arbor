@@ -68,10 +68,10 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 
 	switch format {
 		case "XML":
-			xmlPOST(w, url, data)
+			xmlPOST(r, w, url, token, data)
 			return
 		case "JSON":
-			jsonPOST(w, url, token, data)
+			jsonPOST(r, w, url, token, data)
 			return
 		default:
 			InvalidPOST(w, err)
@@ -80,7 +80,7 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 	}
 }
 
-func jsonPOST(w http.ResponseWriter, url string, token string, data interface{}) {
+func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := json.Marshal(data)
 	if err != nil {
 		log.Println("#1")
@@ -90,10 +90,16 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", JSONHeader)
 	req.Header.Set("Accept", "application/json")
-    if token != "" {
-	     req.Header.Set("Authorization", "Basic " + token)
-    }
-    client := &http.Client{}
+		
+	for k, vs := range r.Header {
+		req.Header[k] = make([]string, len(vs))
+		copy(req.Header[k], vs)
+	}
+	if token != "" {
+		req.Header.Set("Authorization", token)
+	}
+
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		if resp != nil {
@@ -136,7 +142,7 @@ func jsonPOST(w http.ResponseWriter, url string, token string, data interface{})
 	//w.WriteHeader(http.StatusCreated)
 }
 
-func xmlPOST(w http.ResponseWriter, url string, data interface{}) {
+func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := xml.Marshal(data)
 	if err != nil {
 		InvalidPOST(w, err)
@@ -145,6 +151,15 @@ func xmlPOST(w http.ResponseWriter, url string, data interface{}) {
 	}
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", XMLHeader)
+
+	for k, vs := range r.Header {
+		req.Header[k] = make([]string, len(vs))
+		copy(req.Header[k], vs)
+	}
+	if token != "" {
+		req.Header.Set("Authorization", token)
+	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusCreated {

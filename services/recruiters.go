@@ -19,7 +19,7 @@ import (
 //Location
 const RecruiterURL string = "http://localhost:4567"
 
-const RecruiterToken string = config.RecruiterToken
+const RecruiterToken string = config.AuthPrefix + config.RecruiterToken
 
 //Service Data Type
 const RecruiterFormat string = "JSON"
