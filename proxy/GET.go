@@ -14,7 +14,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/acm-uiuc/groot/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -41,7 +40,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		copy(req.Header[k], vs)
 	}
 	if token != "" {
-		req.Header.Set("Authorization", config.AuthPrefix + token)
+		req.Header.Set("Authorization", token)
 	}
 	
 	client := &http.Client{}

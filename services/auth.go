@@ -20,7 +20,7 @@ import (
 const AuthURL string = config.CrowdURL;
 
 //token
-const AuthToken string = config.CrowdToken;
+const AuthToken string = config.AuthPrefix + config.CrowdToken;
 
 //Service Data Type
 const AuthFormat string = "JSON"

@@ -14,7 +14,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
-	"github.com/acm-uiuc/groot/config"
 	"io"
 	"io/ioutil"
 	"log"
@@ -97,7 +96,7 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		copy(req.Header[k], vs)
 	}
 	if token != "" {
-		req.Header.Set("Authorization", config.AuthPrefix + token)
+		req.Header.Set("Authorization", token)
 	}
 
 	client := &http.Client{}
@@ -158,7 +157,7 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 		copy(req.Header[k], vs)
 	}
 	if token != "" {
-		req.Header.Set("Authorization", config.AuthPrefix + token)
+		req.Header.Set("Authorization", token)
 	}
 
 	client := &http.Client{}

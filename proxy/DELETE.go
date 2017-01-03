@@ -12,7 +12,6 @@ package proxy
 
 import (
 	"encoding/json"
-	"github.com/acm-uiuc/groot/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -33,7 +32,7 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 	}
 
 	if token != "" {
-		req.Header.Set("Authorization", config.AuthPrefix + token)
+		req.Header.Set("Authorization", token)
 	}
 
 	client := &http.Client{}
