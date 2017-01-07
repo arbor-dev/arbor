@@ -50,7 +50,7 @@ var MembersRoutes = RouteCollection{
     Route{
         "NewMember",
         "POST",
-        "/newUser",
+        "/users/newUser",
         NewMember,
     },
     Route{
