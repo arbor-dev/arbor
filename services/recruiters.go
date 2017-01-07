@@ -11,9 +11,9 @@
 package services
 
 import (
-	"net/http"
-	"github.com/acm-uiuc/groot/proxy"
-	"github.com/acm-uiuc/groot/config"
+    "net/http"
+    "github.com/acm-uiuc/groot/proxy"
+    "github.com/acm-uiuc/groot/config"
 )
 
 //Location
@@ -27,144 +27,174 @@ const RecruiterFormat string = "JSON"
 //API Interface
 var RecruitersRoutes = RouteCollection{
     Route {
-    	"GetJobs",
-    	"GET",
-    	"/jobs",
-    	GetJobs,
+        "GetJobs",
+        "GET",
+        "/jobs",
+        GetJobs,
     },
     Route {
-    	"CreateJob",
-    	"POST",
-    	"/jobs",
-    	CreateJob,
+        "CreateJob",
+        "POST",
+        "/jobs",
+        CreateJob,
     },
     Route {
-    	"ApproveJob",
-    	"PUT",
-    	"/jobs/{job_id}/approve",
-    	ApproveJob,
+        "ApproveJob",
+        "PUT",
+        "/jobs/{job_id}/approve",
+        ApproveJob,
     },
     Route {
-    	"DeleteJob",
-     	"DELETE",
-    	"/jobs/{job_id}",
-    	DeleteJob,
+        "DeleteJob",
+        "DELETE",
+        "/jobs/{job_id}",
+        DeleteJob,
     },
     Route {
-    	"GetRecruiters",
-    	"GET",
-    	"/recruiters",
-    	GetRecruiters,
+        "GetRecruiters",
+        "GET",
+        "/recruiters",
+        GetRecruiters,
     },
     Route {
-    	"RecruiterLogin",
-    	"POST",
-    	"/recruiters/login",
-    	RecruiterLogin,
+        "RecruiterLogin",
+        "POST",
+        "/recruiters/login",
+        RecruiterLogin,
     },
     Route {
-    	"CreateRecruiter",
-    	"POST",
-    	"/recruiters",
-    	CreateRecruiter,
+        "CreateRecruiter",
+        "POST",
+        "/recruiters",
+        CreateRecruiter,
     },
     Route {
-    	"UpdateRecruiter",
-    	"PUT",
-    	"/recruiters/{recruiter_id}",
-    	UpdateRecruiter,
+        "UpdateRecruiter",
+        "PUT",
+        "/recruiters/{recruiter_id}",
+        UpdateRecruiter,
     },
     Route {
-    	"ResetRecruiter",
-    	"POST",
-    	"/recruiters/{recruiter_id}/reset_password",
-    	ResetRecruiter,
+        "ResetRecruiter",
+        "POST",
+        "/recruiters/reset_password",
+        ResetRecruiter,
     },
     Route {
-    	"GetStudents",
-    	"GET",
-    	"/students",
-    	GetStudents,
+        "RenewRecruiter",
+        "PUT",
+        "/recruiters/{recruiter_id}/renew",
+        RenewRecruiter,
     },
     Route {
-    	"CreateStudent",
-    	"POST",
-    	"/students",
-    	CreateStudent,
+        "DeleteRecruiter",
+        "DELETE",
+        "/recruiters/{recruiter_id}",
+        DeleteRecruiter,
     },
     Route {
-    	"ApproveStudent",
-    	"PUT",
-    	"/students/{netid}/approve",
-    	ApproveStudent,
+        "GetStudents",
+        "GET",
+        "/students",
+        GetStudents,
     },
     Route {
-    	"GetStudent",
-    	"GET",
-    	"/students/{netid}",
-    	GetStudent,
+        "CreateStudent",
+        "POST",
+        "/students",
+        CreateStudent,
     },
     Route {
-    	"DeleteStudent",
-    	"DELETE",
-    	"/students/{netid}",
-    	DeleteStudent,
+        "ApproveStudent",
+        "PUT",
+        "/students/{netid}/approve",
+        ApproveStudent,
+    },
+    Route {
+        "GetStudent",
+        "GET",
+        "/students/{netid}",
+        GetStudent,
+    },
+    Route {
+        "RemindStudents",
+        "POST",
+        "/students/remind",
+        RemindStudents,
+    },
+    Route {
+        "DeleteStudents",
+        "DELETE",
+        "/students/{netid}",
+        DeleteStudents,
     },
 }
 
 //Route handler
 func GetJobs(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func CreateJob(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func ApproveJob(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func DeleteJob(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func GetRecruiters(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func RecruiterLogin(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func CreateRecruiter(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func UpdateRecruiter(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func ResetRecruiter(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func RenewRecruiter(w http.ResponseWriter, r *http.Request) {
+    proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func DeleteRecruiter(w http.ResponseWriter, r *http.Request) {
+    proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func CreateStudent(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func ApproveStudent(w http.ResponseWriter, r *http.Request) {
-	proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.PUT(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func GetStudents(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
 func GetStudent(w http.ResponseWriter, r *http.Request) {
-	proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+    proxy.GET(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
 
-func DeleteStudent(w http.ResponseWriter, r *http.Request) {
-	proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+func RemindStudents(w http.ResponseWriter, r *http.Request) {
+    proxy.POST(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
+}
+
+func DeleteStudents(w http.ResponseWriter, r *http.Request) {
+    proxy.DELETE(w, RecruiterURL+r.URL.String(), RecruiterFormat, RecruiterToken, r)
 }
