@@ -59,6 +59,18 @@ var MemeRoutes = RouteCollection{
         "/memes/unapproved",
         ListUnapprovedMemes,
     },
+    Route{
+        "CastMemeVote",
+        "PUT",
+        "/memes/vote/{meme_id}",
+        CastMemeVote,
+    },
+    Route{
+        "DeleteMemeVote",
+        "DELETE",
+        "/memes/vote/{meme_id}",
+        DeleteMemeVote,
+    },
 }
 
 //Route handler
@@ -84,4 +96,12 @@ func ApproveMeme(w http.ResponseWriter, r *http.Request) {
 
 func ListUnapprovedMemes(w http.ResponseWriter, r *http.Request) {
     proxy.GET(w, MemeURL+r.URL.String(), MemeFormat, "", r)
+}
+
+func CastMemeVote(w http.ResponseWriter, r *http.Request) {
+    proxy.PUT(w, MemeURL+r.URL.String(), MemeFormat, "", r)
+}
+
+func DeleteMemeVote(w http.ResponseWriter, r *http.Request) {
+    proxy.DELETE(w, MemeURL+r.URL.String(), MemeFormat, "", r)
 }
