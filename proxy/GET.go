@@ -47,9 +47,8 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	res, err := client.Do(req)
 
 	if err != nil  || res.StatusCode != http.StatusOK {
-		InvalidGET(w, err)
+		// Log the error, but return the output from the service.
 		log.Println(err)
-		return
 	}
 
 	defer res.Body.Close()

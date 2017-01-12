@@ -109,9 +109,9 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK  {
-		InvalidPUT(w, err)
-		log.Printf("Failed request: %v", err)
-		return
+		log.Println("ERROR: SERVICE FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode));
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(resp.StatusCode)
 	}
 	defer resp.Body.Close()
 
