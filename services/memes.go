@@ -65,6 +65,12 @@ var MemeRoutes = RouteCollection{
         "/memes/{meme_id}/vote",
         DeleteMemeVote,
     },
+    Route{
+        "GetRandomMeme",
+        "GET",
+        "/memes/random",
+        GetRandomMeme,
+    }, 
 }
 
 //Route handler
@@ -94,4 +100,8 @@ func CastMemeVote(w http.ResponseWriter, r *http.Request) {
 
 func DeleteMemeVote(w http.ResponseWriter, r *http.Request) {
     proxy.DELETE(w, MemeURL+r.URL.String(), MemeFormat, "", r)
+}
+
+func GetRandomMeme(w http.ResponseWriter, r *http.Request) {
+    proxy.GET(w, MemeURL+r.URL.String(), MemeFormat, "", r)
 }
