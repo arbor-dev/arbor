@@ -23,6 +23,10 @@ import (
 
 func SanitizeRequest(r *http.Request) {
 
+	if !enabled {
+		return
+	}
+
 	content, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	sanitizedHTML := sanitize.HTML(string(content))
 	r.Body = ioutil.NopCloser(strings.NewReader(sanitizedHTML))
