@@ -11,22 +11,17 @@
 package security
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
-
-	"github.com/kennygrant/sanitize"
 )
 
 func SanitizeRequest(r *http.Request) {
 
 	content, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	fmt.Println("Sanitizer before:" + string(content))
-	fmt.Println(" after " + sanitize.HTML(string(content)))
-	fmt.Println(" alt " + escapeString(string(content)))
-	r.Body = ioutil.NopCloser(strings.NewReader(string(content)))
+	htmlSantizedString := escapeString(string(content))
+	r.Body = ioutil.NopCloser(strings.NewReader(htmlSantizedString))
 	r.ContentLength = int64(len(content))
 
 }
@@ -35,6 +30,7 @@ var htmlEscaper = strings.NewReplacer(
 	`&`, "&amp;",
 	`<`, "&lt;",
 	`>`, "&gt;",
+	`%`, "&#37;",
 )
 
 // EscapeString escapes special characters like "<" to become "&lt;". It
