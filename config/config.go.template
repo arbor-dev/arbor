@@ -1,7 +1,7 @@
 package config
 
 const AuthURL string = "SECRET_SERVER"
-const AuthPrefix string = "Basic "
+const AuthToken string = "Basic TOKEN_HERE"
 const RecruiterToken string = "SECRET_RECRUITER_TOKEN"
 
 const AccessLogLocation string = "log/access.log"
