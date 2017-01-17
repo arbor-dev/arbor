@@ -11,33 +11,21 @@
 package security
 
 import (
+	//"html"
+
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/kennygrant/sanitize"
 )
 
 func SanitizeRequest(r *http.Request) {
 
 	content, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	htmlSantizedString := escapeString(string(content))
-	r.Body = ioutil.NopCloser(strings.NewReader(htmlSantizedString))
-	r.ContentLength = int64(len(content))
+	sanitizedHTML := sanitize.HTML(string(content))
+	r.Body = ioutil.NopCloser(strings.NewReader(sanitizedHTML))
+	r.ContentLength = int64(len(sanitizedHTML))
 
-}
-
-var htmlEscaper = strings.NewReplacer(
-	`&`, "&amp;",
-	`<`, "&lt;",
-	`>`, "&gt;",
-	`%`, "&#37;",
-)
-
-// EscapeString escapes special characters like "<" to become "&lt;". It
-// escapes only five such characters: <, >, &, ' and ".
-// UnescapeString(EscapeString(s)) == s always holds, but the converse isn't
-// always true.
-
-func escapeString(s string) string {
-	return htmlEscaper.Replace(s)
 }
