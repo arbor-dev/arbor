@@ -1,8 +1,8 @@
 /**
 * Copyright © 2016, ACM@UIUC
 *
-* This file is part of the Groot Project.  
-* 
+* This file is part of the Groot Project.
+*
 * The Groot Project is open source software, released under the University of
 * Illinois/NCSA Open Source License. You should have received a copy of
 * this license in a file with the distribution.
@@ -11,16 +11,17 @@
 package services
 
 import (
-	"github.com/acm-uiuc/groot/proxy"
-	"github.com/acm-uiuc/groot/config"
 	"net/http"
+
+	"github.com/acm-uiuc/groot/config"
+	"github.com/acm-uiuc/groot/proxy"
 )
 
 //Location
-const AuthURL string = config.CrowdURL;
+const AuthURL string = config.CrowdURL
 
 //token
-const AuthToken string = config.AuthPrefix + config.CrowdToken;
+const AuthToken string = config.CrowdToken
 
 //Service Data Type
 const AuthFormat string = "JSON"
