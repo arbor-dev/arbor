@@ -1,5 +1,6 @@
 package config
 
+const RecruiterToken string = ""
 const CrowdPrefix = "Basic "
 const CrowdURL string = ""
 const CrowdToken string = ""
