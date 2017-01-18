@@ -1,8 +1,8 @@
 package config
 
-const AuthURL string = "SECRET_SERVER"
-const AuthToken string = "Basic TOKEN_HERE"
-const RecruiterToken string = "SECRET_RECRUITER_TOKEN"
+const CrowdPrefix = "Basic "
+const CrowdURL string = ""
+const CrowdToken string = ""
 
 const AccessLogLocation string = "log/access.log"
 const ClientRegistryLocation string = "clients.db"
