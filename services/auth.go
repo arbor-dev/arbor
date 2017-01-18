@@ -21,7 +21,7 @@ import (
 const AuthURL string = config.CrowdURL
 
 //token
-const AuthToken string = config.CrowdToken
+const AuthToken string = config.CrowdPrefix + config.CrowdToken
 
 //Service Data Type
 const AuthFormat string = "JSON"
