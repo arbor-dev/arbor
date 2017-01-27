@@ -127,7 +127,7 @@ This project is licensed under the University of Illinois/NCSA Open Source Licen
 When contributing new files to this project, preappend the following header to the file as a comment: 
 
 ```
-Copyright © 2016, ACM@UIUC
+Copyright © 2017, ACM@UIUC
 
 This file is part of the Groot Project.  
  
