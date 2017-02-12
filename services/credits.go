@@ -31,7 +31,7 @@ var CreditsRoutes = RouteCollection {
     },
     Route{
         "GetCreditsUser",
-        "POST",
+        "GET",
         "/credits/users/{netid}",
         GetCreditsUser,
     },
@@ -61,7 +61,7 @@ func NewPayment(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetCreditsUser(w http.ResponseWriter, r *http.Request) {
-    proxy.POST(w, CreditsURL+r.URL.String(), CreditsFormat, "", r)
+    proxy.GET(w, CreditsURL+r.URL.String(), CreditsFormat, "", r)
 }
 
 func GetTransaction(w http.ResponseWriter, r *http.Request) {
