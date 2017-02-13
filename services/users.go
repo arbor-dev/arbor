@@ -31,28 +31,28 @@ var UsersRoutes = RouteCollection{
 		GetUsers,
 	},
 	Route{
-		"IsMember",
+		"IsUser",
 		"POST",
-		"/users/{netid}/isMember",
-		IsMember,
+		"/users/{netid}/isUser",
+		IsUser,
 	},
 	Route{
-		"NewMember",
+		"NewUser",
 		"POST",
 		"/users",
-		NewMember,
+		NewUser,
 	},
 	Route{
-		"ConfirmMember",
+		"ConfirmUser",
 		"PUT",
 		"/users/{user_id}/paid",
-		ConfirmMember,
+		ConfirmUser,
 	},
 	Route{
-		"DeleteMember",
+		"DeleteUser",
 		"DELETE",
 		"/users/{user_id}",
-		DeleteMember,
+		DeleteUser,
 	},
 	Route{
 		"UsersLogin",
@@ -73,19 +73,19 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	proxy.GET(w, UsersURL+r.URL.String(), UsersFormat, "", r)
 }
 
-func IsMember(w http.ResponseWriter, r *http.Request) {
+func IsUser(w http.ResponseWriter, r *http.Request) {
 	proxy.POST(w, UsersURL+r.URL.String(), UsersFormat, "", r)
 }
 
-func NewMember(w http.ResponseWriter, r *http.Request) {
+func NewUser(w http.ResponseWriter, r *http.Request) {
 	proxy.POST(w, UsersURL+r.URL.String(), UsersFormat, "", r)
 }
 
-func ConfirmMember(w http.ResponseWriter, r *http.Request) {
+func ConfirmUser(w http.ResponseWriter, r *http.Request) {
 	proxy.PUT(w, UsersURL+r.URL.String(), UsersFormat, "", r)
 }
 
-func DeleteMember(w http.ResponseWriter, r *http.Request) {
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	proxy.DELETE(w, UsersURL+r.URL.String(), UsersFormat, "", r)
 }
 
