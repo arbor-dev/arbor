@@ -42,10 +42,10 @@ var CreditsRoutes = RouteCollection {
         GetCreditsUserMultiple,
     },
     Route{
-        "GetTransaction",
+        "GetTransactions",
         "GET",
-        "/credits/transactions/{id}",
-        GetTransaction,
+        "/credits/transactions",
+        GetTransactions,
     },
     Route{
         "CreateTransaction",
@@ -56,7 +56,7 @@ var CreditsRoutes = RouteCollection {
     Route{
         "DeleteTransaction",
         "DELETE",
-        "/credits/transactions",
+        "/credits/transactions/{id}",
         DeleteTransaction,
     },
 }
@@ -74,7 +74,7 @@ func GetCreditsUserMultiple(w http.ResponseWriter, r *http.Request) {
     proxy.GET(w, CreditsURL+r.URL.String(), CreditsFormat, "", r)
 }
 
-func GetTransaction(w http.ResponseWriter, r *http.Request) {
+func GetTransactions(w http.ResponseWriter, r *http.Request) {
     proxy.GET(w, CreditsURL+r.URL.String(), CreditsFormat, "", r)
 }
 
