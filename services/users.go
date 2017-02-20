@@ -31,10 +31,10 @@ var UsersRoutes = RouteCollection{
 		GetUsers,
 	},
 	Route{
-		"IsUser",
-		"POST",
-		"/users/{netid}/isUser",
-		IsUser,
+		"IsMember",
+		"GET",
+		"/users/{netid}/is_member",
+		IsMember,
 	},
 	Route{
 		"NewUser",
@@ -73,8 +73,8 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	proxy.GET(w, UsersURL+r.URL.String(), UsersFormat, "", r)
 }
 
-func IsUser(w http.ResponseWriter, r *http.Request) {
-	proxy.POST(w, UsersURL+r.URL.String(), UsersFormat, "", r)
+func IsMember(w http.ResponseWriter, r *http.Request) {
+	proxy.GET(w, UsersURL+r.URL.String(), UsersFormat, "", r)
 }
 
 func NewUser(w http.ResponseWriter, r *http.Request) {
