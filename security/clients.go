@@ -16,8 +16,6 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-const clientRegistryLocation string = "clients.db"
-
 var clientRegistryStore *bolt.DB
 
 func AddClient(name string) (string, error) {

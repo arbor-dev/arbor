@@ -20,7 +20,7 @@ import (
 
 func storeOpen() {
 	var err error
-	clientRegistryStore, err = bolt.Open(clientRegistryLocation, 0600, &bolt.Options{Timeout: 1 * time.Second})
+	clientRegistryStore, err = bolt.Open(ClientRegistryLocation, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		log.Fatal(err)
 	}

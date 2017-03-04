@@ -10,13 +10,14 @@
 
 package security
 
-var AccessLogLocation = "log/access.log"
+var AccessLogLocation string = "log/access.log"
+var ClientRegistryLocation string = "clients.db"
 var enabled = false
 
 func Init() {
 	enabled = true
 	storeOpen()
-	logOpen()
+	logOpen(AccessLogLocation)
 }
 
 func Shutdown() {
