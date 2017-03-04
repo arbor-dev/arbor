@@ -1,35 +1,36 @@
 /**
 * Copyright © 2017, ACM@UIUC
 *
-* This file is part of the Groot Project.  
-* 
+* This file is part of the Groot Project.
+*
 * The Groot Project is open source software, released under the University of
 * Illinois/NCSA Open Source License. You should have received a copy of
 * this license in a file with the distribution.
 **/
 
-package main
+package server
 
 import (
-	"os"
-	"log"
 	"fmt"
+	"log"
 	"net/http"
-	"github.com/acm-uiuc/groot/services"
-	"github.com/acm-uiuc/groot/security"
+	"os"
+
+	"github.com/acm-uiuc/arbor/security"
+	"github.com/acm-uiuc/arbor/services"
 )
 
-func main() {
+func Boot(routes RouteCollection) {
 	if len(os.Args) == 3 && (os.Args[1] == "--register-client" || os.Args[1] == "-r") {
 		RegisterClient(os.Args[2])
 	} else if len(os.Args) == 3 && (os.Args[1] == "--check-registration" || os.Args[1] == "-c") {
 		CheckRegistration(os.Args[2])
 	} else if len(os.Args) == 2 && (os.Args[1] == "--unsecured" || os.Args[1] == "-u") {
-		StartUnsecuredServer() 
+		StartUnsecuredServer(routes)
 	} else if len(os.Args) > 1 {
 		fmt.Println("Invalid Command")
 	} else {
-		StartServer()
+		StartServer(routes)
 	}
 }
 
@@ -51,21 +52,19 @@ func CheckRegistration(token string) {
 	defer security.Close()
 }
 
-func StartServer() {
+func StartServer(routes services.RouteCollection) {
 
 	security.Init()
-	services.RegisterAPIs()
-	router := NewRouter()
+	router := NewRouter(routes)
 
-	log.Println("I AM GROOT! [Server is listening on :8000]")
+	log.Println("[INSERT FUNNY TREE JOKE HERE]! [Server is listening on :8000]")
 	log.Fatal(http.ListenAndServe(":8000", router))
 
-	defer security.Close()
+	defer security.Shutdown()
 }
 
-func StartUnsecuredServer() {
-	services.RegisterAPIs()
-	router := NewRouter()
+func StartUnsecuredServer(routes services.RouteCollection) {
+	router := NewRouter(routes)
 
 	log.Println("I AM GROOT! [Server is listening on :8000]")
 	log.Fatal(http.ListenAndServe(":8000", router))

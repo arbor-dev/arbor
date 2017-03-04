@@ -12,21 +12,22 @@ package security
 
 import (
 	"fmt"
-	"github.com/boltdb/bolt"
 	"log"
 	"time"
+
+	"github.com/boltdb/bolt"
 )
 
 func storeOpen() {
 	var err error
-	ClientRegistryStore, err = bolt.Open(ClientRegistryLocation, 0600, &bolt.Options{Timeout: 1 * time.Second})
+	clientRegistryStore, err = bolt.Open(clientRegistryLocation, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func put(k []byte, v []byte) error {
-	err := ClientRegistryStore.Update(func(tx *bolt.Tx) error {
+	err := clientRegistryStore.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte("clients"))
 		if err != nil {
 			return err
@@ -42,7 +43,7 @@ func put(k []byte, v []byte) error {
 
 func get(k []byte) ([]byte, error) {
 	var v []byte
-	err := ClientRegistryStore.View(func(tx *bolt.Tx) error {
+	err := clientRegistryStore.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("clients"))
 		if b == nil {
 			return fmt.Errorf("Bucket client not found")
@@ -54,5 +55,5 @@ func get(k []byte) ([]byte, error) {
 }
 
 func storeClose() {
-	ClientRegistryStore.Close()
+	clientRegistryStore.Close()
 }

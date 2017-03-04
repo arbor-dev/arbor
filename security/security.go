@@ -10,6 +10,7 @@
 
 package security
 
+var AccessLogLocation = "log/access.log"
 var enabled = false
 
 func Init() {
@@ -18,7 +19,7 @@ func Init() {
 	logOpen()
 }
 
-func Close() {
+func Shutdown() {
 	storeClose()
 	logClose()
 	enabled = false
