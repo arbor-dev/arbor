@@ -12,27 +12,24 @@ package security
 
 import (
 	"fmt"
-	"github.com/acm-uiuc/groot/config"
 	"log"
 	"os"
 	"time"
 )
 
-const AccessLogLocation string = config.AccessLogLocation
-
 var AccessLog *os.File
 
-func logOpen() {
-	_, err := os.Stat(AccessLogLocation)
+func logOpen(accessLogLocation string) {
+	_, err := os.Stat(accessLogLocation)
 
 	if os.IsNotExist(err) {
-		AccessLog, err = os.Create(AccessLogLocation)
+		AccessLog, err = os.Create(accessLogLocation)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	AccessLog, err = os.OpenFile(AccessLogLocation, os.O_APPEND|os.O_WRONLY, 0600)
+	AccessLog, err = os.OpenFile(accessLogLocation, os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
 		log.Fatal(err)
 	}

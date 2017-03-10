@@ -1,26 +1,26 @@
 /**
 * Copyright © 2017, ACM@UIUC
 *
-* This file is part of the Groot Project.  
-* 
+* This file is part of the Groot Project.
+*
 * The Groot Project is open source software, released under the University of
 * Illinois/NCSA Open Source License. You should have received a copy of
 * this license in a file with the distribution.
 **/
 
-package main
+package server
 
 import (
-	// "log"
 	"net/http"
+
+	"github.com/acm-uiuc/arbor/services"
 	"github.com/gorilla/mux"
-	"github.com/acm-uiuc/groot/services"
 )
 
-func NewRouter() *mux.Router {
+func NewRouter(routes services.RouteCollection) *mux.Router {
 
 	router := mux.NewRouter()
-	for _, route := range services.Routes {
+	for _, route := range routes {
 		var handler http.Handler
 
 		handler = route.HandlerFunc

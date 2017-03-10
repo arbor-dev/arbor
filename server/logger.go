@@ -8,7 +8,7 @@
 * this license in a file with the distribution.
 **/
 
-package main
+package server
 
 import (
 	"log"

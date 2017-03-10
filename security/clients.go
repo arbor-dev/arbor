@@ -12,13 +12,11 @@ package security
 
 import (
 	"fmt"
-	"github.com/acm-uiuc/groot/config"
+
 	"github.com/boltdb/bolt"
 )
 
-const ClientRegistryLocation string = config.ClientRegistryLocation
-
-var ClientRegistryStore *bolt.DB
+var clientRegistryStore *bolt.DB
 
 func AddClient(name string) (string, error) {
 	token, err := generateRandomString(32)

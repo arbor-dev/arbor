@@ -1,20 +1,18 @@
-# GROOT
+# Arbor
 
-Groot is the next generation web application serving the UIUC Chapter of ACM.
-It is the replacement for liquid which goes defunct 1/1/2016.
-The groot repo itself is an API Gateway written in Fall of 2015
+Arbor is a staticly configured framework for creating API Gateways. 
 It provides the following capabilities:
   * Easy registration of services
-  * Universal Authentication for the entire application - via an external authentication provided (Atlassian crowd)
+  * Basic application authorization and request sanitization
   * Proxying API calls
   * Managing inter-service communication
 
-Groot provides a JSON face to any service. When registering as service specify the data encoding and when requesting a resource though groot make the request using json.
+Arbor currently provides a JSON face to any service. When registering as service specify the data encoding and when requesting a resource though groot make the request using json.
 
 
 
 
-## RUNNING GROOT
+## Registering Services
 
 Add the API spec in a new file (ex. todo.go) in the services package
 
@@ -82,13 +80,13 @@ go install github.com/kennygrant/sanitize
 install packages
 
 ```sh
-go install github.com/acm-uiuc/groot/proxy
+go install github.com/acm-uiuc/arbor/proxy
 
-go install github.com/acm-uiuc/groot/config
+go install github.com/acm-uiuc/arbor/services
 
-go install github.com/acm-uiuc/groot/services
+go install github.com/acm-uiuc/arbor/security
 
-go install github.com/acm-uiuc/groot/security
+go install github.com/acm-uiuc/arbor/server
 ```
 
 run the server
