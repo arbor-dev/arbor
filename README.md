@@ -1,7 +1,7 @@
 
 ![alt tag](https://github.com/acm-uiuc/arbor/blob/master/docs/readme.png)
 
-Arbor is a staticly configured framework for creating API Gateways. 
+Arbor is a statically configured framework for creating API Gateways. 
 It provides the following capabilities:
   * Easy registration of services
   * Basic application authorization and request sanitization
