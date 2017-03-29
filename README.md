@@ -1,4 +1,5 @@
-# Arbor
+
+![alt tag](https://github.com/acm-uiuc/arbor/blob/master/docs/readme.png)
 
 Arbor is a staticly configured framework for creating API Gateways. 
 It provides the following capabilities:
