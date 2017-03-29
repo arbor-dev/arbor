@@ -1,8 +1,8 @@
 /**
 * Copyright © 2017, ACM@UIUC
 *
-* This file is part of the Groot Project.  
-* 
+* This file is part of the Groot Project.
+*
 * The Groot Project is open source software, released under the University of
 * Illinois/NCSA Open Source License. You should have received a copy of
 * this license in a file with the distribution.
@@ -42,13 +42,17 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	if token != "" {
 		req.Header.Set("Authorization", token)
 	}
-	
+
 	client := &http.Client{}
 	res, err := client.Do(req)
 
-	if err != nil  || res.StatusCode != http.StatusOK {
+	//log.Println(err)
+
+	if err != nil || res.StatusCode != http.StatusOK {
 		// Log the error, but return the output from the service.
+		InvalidGET(w, err)
 		log.Println(err)
+		return
 	}
 
 	defer res.Body.Close()
@@ -59,31 +63,31 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	//TODO: FIGURE OUT ORIGIN RULES
 	if origin != "" {
 		w.Header().Set("Access-Control-Allow-Origin", origin)
-	    w.Header().Set("Access-Control-Allow-Methods", "GET")
-	    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		w.Header().Set("Access-Control-Allow-Methods", "GET")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	}
 
 	switch {
-		case contains(JSONHeader, res.Header["Content-Type"]):
-			jsonGET(w, url, contents)
-			break
-		case contains(TEXTHeader, res.Header["Content-Type"]):
-			textGET(w, url, contents)
-			break
-		case contains(HTMLHeader, res.Header["Content-Type"]):
-			textGET(w, url, contents)
-			break
-		case contains(XMLHeader, res.Header["Content-Type"]):
-			xmlGET(w, url, contents)
-			break
-		default:
-			if err != nil {
-				InvalidGET(w, err)
-				log.Println(err)
-				return
-			}
-			textGET(w, url, contents)
-			break
+	case contains(JSONHeader, res.Header["Content-Type"]):
+		jsonGET(w, url, contents)
+		break
+	case contains(TEXTHeader, res.Header["Content-Type"]):
+		textGET(w, url, contents)
+		break
+	case contains(HTMLHeader, res.Header["Content-Type"]):
+		textGET(w, url, contents)
+		break
+	case contains(XMLHeader, res.Header["Content-Type"]):
+		xmlGET(w, url, contents)
+		break
+	default:
+		if err != nil {
+			InvalidGET(w, err)
+			log.Println(err)
+			return
+		}
+		textGET(w, url, contents)
+		break
 	}
 }
 

@@ -57,7 +57,7 @@ func StartServer(routes services.RouteCollection) {
 	security.Init()
 	router := NewRouter(routes)
 
-	log.Println("[INSERT FUNNY TREE JOKE HERE]! [Server is listening on :8000]")
+	log.Println("ROOTS BEING PLANTED [Server is listening on :8000]")
 	log.Fatal(http.ListenAndServe(":8000", router))
 
 	defer security.Shutdown()
@@ -66,6 +66,6 @@ func StartServer(routes services.RouteCollection) {
 func StartUnsecuredServer(routes services.RouteCollection) {
 	router := NewRouter(routes)
 
-	log.Println("I AM GROOT! [Server is listening on :8000]")
+	log.Println("ROOTS BEING PLANTED [Server is listening on :8000]")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
