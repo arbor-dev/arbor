@@ -3,6 +3,9 @@ script:
 - go install github.com/gorilla/mux
 - go install github.com/boltdb/bolt
 - go install github.com/kennygrant/sanitize
-- go test
+- go install github.com/acm-uiuc/arbor/server
+- go install github.com/acm-uiuc/arbor/services
+- go install github.com/acm-uiuc/arbor/security
+- go install github.com/acm-uiuc/arbor/proxy
 notifications:
   email: false
