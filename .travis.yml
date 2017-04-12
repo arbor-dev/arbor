@@ -1,0 +1,8 @@
+language: go
+script: 
+- go install github.com/gorilla/mux
+- go install github.com/boltdb/bolt
+- go install github.com/kennygrant/sanitize
+- go test
+notifications:
+  email: false
