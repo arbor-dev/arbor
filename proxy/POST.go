@@ -1,8 +1,8 @@
 /**
 * Copyright © 2017, ACM@UIUC
 *
-* This file is part of the Groot Project.  
-* 
+* This file is part of the Groot Project.
+*
 * The Groot Project is open source software, released under the University of
 * Illinois/NCSA Open Source License. You should have received a copy of
 * this license in a file with the distribution.
@@ -14,10 +14,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"io"
 	"io/ioutil"
 	"log"
-	"errors"
 	"net/http"
 )
 
@@ -62,21 +62,21 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 	//TODO: FIGURE OUT ORIGIN RULES
 	if origin != "" {
 		w.Header().Set("Access-Control-Allow-Origin", origin)
-	    w.Header().Set("Access-Control-Allow-Methods", "POST")
-	    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	}
 
 	switch format {
-		case "XML":
-			xmlPOST(r, w, url, token, data)
-			return
-		case "JSON":
-			jsonPOST(r, w, url, token, data)
-			return
-		default:
-			InvalidPOST(w, err)
-			log.Println("Unsupported Data Encoding")
-			return
+	case "XML":
+		xmlPOST(r, w, url, token, data)
+		return
+	case "JSON":
+		jsonPOST(r, w, url, token, data)
+		return
+	default:
+		InvalidPOST(w, err)
+		log.Println("Unsupported Data Encoding")
+		return
 	}
 }
 
@@ -90,7 +90,7 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
 	req.Header.Set("Content-Type", JSONHeader)
 	req.Header.Set("Accept", "application/json")
-		
+
 	for k, vs := range r.Header {
 		req.Header[k] = make([]string, len(vs))
 		copy(req.Header[k], vs)
@@ -109,10 +109,10 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		log.Println(err)
 		return
 	} else if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
-      log.Println("ERROR: SERVICE FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode));
-			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			w.WriteHeader(resp.StatusCode)
-    }
+		log.Println("ERROR: SERVICE FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode))
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(resp.StatusCode)
+	}
 
 	defer resp.Body.Close()
 
