@@ -10,7 +10,11 @@
 
 package arbor
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/acm-uiuc/arbor/services"
+)
 
 // Route is a struct that defines a route for a microservice
 // Name: Name of the route
@@ -26,4 +30,4 @@ type Route struct {
 
 // RouteCollection is a slice of routes that is used to represent a service (may change name here )
 // Usage: The recomendation is to create a RouteCollection variable for all of you services and for each service create a specific one then in a registration function append all the service collections into the single master collection.
-type RouteCollection []Route
+type RouteCollection []services.Route

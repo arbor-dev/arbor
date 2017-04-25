@@ -13,10 +13,11 @@ package server
 import (
 	"net/http"
 
+	"github.com/acm-uiuc/arbor/services"
 	"github.com/gorilla/mux"
 )
 
-func NewRouter(routes RouteCollection) *mux.Router {
+func NewRouter(routes services.RouteCollection) *mux.Router {
 
 	router := mux.NewRouter()
 	for _, route := range routes {

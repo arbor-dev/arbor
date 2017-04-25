@@ -18,9 +18,11 @@ import (
 
 	"github.com/acm-uiuc/arbor/security"
 	"github.com/acm-uiuc/arbor/server"
+	"github.com/acm-uiuc/arbor/services"
 )
 
 // Boot is a standard server CLI
+// Provide a set of routes to serve and a port to serve on
 // executable [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
 // -r | --register-client client_name
 // 	registers a client, generates a token
@@ -31,17 +33,17 @@ import (
 // without args
 // 	runs groot with the security layer
 // It will start the arbor instance, parsing the command arguments and execute the behavior
-func Boot(routes RouteCollection) {
+func Boot(routes RouteCollection, port uint16) {
 	if len(os.Args) == 3 && (os.Args[1] == "--register-client" || os.Args[1] == "-r") {
 		RegisterClient(os.Args[2])
 	} else if len(os.Args) == 3 && (os.Args[1] == "--check-registration" || os.Args[1] == "-c") {
 		CheckRegistration(os.Args[2])
 	} else if len(os.Args) == 2 && (os.Args[1] == "--unsecured" || os.Args[1] == "-u") {
-		StartUnsecuredServer(routes)
+		StartUnsecuredServer(routes, port)
 	} else if len(os.Args) > 1 {
 		fmt.Println("Invalid Command")
 	} else {
-		StartServer(routes)
+		StartServer(routes, port)
 	}
 }
 
@@ -67,11 +69,11 @@ func CheckRegistration(token string) {
 }
 
 // StartServer starts a secured arbor server (Token required for access)
-// Provide a set of routes to service and a port to serve on
+// Provide a set of routes to serve and a port to serve on
 func StartServer(routes RouteCollection, port uint16) {
 
 	security.Init()
-	router := server.NewRouter(routes)
+	router := server.NewRouter(services.RouteCollection(routes))
 
 	log.Println("ROOTS BEING PLANTED [Server is listening on :" + fmt.Sprintf("%d", port) + "]")
 	log.Fatal(http.ListenAndServe(":"+fmt.Sprintf("%d", port), router))
@@ -80,9 +82,9 @@ func StartServer(routes RouteCollection, port uint16) {
 }
 
 // StartUnsecuredServer starts an unsecured arbor server (Token required for access)
-// Provide a set of routes to service and a port to serve on
+// Provide a set of routes to server and a port to serve on
 func StartUnsecuredServer(routes RouteCollection, port uint16) {
-	router := server.NewRouter(routes)
+	router := server.NewRouter(services.RouteCollection(routes))
 
 	log.Println("ROOTS BEING PLANTED [Server is listening on :" + fmt.Sprintf("%d", port) + "]")
 	log.Fatal(http.ListenAndServe(":"+fmt.Sprintf("%d", port), router))

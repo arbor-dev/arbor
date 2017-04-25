@@ -8,7 +8,7 @@
 * this license in a file with the distribution.
 **/
 
-package arbor
+package server
 
 import (
 	"log"
