@@ -8,7 +8,7 @@
 * this license in a file with the distribution.
 **/
 
-package arbor
+package server
 
 import (
 	"net/http"
@@ -24,7 +24,7 @@ func NewRouter(routes RouteCollection) *mux.Router {
 
 		handler = route.HandlerFunc
 		//Log request
-		handler = Logger(handler, route.Name)
+		handler = logger(handler, route.Name)
 
 		router.
 			Methods(route.Method).
