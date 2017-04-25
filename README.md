@@ -63,32 +63,12 @@ AS OF 10/28/15
 
 All secret data should be kept in a file called config.go in the config directory
 
-Install Dependencies [First time setup]
-
+### Install 
 ```sh
-go get github.com/gorilla/mux
-
-go get github.com/boltdb/bolt
-
-go get github.com/kennygrant/sanitize
-
-go install github.com/gorilla/mux
-
-go install github.com/boltdb/bolt
-
-go install github.com/kennygrant/sanitize
+go get -u github.com/acm-uiuc/arbor/...
 ```
 
-install packages
 
-```sh
-go install github.com/acm-uiuc/arbor/proxy
-
-go install github.com/acm-uiuc/arbor/services
-
-go install github.com/acm-uiuc/arbor/security
-
-go install github.com/acm-uiuc/arbor/server
 ```
 
 run the server
