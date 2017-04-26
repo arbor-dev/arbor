@@ -18,7 +18,6 @@ import (
 
 	"github.com/acm-uiuc/arbor/security"
 	"github.com/acm-uiuc/arbor/server"
-	"github.com/acm-uiuc/arbor/services"
 )
 
 // Boot is a standard server CLI
@@ -73,7 +72,7 @@ func CheckRegistration(token string) {
 func StartServer(routes RouteCollection, port uint16) {
 
 	security.Init()
-	router := server.NewRouter(services.RouteCollection(routes))
+	router := server.NewRouter(routes.toServiceRoutes())
 
 	log.Println("ROOTS BEING PLANTED [Server is listening on :" + fmt.Sprintf("%d", port) + "]")
 	log.Fatal(http.ListenAndServe(":"+fmt.Sprintf("%d", port), router))
@@ -84,7 +83,7 @@ func StartServer(routes RouteCollection, port uint16) {
 // StartUnsecuredServer starts an unsecured arbor server (Token required for access)
 // Provide a set of routes to server and a port to serve on
 func StartUnsecuredServer(routes RouteCollection, port uint16) {
-	router := server.NewRouter(services.RouteCollection(routes))
+	router := server.NewRouter(routes.toServiceRoutes())
 
 	log.Println("ROOTS BEING PLANTED [Server is listening on :" + fmt.Sprintf("%d", port) + "]")
 	log.Fatal(http.ListenAndServe(":"+fmt.Sprintf("%d", port), router))
