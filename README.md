@@ -10,7 +10,7 @@ It provides the following capabilities:
   * Proxying API calls
   * Managing inter-service communication
 
-Arbor currently provides a JSON face to any service. When registering as service specify the data encoding and when requesting a resource though groot make the request using json.
+Arbor supports JSON APIs with support for others coming soon. When registering as service specify the data encoding and when requesting a resource though groot make the request using json.
 
 
 
