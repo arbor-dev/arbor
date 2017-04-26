@@ -24,7 +24,7 @@ import (
 //
 // Provide a set of routes to serve and a port to serve on.
 //
-// 	executable [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
+// Usage: executable [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
 //
 // 	-r | --register-client client_name
 // registers a client, generates a token
