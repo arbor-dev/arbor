@@ -65,11 +65,10 @@ AS OF 10/28/15
 All secret data should be kept in a file called config.go in the config directory
 
 ### Install 
+> Minimum supported version is Go 1.8 
+
 ```sh
 go get -u github.com/acm-uiuc/arbor/...
-```
-
-
 ```
 
 run the server

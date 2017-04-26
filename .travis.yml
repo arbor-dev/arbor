@@ -1,8 +1,17 @@
 language: go
+
+go:
+    - 1.8
+    - 1.8.x
+
+matrix:
+  allow_failures:
+    - go: 1.8.x
+
 script: 
-- go install github.com/gorilla/mux
-- go install github.com/boltdb/bolt
-- go install github.com/kennygrant/sanitize
-- go install github.com/acm-uiuc/arbor
+  - go get -u github.com/golang/dep/...
+  - dep ensure 
+  - go install github.com/acm-uiuc/arbor
+  
 notifications:
   email: false
