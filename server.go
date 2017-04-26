@@ -17,13 +17,14 @@ import (
 	"os"
 
 	"github.com/acm-uiuc/arbor/security"
+	"github.com/acm-uiuc/arbor/server"
 )
 
 // Boot is a standard server CLI
 //
 // Provide a set of routes to serve and a port to serve on.
 //
-// executable [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
+// 	executable [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
 //
 // 	-r | --register-client client_name
 // registers a client, generates a token

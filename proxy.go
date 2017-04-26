@@ -8,13 +8,13 @@ import (
 
 // DELETE provides a proxy DELETE request allowing authorized clients to make DELETE requests of the microservices
 //
-// Pass the http Request from the client and the ResponseWriter it expects
+// Pass the http Request from the client and the ResponseWriter it expects.
 //
-// Pass the target url of the backend service (not the url the client called)
+// Pass the target url of the backend service (not the url the client called).
 //
-// Pass the format of the service
+// Pass the format of the service.
 //
-// Pass a authorization token (optional)
+// Pass a authorization token (optional).
 //
 // Will call the service and return the result to the client.
 func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
@@ -23,13 +23,13 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 
 // GET provides a proxy GET request allowing authorized clients to make GET requests of the microservices
 //
-// Pass the http Request from the client and the ResponseWriter it expects
+// Pass the http Request from the client and the ResponseWriter it expects.
 //
-// Pass the target url of the backend service (not the url the client called)
+// Pass the target url of the backend service (not the url the client called).
 //
-// Pass the format of the service
+// Pass the format of the service.
 //
-// Pass a authorization token (optional)
+// Pass a authorization token (optional).
 //
 // Will call the service and return the result to the client.
 func GET(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
@@ -38,13 +38,13 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 
 // PATCH provides a proxy PATCH request allowing authorized clients to make PATHC requests of the microservices
 //
-// Pass the http Request from the client and the ResponseWriter it expects
+// Pass the http Request from the client and the ResponseWriter it expects.
 //
-// Pass the target url of the backend service (not the url the client called)
+// Pass the target url of the backend service (not the url the client called).
 //
-// Pass the format of the service
+// Pass the format of the service.
 //
-// Pass a authorization token (optional)
+// Pass a authorization token (optional).
 //
 // Will call the service and return the result to the client.
 func PATCH(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
@@ -53,13 +53,13 @@ func PATCH(w http.ResponseWriter, url string, format string, token string, r *ht
 
 // POST provides a proxy POST request allowing authorized clients to make POST requests of the microservices
 //
-// Pass the http Request from the client and the ResponseWriter it expects
+// Pass the http Request from the client and the ResponseWriter it expects.
 //
-// Pass the target url of the backend service (not the url the client called)
+// Pass the target url of the backend service (not the url the client called).
 //
-// Pass the format of the service
+// Pass the format of the service.
 //
-// Pass a authorization token (optional)
+// Pass a authorization token (optional).
 //
 // Will call the service and return the result to the client.
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
@@ -68,13 +68,13 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 
 // PUT provides a proxy PUT request allowing authorized clients to make PUT requests of the microservices
 //
-// Pass the http Request from the client and the ResponseWriter it expects
+// Pass the http Request from the client and the ResponseWriter it expects.
 //
-// Pass the target url of the backend service (not the url the client called)
+// Pass the target url of the backend service (not the url the client called).
 //
-// Pass the format of the service
+// Pass the format of the service.
 //
-// Pass a authorization token (optional)
+// Pass a authorization token (optional).
 //
 // Will call the service and return the result to the client.
 func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
