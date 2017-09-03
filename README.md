@@ -2,6 +2,9 @@
 ![alt tag](https://github.com/acm-uiuc/arbor/blob/master/docs/readme.png)
 [![Build Status](https://travis-ci.org/acm-uiuc/arbor.svg?branch=master)](https://travis-ci.org/acm-uiuc/arbor)
 [![GoDoc](https://godoc.org/github.com/acm-uiuc/arbor?status.svg)](https://godoc.org/github.com/acm-uiuc/arbor)
+[![Join the chat at https://acm-uiuc.slack.com/messages/C6XGZD212/](https://img.shields.io/badge/slack-groot-724D71.svg)](https://acm-uiuc.slack.com/messages/C6XGZD212/)
+
+
 
 Arbor is a statically configured framework for creating API Gateways. 
 It provides the following capabilities:
