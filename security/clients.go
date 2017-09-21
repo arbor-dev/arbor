@@ -12,40 +12,38 @@ package security
 
 import (
 	"fmt"
-
-	"github.com/boltdb/bolt"
 )
 
-var clientRegistryStore *bolt.DB
-
+// Add a Authroized API Client to Arbor
+// Will return an API key on successful addition
+// Will return DB error if there is an issue
 func AddClient(name string) (string, error) {
 	token, err := generateRandomString(32)
 	if err != nil {
 		return "", err
 	}
-	err = put([]byte(token), []byte(name))
+	err = clientRegistry.put([]byte(token), []byte(name))
 	if err != nil {
 		return "", err
 	}
 	return token, nil
 }
 
+// Verify if a key provided by a client is vaild
 func IsAuthorizedClient(token string) (bool, error) {
 	if !enabled {
 		return true, nil
 	}
-
-	name, err := get([]byte(token))
+	name, err := clientRegistry.get([]byte(token))
 	if err != nil {
 		return false, err
 	}
-	name_str := string(name)
-	if name_str == "" {
+	nameStr := string(name)
+	if nameStr == "" {
 		return false, fmt.Errorf("Not a valid token")
-	} else {
-		appendLog(name_str, token)
-		return true, nil
 	}
+	accessLog.log(nameStr, token)
+	return true, nil
 }
 
 func RemoveClient(token string) error {

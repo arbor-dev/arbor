@@ -11,49 +11,46 @@
 package security
 
 import (
-	"fmt"
 	"log"
-	"time"
 
-	"github.com/boltdb/bolt"
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
-func storeOpen() {
+type levelDBConnector struct {
+	store *leveldb.DB
+}
+
+func newLevelDBConnector() *levelDBConnector {
+	c := new(levelDBConnector)
+	return c
+}
+
+func (c *levelDBConnector) open(location string) {
 	var err error
-	clientRegistryStore, err = bolt.Open(ClientRegistryLocation, 0600, &bolt.Options{Timeout: 1 * time.Second})
+	c.store, err = leveldb.OpenFile(location, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func put(k []byte, v []byte) error {
-	err := clientRegistryStore.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte("clients"))
-		if err != nil {
-			return err
-		}
-		err = bucket.Put(k, v)
-		if err != nil {
-			return err
-		}
-		return err
-	})
+func (c *levelDBConnector) put(k []byte, v []byte) error {
+	err := c.store.Put(k, v, nil)
 	return err
 }
 
-func get(k []byte) ([]byte, error) {
-	var v []byte
-	err := clientRegistryStore.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("clients"))
-		if b == nil {
-			return fmt.Errorf("Bucket client not found")
-		}
-		v = b.Get(k)
-		return nil
-	})
+func (c *levelDBConnector) get(k []byte) ([]byte, error) {
+	v, err := c.store.Get(k, nil)
 	return v, err
 }
 
-func storeClose() {
-	clientRegistryStore.Close()
+func (c *levelDBConnector) delete(k []byte) error {
+	err := c.store.Delete(k, nil)
+	return err
+}
+
+func (c *levelDBConnector) close() {
+	err := c.store.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

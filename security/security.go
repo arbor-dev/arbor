@@ -10,18 +10,27 @@
 
 package security
 
+//Default location for access log
 var AccessLogLocation string = "log/access.log"
+
+//Default location for client db
 var ClientRegistryLocation string = "clients.db"
+
+var accessLog *accessLogger
+var clientRegistry *levelDBConnector
+
 var enabled = false
 
 func Init() {
 	enabled = true
-	storeOpen()
-	logOpen(AccessLogLocation)
+	clientRegistry = newLevelDBConnector()
+	accessLog = newAccessLogger()
+	clientRegistry.open(ClientRegistryLocation)
+	accessLog.open(AccessLogLocation)
 }
 
 func Shutdown() {
-	storeClose()
-	logClose()
+	clientRegistry.close()
+	accessLog.close()
 	enabled = false
 }
