@@ -12,9 +12,9 @@ package security
 
 import (
 	"fmt"
-	"log"
 	"time"
 
+	"github.com/acm-uiuc/arbor/logger"
 	"github.com/boltdb/bolt"
 )
 
@@ -22,7 +22,7 @@ func storeOpen() {
 	var err error
 	clientRegistryStore, err = bolt.Open(ClientRegistryLocation, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
-		log.Fatal(err)
+		logger.Log(logger.FATAL, err.Error())
 	}
 }
 

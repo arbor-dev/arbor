@@ -12,13 +12,19 @@ package arbor
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
+	"github.com/acm-uiuc/arbor/logger"
 	"github.com/acm-uiuc/arbor/security"
 	"github.com/acm-uiuc/arbor/server"
 )
+
+const help = `Usage: executable [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
+                   -r | --register-client client_name -> registers a client, generates a token
+                   -c | --check-registration token    -> checks if a token is valid and returns name of client
+                   -u | --unsecured                   -> runs arbor without the security layer
+                   without args                       -> runs arbor with the security layer	`
 
 // Boot is a standard server CLI
 //
@@ -33,10 +39,10 @@ import (
 // checks if a token is valid and returns name of client
 //
 // 	-u | --unsecured
-// runs groot without the security layer
+// runs arbor without the security layer
 //
 // 	without args
-// runs groot with the security layer
+// runs arbor with the security layer
 //
 // It will start the arbor instance, parsing the command arguments and execute the behavior.
 func Boot(routes RouteCollection, port uint16) {
@@ -45,9 +51,13 @@ func Boot(routes RouteCollection, port uint16) {
 	} else if len(os.Args) == 3 && (os.Args[1] == "--check-registration" || os.Args[1] == "-c") {
 		CheckRegistration(os.Args[2])
 	} else if len(os.Args) == 2 && (os.Args[1] == "--unsecured" || os.Args[1] == "-u") {
+		logger.Log(logger.WARN, "Starting Arbor in unsecured mode")
 		StartUnsecuredServer(routes, port)
+	} else if len(os.Args) == 2 && (os.Args[1] == "--help" || os.Args[1] == "-h") {
+		fmt.Println(help)
 	} else if len(os.Args) > 1 {
-		fmt.Println("Invalid Command")
+		logger.Log(logger.ERR, "Unknown Command")
+		fmt.Println(help)
 	} else {
 		StartServer(routes, port)
 	}
@@ -63,8 +73,7 @@ func RegisterClient(name string) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("Client " + name + " has been granted authorization token: " + token)
-
+	logger.Log(logger.SPEC, "Client "+name+" has been granted authorization token: "+token)
 	defer security.Shutdown()
 }
 
@@ -83,8 +92,8 @@ func StartServer(routes RouteCollection, port uint16) {
 	security.Init()
 	router := server.NewRouter(routes.toServiceRoutes())
 
-	log.Println("ROOTS BEING PLANTED [Server is listening on :" + fmt.Sprintf("%d", port) + "]")
-	log.Fatal(http.ListenAndServe(":"+fmt.Sprintf("%d", port), router))
+	logger.Log(logger.SPEC, "ROOTS BEING PLANTED [Server is listening on :"+fmt.Sprintf("%d", port)+"]")
+	logger.Log(logger.FATAL, http.ListenAndServe(":"+fmt.Sprintf("%d", port), router).Error())
 
 	defer security.Shutdown()
 }
@@ -95,6 +104,6 @@ func StartServer(routes RouteCollection, port uint16) {
 func StartUnsecuredServer(routes RouteCollection, port uint16) {
 	router := server.NewRouter(routes.toServiceRoutes())
 
-	log.Println("ROOTS BEING PLANTED [Server is listening on :" + fmt.Sprintf("%d", port) + "]")
-	log.Fatal(http.ListenAndServe(":"+fmt.Sprintf("%d", port), router))
+	logger.Log(logger.SPEC, "Roots being planted [Server is listening on :"+fmt.Sprintf("%d", port)+"]")
+	logger.Log(logger.FATAL, http.ListenAndServe(":"+fmt.Sprintf("%d", port), router).Error())
 }

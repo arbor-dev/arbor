@@ -11,23 +11,17 @@
 package server
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/acm-uiuc/arbor/logger"
 )
 
-func logger(inner http.Handler, name string) http.Handler {
+func httpLogger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-
+		logger.Log(logger.INFO, fmt.Sprintf("%s\t%s\t%s\t%s", r.Method, r.RequestURI, name, time.Since(start)))
 		inner.ServeHTTP(w, r)
-
-		log.Printf(
-			"%s\t%s\t%s\t%s",
-			r.Method,
-			r.RequestURI,
-			name,
-			time.Since(start),
-		)
 	})
 }
