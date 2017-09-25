@@ -26,10 +26,10 @@ import (
 //
 // HandlerFunc: The function to handle the request, this basicically should just be the proxy call, but it allows you to specify more specific things.
 type Route struct {
-	Name        string           `json:"Name"`
-	Method      string           `json:"Method"`
-	Pattern     string           `json:"Pattern"`
-	HandlerFunc http.HandlerFunc `json:"Handler"`
+	Name    string           `json:"Name"`
+	Method  string           `json:"Method"`
+	Pattern string           `json:"Pattern"`
+	Handler http.HandlerFunc `json:"Handler"`
 }
 
 // RouteCollection is a slice of routes that is used to represent a service (may change name here)
