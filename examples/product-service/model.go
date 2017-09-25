@@ -19,15 +19,13 @@ func newProductModel() *productModel {
 	return m
 }
 
-func (m *productModel) getProduct(p product) error {
+func (m *productModel) getProduct(p product) (product, error) {
 	for i := 0; i < len(m.products); i++ {
 		if m.products[i].ID == p.ID {
-			p.Name = m.products[i].Name
-			p.Price = m.products[i].Price
-			return nil
+			return m.products[i], nil
 		}
 	}
-	return errors.New("Not Found")
+	return p, errors.New("Not Found")
 }
 
 func (m *productModel) updateProduct(p product) error {
@@ -45,6 +43,7 @@ func (m *productModel) deleteProduct(ID int) error {
 	for i := 0; i < len(m.products); i++ {
 		if m.products[i].ID == ID {
 			m.products = append(m.products[:i], m.products[i+1:]...)
+			return nil
 		}
 	}
 	return errors.New("Not Found")

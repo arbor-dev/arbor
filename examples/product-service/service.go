@@ -26,16 +26,16 @@ func newApp() *app {
 }
 
 func (a *app) run() {
-	fmt.Println("Starting Example Service on Port 8000")
-	log.Fatal(http.ListenAndServe(":8000", a.Router))
+	fmt.Println("Starting Example Product Service on Port 5000")
+	log.Fatal(http.ListenAndServe(":5000", a.Router))
 }
 
 func (a *app) initializeRoutes() {
 	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
 	a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", a.getProduct).Methods("GET")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", a.updateProduct).Methods("PUT")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
+	a.Router.HandleFunc("/products/{id:[0-9]+}", a.getProduct).Methods("GET")
+	a.Router.HandleFunc("/products/{id:[0-9]+}", a.updateProduct).Methods("PUT")
+	a.Router.HandleFunc("/products/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
 }
 
 func (a *app) getProducts(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +72,9 @@ func (a *app) getProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := product{ID: id}
-	if err := a.Model.getProduct(p); err != nil {
+	p, err = a.Model.getProduct(p)
+
+	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Product not found")
 		fmt.Println(err.Error())
 		return
