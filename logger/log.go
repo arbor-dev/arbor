@@ -42,5 +42,17 @@ func Log(sev Sev, msg string) {
 		}
 		return
 	}
-	log.Println(msg)
+	switch sev {
+	case WARN:
+		log.Println("[WARNING]: " + msg)
+	case ERR:
+		log.Println("[ERROR]: " + msg)
+	case SPEC:
+		log.Println("[ARBOR]: " + msg)
+	case FATAL:
+		log.Println("[FATAL]: " + msg)
+		os.Exit(1)
+	default:
+		log.Println("[INFO]: " + msg)
+	}
 }
