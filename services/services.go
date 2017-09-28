@@ -13,10 +13,10 @@ package services
 import "net/http"
 
 type Route struct {
-	Name        string           `json:"Name"`
-	Method      string           `json:"Method"`
-	Pattern     string           `json:"Pattern"`
-	HandlerFunc http.HandlerFunc `json:"Handler"`
+	Name    string           `json:"Name"`
+	Method  string           `json:"Method"`
+	Pattern string           `json:"Pattern"`
+	Handler http.HandlerFunc `json:"Handler"`
 }
 
 type RouteCollection []Route

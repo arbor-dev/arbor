@@ -15,8 +15,9 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/acm-uiuc/arbor/logger"
 )
 
 func GET(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
@@ -25,7 +26,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 
 	if !verifyAuthorization(r) {
 		w.WriteHeader(403)
-		log.Println("Unauthorized Access from " + r.RemoteAddr)
+		logger.Log(logger.WARN, "Attempted unauthorized Access from "+r.RemoteAddr)
 		return
 	}
 
@@ -50,8 +51,8 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 
 	if err != nil || res.StatusCode != http.StatusOK {
 		// Log the error, but return the output from the service.
-		InvalidGET(w, err)
-		log.Println(err)
+		invalidGET(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
@@ -82,8 +83,8 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		break
 	default:
 		if err != nil {
-			InvalidGET(w, err)
-			log.Println(err)
+			invalidGET(w, err)
+			logger.Log(logger.ERR, err.Error())
 			return
 		}
 		textGET(w, url, contents)
@@ -95,16 +96,16 @@ func jsonGET(w http.ResponseWriter, url string, contents []byte) {
 	var data interface{}
 	err := json.Unmarshal(contents, &data)
 	if err != nil {
-		InvalidGET(w, err)
-		log.Println(err)
+		invalidGET(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
 	w.Header().Set("Content-Type", JSONHeader)
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		InvalidGET(w, err)
-		log.Println(err)
+		invalidGET(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 }
@@ -113,16 +114,16 @@ func xmlGET(w http.ResponseWriter, url string, contents []byte) {
 	var data interface{}
 	err := xml.Unmarshal(contents, &data)
 	if err != nil {
-		InvalidGET(w, err)
-		log.Println(err)
+		invalidGET(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
 	w.Header().Set("Content-Type", XMLHeader)
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		InvalidGET(w, err)
-		log.Println(err)
+		invalidGET(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 }
@@ -130,14 +131,14 @@ func xmlGET(w http.ResponseWriter, url string, contents []byte) {
 func textGET(w http.ResponseWriter, url string, contents []byte) {
 	var err error
 	if err != nil {
-		InvalidGET(w, err)
-		log.Println(err)
+		invalidGET(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	fmt.Fprintf(w, "%s\n", string(contents))
 }
 
-func InvalidGET(w http.ResponseWriter, err error) {
+func invalidGET(w http.ResponseWriter, err error) {
 	// If we didn't find it, 404
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusNotFound)

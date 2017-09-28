@@ -1,8 +1,8 @@
 /**
 * Copyright © 2017, ACM@UIUC
 *
-* This file is part of the Groot Project.  
-* 
+* This file is part of the Groot Project.
+*
 * The Groot Project is open source software, released under the University of
 * Illinois/NCSA Open Source License. You should have received a copy of
 * this license in a file with the distribution.
@@ -15,43 +15,45 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/acm-uiuc/arbor/logger"
 )
 
 func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
 	if !verifyAuthorization(r) {
 		w.WriteHeader(403)
-		log.Println("Unauthorized Access from " + r.RemoteAddr)
+		logger.Log(logger.WARN, "Attempted unauthorized Access Attempt from "+r.RemoteAddr)
 		return
 	}
 
 	if format != "XML" && format != "JSON" { //TODO: Support Post form data
-		err := errors.New("ERROR: unsupported data encoding")
-		InvalidPUT(w, err)
-		log.Println(err)
+		err := errors.New("Unsupported data encoding")
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		InvalidPUT(w, err)
-		log.Println(err)
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	if err := r.Body.Close(); err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed Reception:%v", err)
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed Reception:%v", err))
 		return
 	}
 
 	var data interface{}
 	err = json.Unmarshal(content, &data)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
@@ -60,43 +62,43 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 	//TODO: FIGURE OUT ORIGIN RULES
 	if origin != "" {
 		w.Header().Set("Access-Control-Allow-Origin", origin)
-	    w.Header().Set("Access-Control-Allow-Methods", "PUT")
-	    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		w.Header().Set("Access-Control-Allow-Methods", "PUT")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	}
 
-
 	switch format {
-		case "XML":
-			xmlPUT(r, w, url, token, data)
-			return
-		case "JSON":
-			jsonPUT(r, w, url, token, data)
-			return
-		default:
-			InvalidPUT(w, err)
-			log.Println("Unsupported Data Encoding")
-			return
+	case "XML":
+		xmlPUT(r, w, url, token, data)
+		return
+	case "JSON":
+		jsonPUT(r, w, url, token, data)
+		return
+	default:
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, "Unsupported Data Encoding")
+		return
 	}
 }
 
-func InvalidPUT(w http.ResponseWriter, err error) {
+func invalidPUT(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(422) // unprocessable entity
 	data := map[string]interface{}{"Code": 400, "Text": "Unprocessable Entity", "Specfically": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		panic(err)
+		logger.Log(logger.ERR, err.Error())
+		panic(err) //ASK: SHOULD THIS BE HERE?
 	}
 }
 
 func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := json.Marshal(data)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
-	
+
 	for k, vs := range r.Header {
 		req.Header[k] = make([]string, len(vs))
 		copy(req.Header[k], vs)
@@ -108,10 +110,11 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK  {
-		log.Println("ERROR: SERVICE FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode));
+	if err != nil || resp.StatusCode != http.StatusOK {
+		logger.Log(logger.ERR, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(resp.StatusCode)
+		return
 	}
 	defer resp.Body.Close()
 
@@ -119,14 +122,14 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 	var serverData interface{}
 	err = json.Unmarshal(contents, &serverData)
 	if err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed decode %v", err)
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed to decode:%v", err))
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed encode %v", err)
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed to encode:%v", err))
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
@@ -136,8 +139,8 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := xml.Marshal(data)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
@@ -153,9 +156,9 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK  {
-		InvalidPUT(w, err)
-		log.Printf("Failed request: %v", err)
+	if err != nil || resp.StatusCode != http.StatusOK {
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed request:%v", err))
 		return
 	}
 	defer resp.Body.Close()
@@ -164,14 +167,14 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 	var serverData interface{}
 	err = xml.Unmarshal(contents, &serverData)
 	if err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed decode %v", err)
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed decode:%v", err))
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		InvalidPUT(w, err)
-		log.Printf("Failed encode %v", err)
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed encode:%v", err))
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
