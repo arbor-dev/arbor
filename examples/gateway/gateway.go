@@ -1,4 +1,4 @@
-package main
+package gateway
 
 import (
 	"fmt"
@@ -26,24 +26,17 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 //Create the full collection of Routes
-func registerRoutes() arbor.RouteCollection {
+func RegisterRoutes() arbor.RouteCollection {
 	routes = append(routes, productServiceRoutes...)
 	return routes
 }
 
 //Arbor configurations
-func configArbor() {
+func ConfigArbor() {
 	//Location for the Access Log
 	security.AccessLogLocation = "/tmp/arbor_access.log"
 	//Location for the Client Registry
 	security.ClientRegistryLocation = "/tmp/arbor_clients.db"
 	//Access Control for the Proxy
 	proxy.AccessControlPolicy = "*"
-}
-
-func main() {
-	//Configure Arbor
-	configArbor()
-	//Register the Routes in a Collection and Boot Arbor
-	arbor.Boot(registerRoutes(), 8000)
 }

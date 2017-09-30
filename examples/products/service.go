@@ -1,6 +1,4 @@
-// app.go
-
-package main
+package products
 
 import (
 	"encoding/json"
@@ -17,7 +15,7 @@ type app struct {
 	Model  *productModel
 }
 
-func newApp() *app {
+func NewApp() *app {
 	a := new(app)
 	a.Router = mux.NewRouter()
 	a.Model = newProductModel()
@@ -25,7 +23,7 @@ func newApp() *app {
 	return a
 }
 
-func (a *app) run() {
+func (a *app) Run() {
 	fmt.Println("Starting Example Product Service on Port 5000")
 	log.Fatal(http.ListenAndServe(":5000", a.Router))
 }
