@@ -1,12 +1,12 @@
 
 [[dependencies]]
   branch = "master"
-  name = "github.com/boltdb/bolt"
-
-[[dependencies]]
-  branch = "master"
   name = "github.com/gorilla/mux"
 
 [[dependencies]]
   branch = "master"
   name = "github.com/kennygrant/sanitize"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/syndtr/goleveldb"
