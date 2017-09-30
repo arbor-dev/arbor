@@ -13,6 +13,7 @@ package security
 import (
 	"log"
 
+	"github.com/acm-uiuc/arbor/logger"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -29,7 +30,7 @@ func (c *levelDBConnector) open(location string) {
 	var err error
 	c.store, err = leveldb.OpenFile(location, nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Log(logger.FATAL, err.Error())
 	}
 }
 

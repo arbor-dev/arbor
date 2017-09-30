@@ -16,7 +16,7 @@ memo = "b4fb84a24241dc44b52861556a0f4144069b031701244defa9f71e68bcf3d555"
   branch = "master"
   name = "github.com/gorilla/mux"
   packages = ["."]
-  revision = "599cba5e7b6137d46ddf58fb1765f5d928e69604"
+  revision = "3f19343c7d9ce75569b952758bd236af94956061"
 
 [[projects]]
   branch = "master"

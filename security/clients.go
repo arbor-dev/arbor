@@ -38,9 +38,12 @@ func IsAuthorizedClient(token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	nameStr := string(name)
-	if nameStr == "" {
+	namestr := string(name)
+	if namestr == "" {
 		return false, fmt.Errorf("Not a valid token")
+	} else {
+		appendLog(namestr, token)
+		return true, nil
 	}
 	accessLog.log(nameStr, token)
 	return true, nil

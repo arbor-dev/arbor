@@ -19,6 +19,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/acm-uiuc/arbor/logger"
 )
 
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
@@ -27,33 +29,33 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 
 	if !verifyAuthorization(r) {
 		w.WriteHeader(403)
-		log.Println("Unauthorized Access from " + r.RemoteAddr)
+		logger.Log(logger.WARN, "Attempted unauthorized Access from "+r.RemoteAddr)
 		return
 	}
 
 	if format != "XML" && format != "JSON" { //TODO: Support Post form data
 		err := errors.New("ERROR: unsupported data encoding")
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	if err := r.Body.Close(); err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
 	var data interface{}
 	err = json.Unmarshal(content, &data)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
@@ -74,8 +76,8 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 		jsonPOST(r, w, url, token, data)
 		return
 	default:
-		InvalidPOST(w, err)
-		log.Println("Unsupported Data Encoding")
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, "Unsupported Data Encoding")
 		return
 	}
 }
@@ -83,8 +85,7 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := json.Marshal(data)
 	if err != nil {
-		log.Println("#1")
-		log.Println(err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
@@ -105,11 +106,11 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		if resp != nil {
 			log.Println(resp.StatusCode)
 		}
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	} else if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
-		log.Println("ERROR: SERVICE FAILED - SERVICE RETURNED STATUS " + http.StatusText(resp.StatusCode))
+		logger.Log(logger.ERR, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(resp.StatusCode)
 	}
@@ -118,22 +119,22 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println("Failed to read response")
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, "Failed to read response")
 		return
 	}
 
 	var serverData interface{}
 	err = json.Unmarshal(contents, &serverData)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println("ERROR: Failed to unmarshal json " + string(err.Error()))
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, "Failed to unmarshal json "+err.Error())
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
@@ -145,8 +146,8 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
 	content, err := xml.Marshal(data)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
@@ -163,8 +164,8 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusCreated {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	defer resp.Body.Close()
@@ -173,21 +174,21 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 	var serverData interface{}
 	err = xml.Unmarshal(contents, &serverData)
 	if err != nil {
-		InvalidPOST(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		InvalidGET(w, err)
-		log.Println(err)
+		invalidPOST(w, err)
+		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
 	w.WriteHeader(http.StatusCreated)
 }
 
-func InvalidPOST(w http.ResponseWriter, err error) {
+func invalidPOST(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(422) // unprocessable entity
 	data := map[string]interface{}{"Code": 422, "Text": "Unprocessable Entity", "Specfically": err}
