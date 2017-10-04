@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/acm-uiuc/arbor/logger"
 )
@@ -37,7 +38,7 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
 
 	if err != nil || resp.StatusCode != http.StatusOK {

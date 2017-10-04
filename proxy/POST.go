@@ -19,6 +19,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/acm-uiuc/arbor/logger"
 )
@@ -100,7 +101,7 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
 		if resp != nil {
@@ -161,7 +162,7 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusCreated {
 		invalidPOST(w, err)

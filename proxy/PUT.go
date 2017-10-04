@@ -19,6 +19,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/acm-uiuc/arbor/logger"
 )
@@ -108,7 +109,7 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		logger.Log(logger.ERR, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
@@ -154,7 +155,7 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		invalidPUT(w, err)
