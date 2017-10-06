@@ -1,16 +1,16 @@
-memo = "aca187f37e27b0b0e251a197a7e5d948f0141edee69d692550240e4cf6927124"
+memo = "b4fb84a24241dc44b52861556a0f4144069b031701244defa9f71e68bcf3d555"
 
 [[projects]]
   branch = "master"
-  name = "github.com/boltdb/bolt"
+  name = "github.com/golang/snappy"
   packages = ["."]
-  revision = "fa5367d20c994db73282594be0146ab221657943"
+  revision = "553a641470496b2327abcac10b36396bd98e45c9"
 
 [[projects]]
+  branch = "master"
   name = "github.com/gorilla/context"
   packages = ["."]
-  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
-  version = "v1.1"
+  revision = "1c83b3eabd45b6d76072b66b746c20815fb2872d"
 
 [[projects]]
   branch = "master"
@@ -22,16 +22,16 @@ memo = "aca187f37e27b0b0e251a197a7e5d948f0141edee69d692550240e4cf6927124"
   branch = "master"
   name = "github.com/kennygrant/sanitize"
   packages = ["."]
-  revision = "b38f6c674c896b4e27dcd769332a50700450dec9"
+  revision = "6a0bfdde8629a3a3a7418a7eae45c54154692514"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/syndtr/goleveldb"
+  packages = ["leveldb","leveldb/cache","leveldb/comparer","leveldb/errors","leveldb/filter","leveldb/iterator","leveldb/journal","leveldb/memdb","leveldb/opt","leveldb/storage","leveldb/table","leveldb/util"]
+  revision = "b89cc31ef7977104127d34c1bd31ebd1a9db2199"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["html","html/atom"]
-  revision = "0a9397675ba34b2845f758fe3cd68828369c6517"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/sys"
-  packages = ["unix"]
-  revision = "314a259e304ff91bd6985da2a7149bbf91237993"
+  revision = "da118f7b8e5954f39d0d2130ab35d4bf0e3cb344"

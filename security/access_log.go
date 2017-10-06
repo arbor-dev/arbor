@@ -17,32 +17,39 @@ import (
 	"time"
 )
 
-var AccessLog *os.File
+type accessLogger struct {
+	accessLog *os.File
+}
 
-func logOpen(accessLogLocation string) {
+func newAccessLogger() *accessLogger {
+	logger := new(accessLogger)
+	return logger
+}
+
+func (l *accessLogger) open(accessLogLocation string) {
 	_, err := os.Stat(accessLogLocation)
 
 	if os.IsNotExist(err) {
-		AccessLog, err = os.Create(accessLogLocation)
+		l.accessLog, err = os.Create(accessLogLocation)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	AccessLog, err = os.OpenFile(accessLogLocation, os.O_APPEND|os.O_WRONLY, 0600)
+	l.accessLog, err = os.OpenFile(accessLogLocation, os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func appendLog(name string, token string) error {
+func (l *accessLogger) log(name string, token string) error {
 	t := time.Now().Local()
 	str := fmt.Sprintf("%s %s %s\n", t.Format("2006-01-02 15:04:05 +0800"), name, token)
-	_, err := (*AccessLog).WriteString(str)
-	err = (*AccessLog).Sync()
+	_, err := (*l.accessLog).WriteString(str)
+	err = (*l.accessLog).Sync()
 	return err
 }
 
-func logClose() {
-	(*AccessLog).Close()
+func (l *accessLogger) close() {
+	(*l.accessLog).Close()
 }

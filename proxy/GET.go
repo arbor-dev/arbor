@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/acm-uiuc/arbor/logger"
 )
@@ -44,7 +45,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	res, err := client.Do(req)
 
 	//log.Println(err)
