@@ -29,6 +29,10 @@ func Init() {
 	accessLog.open(AccessLogLocation)
 }
 
+func IsEnabled() bool {
+	return enabled
+}
+
 func Shutdown() {
 	clientRegistry.close()
 	accessLog.close()
