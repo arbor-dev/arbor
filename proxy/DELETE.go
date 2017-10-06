@@ -24,7 +24,7 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 
 	if !verifyAuthorization(r) {
 		w.WriteHeader(403)
-		logger.Log(logger.WARN, "Attempted unauthorized Access from "+r.RemoteAddr)
+		logger.Log(logger.WARN, "Attempted unauthorized access from "+r.RemoteAddr)
 		return
 	}
 
@@ -56,27 +56,20 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 	var serverData interface{}
 	err = json.Unmarshal(contents, &serverData)
 	if err != nil {
-		invalidPUT(w, err)
+		invalidDELETE(w, err)
 		logger.Log(logger.ERR, fmt.Sprintf("Failed decode %v", err))
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		invalidPUT(w, err)
+		invalidDELETE(w, err)
 		logger.Log(logger.ERR, fmt.Sprintf("Failed encode %v", err))
 		return
 	}
+
 	w.Header().Set("Content-Type", JSONHeader)
-	w.WriteHeader(http.StatusOK)
-
-	origin := r.Header.Get("Origin")
-
-	//TODO: FIGURE OUT ORIGIN RULES
-	if origin != "" {
-		w.Header().Set("Access-Control-Allow-Origin", origin)
-		w.Header().Set("Access-Control-Allow-Methods", "GET")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	}
+	//IF THINGS START BREAKING UNCOMMENT
+	//w.WriteHeader(http.StatusOK)
 }
 
 func invalidDELETE(w http.ResponseWriter, err error) {

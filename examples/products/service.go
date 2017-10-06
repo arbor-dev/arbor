@@ -10,25 +10,41 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type app struct {
+type App struct {
 	Router *mux.Router
 	Model  *productModel
+	Srv    *http.Server
 }
 
-func NewApp() *app {
-	a := new(app)
+func NewApp() *App {
+	a := new(App)
 	a.Router = mux.NewRouter()
 	a.Model = newProductModel()
 	a.initializeRoutes()
+	a.Srv = &http.Server{Addr: ":5000", Handler: a.Router}
 	return a
 }
 
-func (a *app) Run() {
+func (a *App) Run() {
 	fmt.Println("Starting Example Product Service on Port 5000")
-	log.Fatal(http.ListenAndServe(":5000", a.Router))
+
+	go func() {
+		err := a.Srv.ListenAndServe()
+		if err != nil {
+			if err.Error() == "http: Server closed" {
+				return
+			}
+			log.Fatal(err.Error())
+		}
+	}()
 }
 
-func (a *app) initializeRoutes() {
+func (a *App) Kill() {
+	fmt.Println("Killing example service")
+	a.Srv.Shutdown(nil)
+}
+
+func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
 	a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
 	a.Router.HandleFunc("/products/{id:[0-9]+}", a.getProduct).Methods("GET")
@@ -36,7 +52,7 @@ func (a *app) initializeRoutes() {
 	a.Router.HandleFunc("/products/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
 }
 
-func (a *app) getProducts(w http.ResponseWriter, r *http.Request) {
+func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
 	products, err := a.Model.getProducts()
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -46,7 +62,7 @@ func (a *app) getProducts(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, products)
 }
 
-func (a *app) createProduct(w http.ResponseWriter, r *http.Request) {
+func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	var p product
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&p); err != nil {
@@ -60,7 +76,7 @@ func (a *app) createProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusCreated, p)
 }
 
-func (a *app) getProduct(w http.ResponseWriter, r *http.Request) {
+func (a *App) getProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -80,7 +96,7 @@ func (a *app) getProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, p)
 }
 
-func (a *app) updateProduct(w http.ResponseWriter, r *http.Request) {
+func (a *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -108,7 +124,7 @@ func (a *app) updateProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, p)
 }
 
-func (a *app) deleteProduct(w http.ResponseWriter, r *http.Request) {
+func (a *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
