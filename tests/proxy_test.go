@@ -17,7 +17,7 @@ import (
 	"github.com/acm-uiuc/arbor/server"
 )
 
-const url string = "http://127.0.0.1:8000"
+const url string = "http://0.0.0.0:8000"
 
 type product struct {
 	ID    int     `json:"id"`
