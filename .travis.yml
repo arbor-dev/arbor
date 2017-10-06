@@ -4,14 +4,22 @@ go:
     - 1.8
     - 1.8.x
 
+jobs:
+  include:
+    - stage: build
+      script:  
+        - go get -u github.com/golang/dep/...
+        - dep ensure 
+        - go install github.com/acm-uiuc/arbor
+    - stage: test
+      script:
+        - cd tests
+        - go test -v
+
+
 matrix:
   allow_failures:
     - go: 1.8.x
-
-script: 
-  - go get -u github.com/golang/dep/...
-  - dep ensure 
-  - go install github.com/acm-uiuc/arbor
   
 notifications:
   email: false
