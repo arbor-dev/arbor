@@ -15,8 +15,7 @@ jobs:
         - go install github.com/acm-uiuc/arbor
     - stage: test
       script:
-        - cd tests
-        - go test -v
+        - go test -v github.com/acm-uiuc/arbor/tests
 
 stages:
   - build
