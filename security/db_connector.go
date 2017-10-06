@@ -11,6 +11,7 @@
 package security
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/acm-uiuc/arbor/logger"
@@ -30,6 +31,7 @@ func (c *levelDBConnector) open(location string) {
 	var err error
 	c.store, err = leveldb.OpenFile(location, nil)
 	if err != nil {
+		fmt.Println(err)
 		logger.Log(logger.FATAL, err.Error())
 	}
 }
