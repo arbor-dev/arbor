@@ -14,6 +14,7 @@ import (
 	"github.com/acm-uiuc/arbor"
 	"github.com/acm-uiuc/arbor/examples/gateway"
 	"github.com/acm-uiuc/arbor/examples/products"
+	"github.com/acm-uiuc/arbor/server"
 )
 
 const url string = "http://localhost:8000"
@@ -24,22 +25,29 @@ type product struct {
 	Price float32 `json:"price"`
 }
 
-func startServer() {
-	a := products.NewApp()
-	a.Run()
+type testingServices struct {
+	testGateway *server.ArborServer
+	testService *products.App
 }
 
-func startGateway() {
-	//Configure Arbor
+func newTestingServices() *testingServices {
+	t := new(testingServices)
+	t.testService = products.NewApp()
+	t.testService.Run()
 	gateway.ConfigArbor()
-	//Register the Routes in a Collection and Boot Arbor
-	arbor.Boot(gateway.RegisterRoutes(), 8000)
+	t.testGateway = arbor.Boot(gateway.RegisterRoutes(), 8000)
+	return t
+}
+
+func (t *testingServices) killTestingServices() {
+	t.testGateway.KillServer()
+	t.testService.Kill()
 }
 
 func TestProxyGETEmpty(t *testing.T) {
 	os.Args = []string{"tests", "-u"}
-	go startServer()
-	go startGateway()
+
+	testSrvs := newTestingServices()
 
 	c := http.Client{Timeout: time.Second * 2}
 
@@ -79,12 +87,12 @@ func TestProxyGETEmpty(t *testing.T) {
 			"got", len(p),
 		)
 	}
-}
 
+	testSrvs.killTestingServices()
+}
 func TestProxyPOST(t *testing.T) {
 	os.Args = []string{"tests", "-u"}
-	go startServer()
-	go startGateway()
+	testSrvs := newTestingServices()
 
 	p := new(product)
 	p.ID = 0
@@ -109,32 +117,81 @@ func TestProxyPOST(t *testing.T) {
 
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
-		log.Fatal(readErr)
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
 	}
 
 	serverP := new(product)
 	jsonErr := json.Unmarshal(body, &serverP)
 	if jsonErr != nil {
-		log.Fatal(jsonErr)
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
 	}
 
-	if reflect.DeepEqual(p, serverP) {
+	if !reflect.DeepEqual(p, serverP) {
 		t.Error(
 			"For", serverP,
 			"expected", p,
 			"got", serverP,
 		)
 	}
+
+	testSrvs.killTestingServices()
 }
 
 func TestProxyGET(t *testing.T) {
 	os.Args = []string{"tests", "-u"}
-	go startServer()
-	go startGateway()
+	testSrvs := newTestingServices()
+
+	p := new(product)
+	p.ID = 0
+	p.Name = "Test Product"
+	p.Price = 9.99
+
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(p)
+
+	res, err := http.Post(url+"/product", "application/json; charset=utf-8", b)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		t.Error(
+			"For", res,
+			"expected", http.StatusOK,
+			"got", res.StatusCode,
+		)
+	}
+
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	serverP := new(product)
+	jsonErr := json.Unmarshal(body, &serverP)
+	if jsonErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	if !reflect.DeepEqual(p, serverP) {
+		t.Error(
+			"For", serverP,
+			"expected", p,
+			"got", serverP,
+		)
+	}
 
 	c := http.Client{Timeout: time.Second * 2}
 
-	req, err := http.NewRequest(http.MethodGet, url+"/products", nil)
+	req, err := http.NewRequest(http.MethodGet, url+"/products/0", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -148,30 +205,210 @@ func TestProxyGET(t *testing.T) {
 		log.Fatal("Gateway returned " + http.StatusText(res.StatusCode))
 	}
 
+	body, readErr = ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	serverP = new(product)
+	jsonErr = json.Unmarshal(body, &serverP)
+	if jsonErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	if !reflect.DeepEqual(p, serverP) {
+		t.Error(
+			"For", serverP,
+			"expected", p,
+			"got", serverP,
+		)
+	}
+
+	testSrvs.killTestingServices()
+}
+
+func TestProxyPUT(t *testing.T) {
+	os.Args = []string{"tests", "-u"}
+	testSrvs := newTestingServices()
+
+	p := new(product)
+	p.ID = 0
+	p.Name = "Test Product"
+	p.Price = 9.99
+
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(p)
+
+	res, err := http.Post(url+"/product", "application/json; charset=utf-8", b)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		t.Error(
+			"For", res,
+			"expected", http.StatusOK,
+			"got", res.StatusCode,
+		)
+	}
+
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	serverP := new(product)
+	jsonErr := json.Unmarshal(body, &serverP)
+	if jsonErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	if !reflect.DeepEqual(p, serverP) {
+		t.Error(
+			"For", serverP,
+			"expected", p,
+			"got", serverP,
+		)
+	}
+
+	c := http.Client{Timeout: time.Second * 2}
+
+	p = new(product)
+	p.ID = 0
+	p.Name = "Test Product"
+	p.Price = 10.99
+
+	b = new(bytes.Buffer)
+	json.NewEncoder(b).Encode(p)
+
+	req, err := http.NewRequest(http.MethodPut, url+"/products/0", b)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	res, getErr := c.Do(req)
+	if getErr != nil {
+		log.Fatal(getErr)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		log.Fatal("Gateway returned " + http.StatusText(res.StatusCode))
+	}
+
+	body, readErr = ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	serverP = new(product)
+	jsonErr = json.Unmarshal(body, &serverP)
+	if jsonErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	if !reflect.DeepEqual(p, serverP) {
+		t.Error(
+			"For", serverP,
+			"expected", p,
+			"got", serverP,
+		)
+	}
+
+	testSrvs.killTestingServices()
+
+}
+
+func TestProxyDELETE(t *testing.T) {
+	os.Args = []string{"tests", "-u"}
+	testSrvs := newTestingServices()
+
+	p := new(product)
+	p.ID = 0
+	p.Name = "Test Product"
+	p.Price = 9.99
+
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(p)
+
+	res, err := http.Post(url+"/product", "application/json; charset=utf-8", b)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		t.Error(
+			"For", res,
+			"expected", http.StatusOK,
+			"got", res.StatusCode,
+		)
+	}
+
+	c := http.Client{Timeout: time.Second * 2}
+
+	req, err := http.NewRequest(http.MethodDelete, url+"/products/0", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	res, getErr := c.Do(req)
+	if getErr != nil {
+		log.Fatal(getErr)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		log.Fatal("Gateway returned " + http.StatusText(res.StatusCode))
+	}
+
+	c = http.Client{Timeout: time.Second * 2}
+
+	req, err = http.NewRequest(http.MethodGet, url+"/products", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	res, getErr = c.Do(req)
+	if getErr != nil {
+		log.Fatal(getErr)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		t.Error(
+			"For", res,
+			"expected", http.StatusOK,
+			"got", res.StatusCode,
+		)
+	}
+
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
 		log.Fatal(readErr)
 	}
 
-	p := make([]product, 0)
-	jsonErr := json.Unmarshal(body, &p)
+	srvp := make([]product, 0)
+	jsonErr := json.Unmarshal(body, &srvp)
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
 
-	if len(p) != 0 {
+	if len(srvp) != 0 {
 		t.Error(
-			"For", p,
+			"For", srvp,
 			"expected", 0,
-			"got", len(p),
+			"got", len(srvp),
 		)
 	}
-}
 
-func TestProxyPUT(t *testing.T) {
-
-}
-
-func TestProxyDELETE(t *testing.T) {
-
+	testSrvs.killTestingServices()
 }

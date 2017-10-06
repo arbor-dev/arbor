@@ -12,7 +12,6 @@ package arbor
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/acm-uiuc/arbor/logger"
@@ -45,22 +44,24 @@ const help = `Usage: executable [-r | --register-client client_name] [-c | --che
 // runs arbor with the security layer
 //
 // It will start the arbor instance, parsing the command arguments and execute the behavior.
-func Boot(routes RouteCollection, port uint16) {
+func Boot(routes RouteCollection, port uint16) *server.ArborServer {
+	var srv *server.ArborServer
 	if len(os.Args) == 3 && (os.Args[1] == "--register-client" || os.Args[1] == "-r") {
 		RegisterClient(os.Args[2])
 	} else if len(os.Args) == 3 && (os.Args[1] == "--check-registration" || os.Args[1] == "-c") {
 		CheckRegistration(os.Args[2])
 	} else if len(os.Args) == 2 && (os.Args[1] == "--unsecured" || os.Args[1] == "-u") {
 		logger.Log(logger.WARN, "Starting Arbor in unsecured mode")
-		StartUnsecuredServer(routes, port)
+		srv = server.StartUnsecuredServer(routes.toServiceRoutes(), port)
 	} else if len(os.Args) == 2 && (os.Args[1] == "--help" || os.Args[1] == "-h") {
 		fmt.Println(help)
 	} else if len(os.Args) > 1 {
 		logger.Log(logger.ERR, "Unknown Command")
 		fmt.Println(help)
 	} else {
-		StartServer(routes, port)
+		srv = server.StartSecuredServer(routes.toServiceRoutes(), port)
 	}
+	return srv
 }
 
 // RegisterClient will generate a access token for a client
@@ -82,28 +83,4 @@ func CheckRegistration(token string) {
 	security.Init()
 	fmt.Println(security.IsAuthorizedClient(token))
 	defer security.Shutdown()
-}
-
-// StartServer starts a secured arbor server (Token required for access)
-//
-// Provide a set of routes to serve and a port to serve on.
-func StartServer(routes RouteCollection, port uint16) {
-
-	security.Init()
-	router := server.NewRouter(routes.toServiceRoutes())
-
-	logger.Log(logger.SPEC, "ROOTS BEING PLANTED [Server is listening on :"+fmt.Sprintf("%d", port)+"]")
-	logger.Log(logger.FATAL, http.ListenAndServe(":"+fmt.Sprintf("%d", port), router).Error())
-
-	defer security.Shutdown()
-}
-
-// StartUnsecuredServer starts an unsecured arbor server (Token required for access)
-//
-// Provide a set of routes to server and a port to serve on/
-func StartUnsecuredServer(routes RouteCollection, port uint16) {
-	router := server.NewRouter(routes.toServiceRoutes())
-
-	logger.Log(logger.SPEC, "Roots being planted [Server is listening on :"+fmt.Sprintf("%d", port)+"]")
-	logger.Log(logger.FATAL, http.ListenAndServe(":"+fmt.Sprintf("%d", port), router).Error())
 }
