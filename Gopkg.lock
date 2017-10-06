@@ -7,10 +7,10 @@ memo = "b4fb84a24241dc44b52861556a0f4144069b031701244defa9f71e68bcf3d555"
   revision = "553a641470496b2327abcac10b36396bd98e45c9"
 
 [[projects]]
-  branch = "master"
   name = "github.com/gorilla/context"
   packages = ["."]
-  revision = "1c83b3eabd45b6d76072b66b746c20815fb2872d"
+  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
+  version = "v1.1"
 
 [[projects]]
   branch = "master"
@@ -19,10 +19,10 @@ memo = "b4fb84a24241dc44b52861556a0f4144069b031701244defa9f71e68bcf3d555"
   revision = "3f19343c7d9ce75569b952758bd236af94956061"
 
 [[projects]]
-  branch = "master"
   name = "github.com/kennygrant/sanitize"
   packages = ["."]
-  revision = "6a0bfdde8629a3a3a7418a7eae45c54154692514"
+  revision = "2e6820834a1f36c626bf19a253b7d3cc060e9b8b"
+  version = "v1.2.3"
 
 [[projects]]
   branch = "master"
@@ -34,4 +34,4 @@ memo = "b4fb84a24241dc44b52861556a0f4144069b031701244defa9f71e68bcf3d555"
   branch = "master"
   name = "golang.org/x/net"
   packages = ["html","html/atom"]
-  revision = "da118f7b8e5954f39d0d2130ab35d4bf0e3cb344"
+  revision = "a04bdaca5b32abe1c069418fb7088ae607de5bd0"
