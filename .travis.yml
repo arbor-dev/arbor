@@ -16,6 +16,9 @@ jobs:
         - cd tests
         - go test -v
 
+stages:
+  - build
+  - test
 
 matrix:
   allow_failures:
