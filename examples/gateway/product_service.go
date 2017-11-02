@@ -7,7 +7,7 @@ import (
 )
 
 //URL of the Product Service API
-const productServiceURL string = "http://localhost:5000"
+const productServiceURL string = "http://127.0.0.1:5000"
 
 //Data format of the API
 const productServiceFormat string = "JSON"
