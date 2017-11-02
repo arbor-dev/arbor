@@ -2,7 +2,9 @@ language: go
 
 go:
     - 1.8
-	- 1.8.x
+    - 1.8.x
+    - 1.9
+    - 1.9.x
 
 sudo: false
 
@@ -23,7 +25,8 @@ stages:
 
 matrix:
   allow_failures:
-	- go: 1.8.x
+    - go: 1.8.x
+    - go: 1.9.x
 
 notifications:
   email: false
