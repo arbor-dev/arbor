@@ -18,10 +18,21 @@ import (
 	"github.com/acm-uiuc/arbor/logger"
 )
 
+type StatusResponseWriter struct {
+    http.ResponseWriter
+    status int
+}
+
+func (rec StatusResponseWriter) WriteHeader(code int) {
+    rec.status = code
+    rec.ResponseWriter.WriteHeader(code)
+}
+
 func httpLogger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		logger.Log(logger.INFO, fmt.Sprintf("%s\t%s\t%s\t%s", r.Method, r.RequestURI, name, time.Since(start)))
-		inner.ServeHTTP(w, r)
+        s := StatusResponseWriter{ResponseWriter: w}
+		inner.ServeHTTP(s, r)
+        logger.Log(logger.INFO, fmt.Sprintf("%s\t%s\t%s\t%s\t%s", r.Method, r.RequestURI, name, s.status, time.Since(start)))
 	})
 }
