@@ -47,6 +47,18 @@ func IsAuthorizedClient(token string) (bool, error) {
 	return true, nil
 }
 
-func RemoveClient(token string) error {
-	return nil
+func DeleteClient(name string) error {
+	return clientRegistry.delete([]byte(name))
+}
+
+func ListClients() ([]string, error) {
+	clients, err := clientRegistry.list()
+	if err != nil {
+		return []string{}, err
+	}
+	names := make([]string, len(clients))
+	for i := 0; i < len(clients); i++ {
+		names[i] = string(clients[i])
+	}
+	return names, nil
 }
