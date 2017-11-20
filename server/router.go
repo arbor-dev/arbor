@@ -12,14 +12,23 @@ package server
 
 import (
 	"net/http"
+	"time"
+	"io"
 
 	"github.com/acm-uiuc/arbor/services"
 	"github.com/gorilla/mux"
 )
 
+func notFound(w http.ResponseWriter, r *http.Request) {
+	logRequest(r.Method, r.RequestURI, "Unknown", 404, time.Duration(0))
+	w.WriteHeader(404)
+	io.WriteString(w, "404 Not Found")
+}
+
 func NewRouter(routes services.RouteCollection) *mux.Router {
 
 	router := mux.NewRouter()
+	router.NotFoundHandler = http.HandlerFunc(notFound)
 	for _, route := range routes {
 		var handler http.Handler
 
@@ -34,6 +43,5 @@ func NewRouter(routes services.RouteCollection) *mux.Router {
 			Handler(handler)
 
 	}
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./")))
 	return router
 }
