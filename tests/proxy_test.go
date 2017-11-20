@@ -36,6 +36,7 @@ func newTestingServices() *testingServices {
 	t.testService.Run()
 	gateway.ConfigArbor()
 	t.testGateway = arbor.Boot(gateway.RegisterRoutes(), "0.0.0.0", 8000)
+	time.Sleep(250 * time.Millisecond)
 	return t
 }
 
