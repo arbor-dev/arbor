@@ -35,7 +35,7 @@ func newTestingServices() *testingServices {
 	t.testService = products.NewApp()
 	t.testService.Run()
 	gateway.ConfigArbor()
-	t.testGateway = arbor.Boot(gateway.RegisterRoutes(), 8000)
+	t.testGateway = arbor.Boot(gateway.RegisterRoutes(), "127.0.0.1", 8000)
 	return t
 }
 
