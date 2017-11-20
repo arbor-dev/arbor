@@ -1,6 +1,7 @@
 package products
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -41,7 +42,7 @@ func (a *App) Run() {
 
 func (a *App) Kill() {
 	fmt.Println("Killing example service")
-	a.Srv.Shutdown(nil)
+	a.Srv.Shutdown(context.Background())
 }
 
 func (a *App) initializeRoutes() {

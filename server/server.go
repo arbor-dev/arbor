@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"context"
 
 	"github.com/acm-uiuc/arbor/logger"
 	"github.com/acm-uiuc/arbor/security"
@@ -45,7 +46,7 @@ func (a *ArborServer) StartServer() {
 //KillServer ends the http server
 func (a *ArborServer) KillServer() {
 	logger.Log(logger.SPEC, "Pulling up the roots [Shutting down the server...]")
-	a.server.Shutdown(nil)
+	a.server.Shutdown(context.Background())
 	if security.IsEnabled() {
 		security.Shutdown()
 	}
