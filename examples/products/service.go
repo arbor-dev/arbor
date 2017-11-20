@@ -21,7 +21,7 @@ func NewApp() *App {
 	a.Router = mux.NewRouter()
 	a.Model = newProductModel()
 	a.initializeRoutes()
-	a.Srv = &http.Server{Addr: ":5000", Handler: a.Router}
+	a.Srv = &http.Server{Addr: "0.0.0.0:5000", Handler: a.Router}
 	return a
 }
 

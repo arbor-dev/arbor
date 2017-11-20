@@ -9,5 +9,5 @@ func main() {
 	//Configure Arbor
 	gateway.ConfigArbor()
 	//Register the Routes in a Collection and Boot Arbor
-	arbor.Boot(gateway.RegisterRoutes(), "127.0.0.1", 8000)
+	arbor.Boot(gateway.RegisterRoutes(), "0.0.0.0", 8000)
 }
