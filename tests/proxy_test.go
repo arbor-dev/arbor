@@ -43,6 +43,7 @@ func newTestingServices() *testingServices {
 func (t *testingServices) killTestingServices() {
 	t.testGateway.KillServer()
 	t.testService.Kill()
+	time.Sleep(250 * time.Millisecond)
 }
 
 func TestProxyGETEmpty(t *testing.T) {
