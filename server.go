@@ -51,7 +51,7 @@ const help = `Usage: executable [-r | --register-client client_name] [-c | --che
 // runs arbor with the security layer
 //
 // It will start the arbor instance, parsing the command arguments and execute the behavior.
-func Boot(routes RouteCollection, port uint16) *server.ArborServer {
+func Boot(routes RouteCollection, addr string, port uint16) *server.ArborServer {
 	var srv *server.ArborServer
 	if len(os.Args) == 3 && (os.Args[1] == "--register-client" || os.Args[1] == "-r") {
 		RegisterClient(os.Args[2])
@@ -63,14 +63,14 @@ func Boot(routes RouteCollection, port uint16) *server.ArborServer {
 		ListClients()
 	} else if len(os.Args) == 2 && (os.Args[1] == "--unsecured" || os.Args[1] == "-u") {
 		logger.Log(logger.WARN, "Starting Arbor in unsecured mode")
-		srv = server.StartUnsecuredServer(routes.toServiceRoutes(), port)
+		srv = server.StartUnsecuredServer(routes.toServiceRoutes(), addr, port)
 	} else if len(os.Args) == 2 && (os.Args[1] == "--help" || os.Args[1] == "-h") {
 		fmt.Println(help)
 	} else if len(os.Args) > 1 {
 		logger.Log(logger.ERR, "Unknown Command")
 		fmt.Println(help)
 	} else {
-		srv = server.StartSecuredServer(routes.toServiceRoutes(), port)
+		srv = server.StartSecuredServer(routes.toServiceRoutes(), addr, port)
 	}
 	return srv
 }

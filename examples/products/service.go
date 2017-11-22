@@ -1,6 +1,7 @@
 package products
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -21,7 +22,7 @@ func NewApp() *App {
 	a.Router = mux.NewRouter()
 	a.Model = newProductModel()
 	a.initializeRoutes()
-	a.Srv = &http.Server{Addr: ":5000", Handler: a.Router}
+	a.Srv = &http.Server{Addr: "0.0.0.0:5000", Handler: a.Router}
 	return a
 }
 
@@ -41,7 +42,7 @@ func (a *App) Run() {
 
 func (a *App) Kill() {
 	fmt.Println("Killing example service")
-	a.Srv.Shutdown(nil)
+	a.Srv.Shutdown(context.Background())
 }
 
 func (a *App) initializeRoutes() {

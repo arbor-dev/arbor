@@ -3,15 +3,30 @@ language: go
 go:
     - 1.8
     - 1.8.x
+    - 1.9
+    - 1.9.x
+
+sudo: false
+
+jobs:
+  include:
+    - stage: build
+      script:  
+        - go get -u github.com/golang/dep/...
+        - dep ensure 
+        - go install github.com/acm-uiuc/arbor
+    - stage: test
+      script:
+        - go test -v github.com/acm-uiuc/arbor/tests
+
+stages:
+  - build
+  - test
 
 matrix:
   allow_failures:
     - go: 1.8.x
+    - go: 1.9.x
 
-script: 
-  - go get -u github.com/golang/dep/...
-  - dep ensure 
-  - go install github.com/acm-uiuc/arbor
-  
 notifications:
   email: false
