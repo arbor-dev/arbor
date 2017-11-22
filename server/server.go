@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"context"
 
 	"github.com/acm-uiuc/arbor/logger"
 	"github.com/acm-uiuc/arbor/security"
@@ -18,9 +19,9 @@ type ArborServer struct {
 }
 
 //NewServer creates a new ArborSever
-func NewServer(routes services.RouteCollection, port uint16) *ArborServer {
+func NewServer(routes services.RouteCollection, addr string, port uint16) *ArborServer {
 	a := new(ArborServer)
-	a.addr = fmt.Sprintf(":%d", port)
+	a.addr = fmt.Sprintf("%s:%d", addr, port)
 	a.router = NewRouter(routes)
 	a.server = &http.Server{Addr: a.addr, Handler: a.router}
 	return a
@@ -28,7 +29,7 @@ func NewServer(routes services.RouteCollection, port uint16) *ArborServer {
 
 //StartServer starts the http server in a goroutine to start listening
 func (a *ArborServer) StartServer() {
-	logger.Log(logger.SPEC, "Roots being planted [Server is listening on localhost"+a.addr+"]")
+	logger.Log(logger.SPEC, "Roots being planted [Server is listening on "+a.addr+"]")
 
 	go func() {
 		err := a.server.ListenAndServe()
@@ -45,7 +46,7 @@ func (a *ArborServer) StartServer() {
 //KillServer ends the http server
 func (a *ArborServer) KillServer() {
 	logger.Log(logger.SPEC, "Pulling up the roots [Shutting down the server...]")
-	a.server.Shutdown(nil)
+	a.server.Shutdown(context.Background())
 	if security.IsEnabled() {
 		security.Shutdown()
 	}
@@ -54,8 +55,8 @@ func (a *ArborServer) KillServer() {
 // StartSecuredServer starts a secured arbor server (Token required for access)
 //
 // Provide a set of routes to serve and a port to serve on.
-func StartSecuredServer(routes services.RouteCollection, port uint16) *ArborServer {
-	srv := NewServer(routes, port)
+func StartSecuredServer(routes services.RouteCollection, addr string, port uint16) *ArborServer {
+	srv := NewServer(routes, addr, port)
 	security.Init()
 	srv.StartServer()
 	return srv
@@ -64,8 +65,8 @@ func StartSecuredServer(routes services.RouteCollection, port uint16) *ArborServ
 // StartUnsecuredServer starts an unsecured arbor server (Token required for access)
 //
 // Provide a set of routes to server and a port to serve on/
-func StartUnsecuredServer(routes services.RouteCollection, port uint16) *ArborServer {
-	srv := NewServer(routes, port)
+func StartUnsecuredServer(routes services.RouteCollection, addr string, port uint16) *ArborServer {
+	srv := NewServer(routes, addr, port)
 	srv.StartServer()
 	return srv
 }

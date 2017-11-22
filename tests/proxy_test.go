@@ -17,7 +17,7 @@ import (
 	"github.com/acm-uiuc/arbor/server"
 )
 
-const url string = "http://127.0.0.1:8000"
+const url string = "http://0.0.0.0:8000"
 
 type product struct {
 	ID    int     `json:"id"`
@@ -35,13 +35,15 @@ func newTestingServices() *testingServices {
 	t.testService = products.NewApp()
 	t.testService.Run()
 	gateway.ConfigArbor()
-	t.testGateway = arbor.Boot(gateway.RegisterRoutes(), 8000)
+	t.testGateway = arbor.Boot(gateway.RegisterRoutes(), "0.0.0.0", 8000)
+	time.Sleep(250 * time.Millisecond)
 	return t
 }
 
 func (t *testingServices) killTestingServices() {
 	t.testGateway.KillServer()
 	t.testService.Kill()
+	time.Sleep(250 * time.Millisecond)
 }
 
 func TestProxyGETEmpty(t *testing.T) {
