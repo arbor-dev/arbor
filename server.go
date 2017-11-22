@@ -13,6 +13,7 @@ package arbor
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/acm-uiuc/arbor/logger"
 	"github.com/acm-uiuc/arbor/security"
@@ -40,6 +41,12 @@ const help = `Usage: executable [-r | --register-client client_name] [-c | --che
 // 	-u | --unsecured
 // runs arbor without the security layer
 //
+//	-l | --list-clients
+//  lists all registered client names
+//
+//	-d | --delete-client client_name
+//  deletes the client token with the given name
+//
 // 	without args
 // runs arbor with the security layer
 //
@@ -50,6 +57,10 @@ func Boot(routes RouteCollection, port uint16) *server.ArborServer {
 		RegisterClient(os.Args[2])
 	} else if len(os.Args) == 3 && (os.Args[1] == "--check-registration" || os.Args[1] == "-c") {
 		CheckRegistration(os.Args[2])
+	} else if len(os.Args) == 3 && (os.Args[1] == "--delete-client" || os.Args[1] == "-d") {
+		DeleteClient(os.Args[2])
+	} else if len(os.Args) == 2 && (os.Args[1] == "--list-clients" || os.Args[1] == "-l") {
+		ListClients()
 	} else if len(os.Args) == 2 && (os.Args[1] == "--unsecured" || os.Args[1] == "-u") {
 		logger.Log(logger.WARN, "Starting Arbor in unsecured mode")
 		srv = server.StartUnsecuredServer(routes.toServiceRoutes(), port)
@@ -82,5 +93,27 @@ func RegisterClient(name string) {
 func CheckRegistration(token string) {
 	security.Init()
 	fmt.Println(security.IsAuthorizedClient(token))
+	defer security.Shutdown()
+}
+
+func ListClients() {
+	security.Init()
+	names, _ := security.ListClients()
+	if len(names) == 0 {
+		logger.Log(logger.SPEC, "No registered clients")
+	} else {
+		logger.Log(logger.SPEC, "Known clients: \n- "+strings.Join(names, "\n- "))
+	}
+	defer security.Shutdown()
+}
+
+func DeleteClient(name string) {
+	security.Init()
+	err := security.DeleteClient(name)
+	if err != nil {
+		logger.Log(logger.ERR, err.Error())
+		return
+	}
+	logger.Log(logger.SPEC, "Client "+name+" has been deleted.")
 	defer security.Shutdown()
 }

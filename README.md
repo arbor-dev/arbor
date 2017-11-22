@@ -99,6 +99,12 @@ groot [-r | --register-client client_name] [-c | --check-registration token] [-u
 -u | --unsecured
 > runs groot without the security layer 
 
+-l | --list-clients
+> lists all registered client names
+
+-d | --delete-client *client_name*
+> deletes the client token with the given name
+
 *without args* 
 > runs groot with the security layer
 

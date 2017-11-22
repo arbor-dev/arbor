@@ -13,6 +13,8 @@ package security
 import (
 	"fmt"
 	"log"
+	"reflect"
+	"errors"
 
 	"github.com/acm-uiuc/arbor/logger"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -46,9 +48,43 @@ func (c *levelDBConnector) get(k []byte) ([]byte, error) {
 	return v, err
 }
 
-func (c *levelDBConnector) delete(k []byte) error {
-	err := c.store.Delete(k, nil)
-	return err
+func (c *levelDBConnector) delete(v []byte) error {
+	var err error
+	iter := c.store.NewIterator(nil, nil)
+	found := false
+	for iter.Next() {
+		currVal := iter.Value()
+		if reflect.DeepEqual(currVal, v) {
+			err = c.store.Delete(iter.Key(), nil)
+			if err != nil {
+				fmt.Println(err)
+				logger.Log(logger.FATAL, err.Error())
+			}
+			found = true
+		}
+	}
+	iter.Release()
+	err = iter.Error()
+	if err != nil {
+		return err
+	} else if found == false {
+		return errors.New("No such value")
+	}
+	return nil
+}
+
+func (c *levelDBConnector) list() ([][]byte, error) {
+	iter := c.store.NewIterator(nil, nil)
+	values := make([][]byte, 0)
+	for iter.Next() {
+		v := iter.Value()
+		c := make([]byte, len(v))
+		copy(c, v)
+		values = append(values, c)
+	}
+	iter.Release()
+	err := iter.Error()
+	return values, err
 }
 
 func (c *levelDBConnector) close() {
