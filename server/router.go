@@ -11,16 +11,16 @@
 package server
 
 import (
+	"io"
 	"net/http"
 	"time"
-	"io"
 
 	"github.com/acm-uiuc/arbor/services"
 	"github.com/gorilla/mux"
 )
 
 func notFound(w http.ResponseWriter, r *http.Request) {
-	logRequest(r.Method, r.RequestURI, "Unknown", 404, time.Duration(0))
+	logRequest(r, "Unknown", 404, time.Duration(0))
 	w.WriteHeader(404)
 	io.WriteString(w, "404 Not Found")
 }
