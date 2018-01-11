@@ -29,11 +29,7 @@ func (rec *StatusResponseWriter) WriteHeader(code int) {
 }
 
 func logRequest(r *http.Request, name string, status int, timeSince time.Duration) {
-	if logger.LogLevel == logger.DEBUG && r != nil {
-		logger.LogReq(logger.DEBUG, r)
-	} else {
-		logger.Log(logger.INFO, fmt.Sprintf("%s\t%s\t%s\t%d\t%s", r.Method, r.RequestURI, name, status, timeSince))
-	}
+	logger.Log(logger.INFO, fmt.Sprintf("%s\t%s\t%s\t%d\t%s", r.Method, r.RequestURI, name, status, timeSince))
 }
 
 func httpLogger(inner http.Handler, name string) http.Handler {

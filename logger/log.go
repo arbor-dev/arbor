@@ -33,58 +33,41 @@ var LogLevel = DEBUG
 
 //Log a messaage at a specific severity
 func Log(sev Sev, msg string) {
+	if !(LogLevel >= sev) && !(sev == FATAL) {
+		return
+	}
 	if ColoredOutput {
 		switch sev {
 		case DEBUG:
-			if LogLevel >= DEBUG {
-				log.Println("[DEBUG]: " + msg)
-			}
+			log.Println("[DEBUG]: " + msg)
 		case WARN:
-			if LogLevel >= WARN {
-				log.Println("\x1b[33;1m[WARNING]: " + msg + "\x1b[0m")
-			}
+			log.Println("\x1b[33;1m[WARNING]: " + msg + "\x1b[0m")
 		case ERR:
-			if LogLevel >= ERR {
-				log.Println("\x1b[31;1m[ERROR]: " + msg + "\x1b[0m")
-			}
+			log.Println("\x1b[31;1m[ERROR]: " + msg + "\x1b[0m")
 		case SPEC:
-			if LogLevel >= SPEC {
-				log.Println("\x1b[32;1m[ARBOR]: " + msg + "\x1b[0m")
-			}
+			log.Println("\x1b[32;1m[ARBOR]: " + msg + "\x1b[0m")
 		case FATAL:
 			log.Println("\x1b[31;1m[FATAL]: " + msg + "\x1b[0m")
 			os.Exit(1)
 		default:
-			if LogLevel >= INFO {
-				log.Println("[INFO]: " + msg)
-			}
+			log.Println("[INFO]: " + msg)
 		}
 		return
 	}
 	switch sev {
 	case DEBUG:
-		if LogLevel >= DEBUG {
-			log.Println("[DEBUG]: " + msg)
-		}
+		log.Println("[DEBUG]: " + msg)
 	case WARN:
-		if LogLevel >= WARN {
-			log.Println("[WARNING]: " + msg)
-		}
+		log.Println("[WARNING]: " + msg)
 	case ERR:
-		if LogLevel >= ERR {
-			log.Println("[ERROR]: " + msg)
-		}
+		log.Println("[ERROR]: " + msg)
 	case SPEC:
-		if LogLevel >= SPEC {
-			log.Println("[ARBOR]: " + msg)
-		}
+		log.Println("[ARBOR]: " + msg)
 	case FATAL:
 		log.Println("[FATAL]: " + msg)
 		os.Exit(1)
 	default:
-		if LogLevel >= INFO {
-			log.Println("[INFO]: " + msg)
-		}
+		log.Println("[INFO]: " + msg)
 	}
 }
 

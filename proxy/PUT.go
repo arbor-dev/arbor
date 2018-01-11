@@ -26,9 +26,8 @@ import (
 
 func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
-	if !verifyAuthorization(r) {
-		w.WriteHeader(403)
-		logger.Log(logger.WARN, "Attempted unauthorized Access Attempt from "+r.RemoteAddr)
+	preprocessing_err := requestPreprocessing(w, r)
+	if preprocessing_err != nil {
 		return
 	}
 
