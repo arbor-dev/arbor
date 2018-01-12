@@ -83,6 +83,9 @@ func Log(sev Sev, msg string) {
 
 //LogReq is a helper to log requests
 func LogReq(sev Sev, req *http.Request) {
+	if !(LogLevel >= sev) && !(sev == FATAL) {
+		return
+	}
 	rDump, err := httputil.DumpRequest(req, true)
 	if err != nil {
 		Log(ERR, err.Error())
@@ -92,6 +95,9 @@ func LogReq(sev Sev, req *http.Request) {
 }
 
 func LogResp(sev Sev, resp *http.Response) {
+	if !(LogLevel >= sev) && !(sev == FATAL) {
+		return
+	}
 	rDump, err := httputil.DumpResponse(resp, true)
 	if err != nil {
 		Log(ERR, err.Error())
