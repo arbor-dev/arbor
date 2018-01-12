@@ -88,7 +88,7 @@ func LogReq(sev Sev, req *http.Request) {
 		Log(ERR, err.Error())
 		return
 	}
-	Log(sev, string("Request:\n\n")+string(rDump)+string('\n'))
+	Log(sev, string("Request:\n\n")+string(rDump))
 }
 
 func LogResp(sev Sev, resp *http.Response) {
