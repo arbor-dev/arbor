@@ -36,7 +36,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	proxy.GET(w, url, format, token, r)
 }
 
-// PATCH provides a proxy PATCH request allowing authorized clients to make PATHC requests of the microservices
+// PATCH provides a proxy PATCH request allowing authorized clients to make PATCH requests of the microservices
 //
 // Pass the http Request from the client and the ResponseWriter it expects.
 //

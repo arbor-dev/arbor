@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/acm-uiuc/arbor"
+	"github.com/acm-uiuc/arbor/logger"
 	"github.com/acm-uiuc/arbor/proxy"
 	"github.com/acm-uiuc/arbor/security"
 )
@@ -39,4 +40,6 @@ func ConfigArbor() {
 	security.ClientRegistryLocation = "/tmp/arbor_clients.db"
 	//Access Control for the Proxy
 	proxy.AccessControlPolicy = "*"
+	//Logging Verboseness
+	logger.LogLevel = logger.DEBUG
 }

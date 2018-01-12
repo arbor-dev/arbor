@@ -26,9 +26,8 @@ import (
 
 func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
-	if !verifyAuthorization(r) {
-		w.WriteHeader(403)
-		logger.Log(logger.WARN, "Attempted unauthorized Access Attempt from "+r.RemoteAddr)
+	preprocessing_err := requestPreprocessing(w, r)
+	if preprocessing_err != nil {
 		return
 	}
 
@@ -111,6 +110,8 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil || resp.StatusCode != http.StatusOK {
 		logger.Log(logger.ERR, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -157,6 +158,8 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil || resp.StatusCode != http.StatusOK {
 		invalidPUT(w, err)
 		logger.Log(logger.ERR, fmt.Sprintf("Failed request:%v", err))
