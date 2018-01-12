@@ -135,7 +135,8 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 		return
 	}
 	w.Header().Set("Content-Type", JSONHeader)
-	w.WriteHeader(http.StatusOK)
+	//ADD BACK IF THINGS START BREAKING
+	//w.WriteHeader(http.StatusOK)
 }
 
 func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
