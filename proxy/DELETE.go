@@ -40,6 +40,8 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
 
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil || resp.StatusCode != http.StatusOK {
 		invalidDELETE(w, err)
 		if err == nil {

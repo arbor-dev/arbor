@@ -1,3 +1,13 @@
+/**
+* Copyright © 2017, ACM@UIUC
+*
+* This file is part of the Groot Project.
+*
+* The Groot Project is open source software, released under the University of
+* Illinois/NCSA Open Source License. You should have received a copy of
+* this license in a file with the distribution.
+**/
+
 package logger
 
 import (
@@ -78,5 +88,14 @@ func LogReq(sev Sev, req *http.Request) {
 		Log(ERR, err.Error())
 		return
 	}
-	Log(sev, string(rDump))
+	Log(sev, string("Request:\n\n")+string(rDump)+string('\n'))
+}
+
+func LogResp(sev Sev, resp *http.Response) {
+	rDump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		Log(ERR, err.Error())
+		return
+	}
+	Log(sev, string("Response:\n\n")+string(rDump)+string('\n'))
 }

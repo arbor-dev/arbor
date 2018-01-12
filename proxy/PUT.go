@@ -110,6 +110,8 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil || resp.StatusCode != http.StatusOK {
 		logger.Log(logger.ERR, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -156,6 +158,8 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil || resp.StatusCode != http.StatusOK {
 		invalidPUT(w, err)
 		logger.Log(logger.ERR, fmt.Sprintf("Failed request:%v", err))

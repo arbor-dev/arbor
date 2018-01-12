@@ -45,7 +45,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	res, err := client.Do(req)
 
-	//log.Println(err)
+	logger.LogResp(logger.DEBUG, res)
 
 	if err != nil || res.StatusCode != http.StatusOK {
 		// Log the error, but return the output from the service.
@@ -88,6 +88,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		textGET(w, url, contents)
 		break
 	}
+
 }
 
 func jsonGET(w http.ResponseWriter, url string, contents []byte) {

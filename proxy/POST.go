@@ -100,6 +100,8 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil {
 		if resp != nil {
 			log.Println(resp.StatusCode)
@@ -161,6 +163,8 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil || resp.StatusCode != http.StatusCreated {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
