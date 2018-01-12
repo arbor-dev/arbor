@@ -73,20 +73,6 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 }
 
 func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, contents []byte) {
-	/*var data interface{}
-	err = json.Unmarshal(content, &data)
-	if err != nil {
-		invalidPOST(w, err)
-		logger.Log(logger.ERR, err.Error())
-		return
-	}
-
-	content, err := json.Marshal(data)
-	if err != nil {
-		logger.Log(logger.ERR, err.Error())
-		return
-	}*/
-
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(contents))
 	req.Header.Set("Content-Type", JSONHeader)
 	req.Header.Set("Accept", "application/json")
