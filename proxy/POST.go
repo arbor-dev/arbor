@@ -21,7 +21,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/acm-uiuc/arbor/logger"
+	"github.com/arbor-dev/arbor/logger"
 )
 
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {

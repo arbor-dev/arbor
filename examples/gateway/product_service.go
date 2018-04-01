@@ -3,7 +3,7 @@ package gateway
 import (
 	"net/http"
 
-	"github.com/acm-uiuc/arbor"
+	"github.com/arbor-dev/arbor"
 )
 
 //URL of the Product Service API

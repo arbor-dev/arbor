@@ -11,12 +11,12 @@
 package security
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"reflect"
-	"errors"
 
-	"github.com/acm-uiuc/arbor/logger"
+	"github.com/arbor-dev/arbor/logger"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 

@@ -1,6 +1,6 @@
 # arbor
 --
-    import "github.com/acm-uiuc/arbor"
+    import "github.com/arbor-dev/arbor"
 
 
 ## Usage

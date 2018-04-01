@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/acm-uiuc/arbor/examples/products"
+	"github.com/arbor-dev/arbor/examples/products"
 )
 
 func main() {

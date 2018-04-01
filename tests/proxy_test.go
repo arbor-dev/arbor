@@ -11,10 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/acm-uiuc/arbor"
-	"github.com/acm-uiuc/arbor/examples/gateway"
-	"github.com/acm-uiuc/arbor/examples/products"
-	"github.com/acm-uiuc/arbor/server"
+	"github.com/arbor-dev/arbor/examples/gateway"
+	"github.com/arbor-dev/arbor/examples/products"
+	"github.com/arbor-dev/arbor/server"
 )
 
 const url string = "http://0.0.0.0:8000"
@@ -31,11 +30,12 @@ type testingServices struct {
 }
 
 func newTestingServices() *testingServices {
+	gateway.ConfigArbor()
 	t := new(testingServices)
 	t.testService = products.NewApp()
-	t.testService.Run()
-	gateway.ConfigArbor()
-	t.testGateway = arbor.Boot(gateway.RegisterRoutes(), "0.0.0.0", 8000)
+	t.testGateway = server.NewArborServer(gateway.RegisterRoutes().ToServiceRoutes(), "0.0.0.0", 8000)
+	go t.testService.Run()
+	go t.testGateway.StartServer()
 	time.Sleep(250 * time.Millisecond)
 	return t
 }

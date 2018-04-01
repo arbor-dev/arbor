@@ -3,7 +3,7 @@ package arbor
 import (
 	"net/http"
 
-	"github.com/acm-uiuc/arbor/proxy"
+	"github.com/arbor-dev/arbor/proxy"
 )
 
 // DELETE provides a proxy DELETE request allowing authorized clients to make DELETE requests of the microservices

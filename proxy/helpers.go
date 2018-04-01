@@ -15,7 +15,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/acm-uiuc/arbor/security"
+	"github.com/arbor-dev/arbor/security"
 )
 
 func contains(a string, list []string) bool {

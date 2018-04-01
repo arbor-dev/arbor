@@ -28,16 +28,14 @@ func NewApp() *App {
 
 func (a *App) Run() {
 	fmt.Println("Starting Example Product Service on Port 5000")
-
-	go func() {
-		err := a.Srv.ListenAndServe()
-		if err != nil {
-			if err.Error() == "http: Server closed" {
-				return
-			}
-			log.Fatal(err.Error())
+	err := a.Srv.ListenAndServe()
+	if err != nil {
+		if err.Error() == "http: Server closed" {
+			return
 		}
-	}()
+		log.Fatal(err.Error())
+	}
+	fmt.Println("Spinning down Example Product Service")
 }
 
 func (a *App) Kill() {
