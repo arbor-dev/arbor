@@ -22,9 +22,8 @@ import (
 
 func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
-	if !verifyAuthorization(r) {
-		w.WriteHeader(403)
-		logger.Log(logger.WARN, "Attempted unauthorized access from "+r.RemoteAddr)
+	preprocessing_err := requestPreprocessing(w, r)
+	if preprocessing_err != nil {
 		return
 	}
 
@@ -40,6 +39,8 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+
+	logger.LogResp(logger.DEBUG, resp)
 
 	if err != nil {
 		invalidDELETE(w, err)

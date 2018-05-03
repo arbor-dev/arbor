@@ -26,11 +26,8 @@ import (
 
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
-	sanitizeRequest(r)
-
-	if !verifyAuthorization(r) {
-		w.WriteHeader(403)
-		logger.Log(logger.WARN, "Attempted unauthorized Access from "+r.RemoteAddr)
+	preprocessing_err := requestPreprocessing(w, r)
+	if preprocessing_err != nil {
 		return
 	}
 
@@ -40,21 +37,13 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
-	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	contents, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	if err := r.Body.Close(); err != nil {
-		invalidPOST(w, err)
-		logger.Log(logger.ERR, err.Error())
-		return
-	}
-
-	var data interface{}
-	err = json.Unmarshal(content, &data)
-	if err != nil {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
@@ -71,10 +60,10 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 
 	switch format {
 	case "XML":
-		xmlPOST(r, w, url, token, data)
+		xmlPOST(r, w, url, token, contents)
 		return
 	case "JSON":
-		jsonPOST(r, w, url, token, data)
+		jsonPOST(r, w, url, token, contents)
 		return
 	default:
 		invalidPOST(w, err)
@@ -83,13 +72,8 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 	}
 }
 
-func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
-	content, err := json.Marshal(data)
-	if err != nil {
-		logger.Log(logger.ERR, err.Error())
-		return
-	}
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
+func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, contents []byte) {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(contents))
 	req.Header.Set("Content-Type", JSONHeader)
 	req.Header.Set("Accept", "application/json")
 
@@ -103,6 +87,8 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil {
 		if resp != nil {
 			log.Println(resp.StatusCode)
@@ -118,7 +104,7 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 
 	defer resp.Body.Close()
 
-	contents, err := ioutil.ReadAll(resp.Body)
+	contents, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, "Failed to read response")
@@ -144,14 +130,8 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 	//w.WriteHeader(http.StatusCreated)
 }
 
-func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, data interface{}) {
-	content, err := xml.Marshal(data)
-	if err != nil {
-		invalidPOST(w, err)
-		logger.Log(logger.ERR, err.Error())
-		return
-	}
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(content))
+func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, contents []byte) {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(contents))
 	req.Header.Set("Content-Type", XMLHeader)
 
 	for k, vs := range r.Header {
@@ -164,6 +144,8 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 
 	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
 	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
 	if err != nil || resp.StatusCode != http.StatusCreated {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
@@ -171,7 +153,7 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 	}
 	defer resp.Body.Close()
 
-	contents, err := ioutil.ReadAll(resp.Body)
+	contents, err = ioutil.ReadAll(resp.Body)
 	var serverData interface{}
 	err = xml.Unmarshal(contents, &serverData)
 	if err != nil {
@@ -185,7 +167,7 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, d
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
-	w.Header().Set("Content-Type", JSONHeader)
+	w.Header().Set("Content-Type", XMLHeader)
 	w.WriteHeader(http.StatusCreated)
 }
 

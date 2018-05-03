@@ -3,8 +3,8 @@ package gateway
 import (
 	"fmt"
 	"net/http"
-
 	"github.com/arbor-dev/arbor"
+	"github.com/arbor-dev/logger"
 	"github.com/arbor-dev/arbor/proxy"
 	"github.com/arbor-dev/arbor/security"
 )
@@ -39,4 +39,6 @@ func ConfigArbor() {
 	security.ClientRegistryLocation = "/tmp/arbor_clients.db"
 	//Access Control for the Proxy
 	proxy.AccessControlPolicy = "*"
+	//Logging Verboseness
+	logger.LogLevel = logger.DEBUG
 }
