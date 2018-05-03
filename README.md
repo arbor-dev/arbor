@@ -1,7 +1,7 @@
 
-![alt tag](https://github.com/acm-uiuc/arbor/blob/master/docs/readme.png)
-[![Build Status](https://travis-ci.org/acm-uiuc/arbor.svg?branch=master)](https://travis-ci.org/acm-uiuc/arbor)
-[![GoDoc](https://godoc.org/github.com/acm-uiuc/arbor?status.svg)](https://godoc.org/github.com/acm-uiuc/arbor)
+![alt tag](https://github.com/arbor-dev/arbor/blob/master/docs/readme.png)
+[![Build Status](https://travis-ci.org/arbor-dev/arbor.svg?branch=master)](https://travis-ci.org/arbor-dev/arbor)
+[![GoDoc](https://godoc.org/github.com/arbor-dev/arbor?status.svg)](https://godoc.org/github.com/arbor-dev/arbor)
 [![Join the chat at https://acm-uiuc.slack.com/messages/C6XGZD212/](https://img.shields.io/badge/slack-groot-724D71.svg)](https://acm-uiuc.slack.com/messages/C6XGZD212/)
 
 
@@ -71,7 +71,7 @@ All secret data should be kept in a file called config.go in the config director
 > Minimum supported version is Go 1.8 
 
 ```sh
-go get -u github.com/acm-uiuc/arbor/...
+go get -u github.com/arbor-dev/arbor/...
 ```
 
 run the server

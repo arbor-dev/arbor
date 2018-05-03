@@ -13,7 +13,7 @@ package arbor
 import (
 	"net/http"
 
-	"github.com/acm-uiuc/arbor/services"
+	"github.com/arbor-dev/arbor/services"
 )
 
 // Route is a struct that defines a route for a microservice
@@ -45,4 +45,8 @@ func (routes RouteCollection) toServiceRoutes() services.RouteCollection {
 	}
 
 	return serviceRoutes
+}
+
+func (routes RouteCollection) ToServiceRoutes() services.RouteCollection {
+	return routes.toServiceRoutes()
 }

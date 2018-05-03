@@ -15,7 +15,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/acm-uiuc/arbor/logger"
+	"github.com/arbor-dev/arbor/logger"
 )
 
 type StatusResponseWriter struct {
@@ -28,8 +28,8 @@ func (rec *StatusResponseWriter) WriteHeader(code int) {
 	rec.ResponseWriter.WriteHeader(code)
 }
 
-func logRequest(r *http.Request, name string, status int, timeSince time.Duration) {
-	logger.Log(logger.INFO, fmt.Sprintf("%s\t%s\t%s\t%d\t%s", r.Method, r.RequestURI, name, status, timeSince))
+func logRequest(method string, requestURI string, routeName string, responseStatus int, latency time.Duration) {
+	logger.Log(logger.INFO, fmt.Sprintf("%s\t%s\t%s\t%d\t%s", method, requestURI, routeName, responseStatus, latency))
 }
 
 func httpLogger(inner http.Handler, name string) http.Handler {
@@ -37,6 +37,6 @@ func httpLogger(inner http.Handler, name string) http.Handler {
 		start := time.Now()
 		s := &StatusResponseWriter{ResponseWriter: w, status: 200}
 		inner.ServeHTTP(s, r)
-		logRequest(r, name, s.status, time.Since(start))
+		logRequest(r.Method, r.RequestURI, name, s.status, time.Since(start))
 	})
 }

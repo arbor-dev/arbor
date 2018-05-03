@@ -14,10 +14,10 @@ jobs:
       script:  
         - go get -u github.com/golang/dep/...
         - dep ensure 
-        - go install github.com/acm-uiuc/arbor
+        - go install github.com/arbor-dev/arbor
     - stage: test
       script:
-        - go test -v github.com/acm-uiuc/arbor/tests
+        - go test -v github.com/arbor-dev/arbor/tests
 
 stages:
   - build

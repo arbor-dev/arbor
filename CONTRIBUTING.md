@@ -20,7 +20,7 @@ After a quick discussion and maybe some changes requested, your code will get me
 
 
 ### Style Guidelines 
-__Go__ (just us a linter basically):
+__Go__ (just use a linter basically):
 ```go
 //Function Signatures:
 func foo(arg1: int, arg2: bool) { 

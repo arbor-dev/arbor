@@ -18,7 +18,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/acm-uiuc/arbor/logger"
+	"github.com/arbor-dev/arbor/logger"
 )
 
 func PATCH(w http.ResponseWriter, url string, format string, token string, r *http.Request) {

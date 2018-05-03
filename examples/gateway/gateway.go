@@ -3,11 +3,10 @@ package gateway
 import (
 	"fmt"
 	"net/http"
-
-	"github.com/acm-uiuc/arbor"
-	"github.com/acm-uiuc/arbor/logger"
-	"github.com/acm-uiuc/arbor/proxy"
-	"github.com/acm-uiuc/arbor/security"
+	"github.com/arbor-dev/arbor"
+	"github.com/arbor-dev/logger"
+	"github.com/arbor-dev/arbor/proxy"
+	"github.com/arbor-dev/arbor/security"
 )
 
 //The Global Collection of Routes, not necessary but good for organization

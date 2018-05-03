@@ -1,13 +1,13 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net/http"
-	"context"
 
-	"github.com/acm-uiuc/arbor/logger"
-	"github.com/acm-uiuc/arbor/security"
-	"github.com/acm-uiuc/arbor/services"
+	"github.com/arbor-dev/arbor/logger"
+	"github.com/arbor-dev/arbor/security"
+	"github.com/arbor-dev/arbor/services"
 	"github.com/gorilla/mux"
 )
 
@@ -18,8 +18,8 @@ type ArborServer struct {
 	server *http.Server
 }
 
-//NewServer creates a new ArborSever
-func NewServer(routes services.RouteCollection, addr string, port uint16) *ArborServer {
+//NewServer creates a new Arbor Server
+func NewArborServer(routes services.RouteCollection, addr string, port uint16) *ArborServer {
 	a := new(ArborServer)
 	a.addr = fmt.Sprintf("%s:%d", addr, port)
 	a.router = NewRouter(routes)
@@ -31,16 +31,13 @@ func NewServer(routes services.RouteCollection, addr string, port uint16) *Arbor
 func (a *ArborServer) StartServer() {
 	logger.Log(logger.SPEC, "Roots being planted [Server is listening on "+a.addr+"]")
 
-	go func() {
-		err := a.server.ListenAndServe()
-		if err != nil {
-			if err.Error() == "http: Server closed" {
-				return
-			}
-			logger.Log(logger.FATAL, err.Error())
+	err := a.server.ListenAndServe()
+	if err != nil {
+		if err.Error() == "http: Server closed" {
+			return
 		}
-	}()
-
+		logger.Log(logger.FATAL, err.Error())
+	}
 }
 
 //KillServer ends the http server
@@ -56,7 +53,7 @@ func (a *ArborServer) KillServer() {
 //
 // Provide a set of routes to serve and a port to serve on.
 func StartSecuredServer(routes services.RouteCollection, addr string, port uint16) *ArborServer {
-	srv := NewServer(routes, addr, port)
+	srv := NewArborServer(routes, addr, port)
 	security.Init()
 	srv.StartServer()
 	return srv
@@ -66,7 +63,7 @@ func StartSecuredServer(routes services.RouteCollection, addr string, port uint1
 //
 // Provide a set of routes to server and a port to serve on/
 func StartUnsecuredServer(routes services.RouteCollection, addr string, port uint16) *ArborServer {
-	srv := NewServer(routes, addr, port)
+	srv := NewArborServer(routes, addr, port)
 	srv.StartServer()
 	return srv
 }

@@ -13,6 +13,8 @@ package proxy
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+	"github.com/arbor-dev/arbor/security"
 )
 
 func contains(a string, list []string) bool {

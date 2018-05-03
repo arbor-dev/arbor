@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/acm-uiuc/arbor"
-	"github.com/acm-uiuc/arbor/examples/gateway"
+	"github.com/arbor-dev/arbor"
+	"github.com/arbor-dev/arbor/examples/gateway"
 )
 
 func main() {

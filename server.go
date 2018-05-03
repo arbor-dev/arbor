@@ -15,9 +15,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/acm-uiuc/arbor/logger"
-	"github.com/acm-uiuc/arbor/security"
-	"github.com/acm-uiuc/arbor/server"
+	"github.com/arbor-dev/arbor/logger"
+	"github.com/arbor-dev/arbor/security"
+	"github.com/arbor-dev/arbor/server"
 )
 
 const help = `Usage: executable [-r | --register-client client_name] [-c | --check-registration token] [-u | --unsecured]
