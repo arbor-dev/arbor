@@ -51,17 +51,15 @@ func extract(a interface{}, b string) (val string, err error) {
 	i := 0
 
 	// copy c's keys into k
-	for s, _ := range c {
+	for s := range c {
 		k[i] = s
 		i++
 	}
 
 	if contains(b, k) {
 		return c[b].(string), nil
-	} else {
-		return "", errors.New("key does not exist")
 	}
-
+	return "", errors.New("key does not exist")
 }
 
 func verifyAuthorization(r *http.Request) bool {
