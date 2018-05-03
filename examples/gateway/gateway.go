@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/arbor-dev/arbor"
-	"github.com/arbor-dev/logger"
+	"github.com/arbor-dev/arbor/logger"
 	"github.com/arbor-dev/arbor/proxy"
 	"github.com/arbor-dev/arbor/security"
 )
