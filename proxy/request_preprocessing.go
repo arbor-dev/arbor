@@ -44,7 +44,7 @@ func (e *preprocessingError) Error() string {
 func requestPreprocessing(w http.ResponseWriter, r *http.Request) error {
 	logger.LogReq(logger.DEBUG, r)
 	sanitizeRequest(r)
-	if !verifyAuthorization(r.Header.Get("Authorization"), r.RemoteAddr) {
+	if !verifyAuthorization(r.Header.Get(ClientAuthorizationField), r.RemoteAddr) {
 		w.WriteHeader(403)
 		return &preprocessingError{-1, "Client Not Authorized"}
 	}

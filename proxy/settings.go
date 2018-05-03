@@ -27,3 +27,6 @@ var Timeout int64 = 10
 
 // AccessControlPolicy is the default Access control policy
 var AccessControlPolicy = "*"
+
+// Client Authorization Token Field
+var ClientAuthorizationField = "Authorization"
