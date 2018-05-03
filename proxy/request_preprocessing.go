@@ -14,8 +14,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/acm-uiuc/arbor/logger"
-	"github.com/acm-uiuc/arbor/security"
+	"github.com/arbor-dev/arbor/logger"
+	"github.com/arbor-dev/arbor/security"
 )
 
 func verifyAuthorization(authorization string, remoteAddr string) bool {
