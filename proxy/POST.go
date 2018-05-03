@@ -24,6 +24,18 @@ import (
 	"github.com/arbor-dev/arbor/logger"
 )
 
+// POST provides a proxy POST request allowing authorized clients to make POST
+// requests of the microservices
+//
+// Pass the http Request from the client and the ResponseWriter it expects.
+//
+// Pass the target url of the backend service (not the url the client called).
+//
+// Pass the format of the service.
+//
+// Pass a authorization token (optional).
+//
+// Will call the service and return the result to the client.
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
 	preprocessing_err := requestPreprocessing(w, r)
