@@ -42,15 +42,16 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 
 	logger.LogResp(logger.DEBUG, resp)
 
-	if err != nil || resp.StatusCode != http.StatusOK {
+	if err != nil {
 		invalidDELETE(w, err)
-		if err == nil {
-			logger.Log(logger.ERR, fmt.Sprintf("Server Returned"+string(resp.StatusCode)))
-			return
-		}
 		logger.Log(logger.ERR, fmt.Sprintf("Hit %s", err.Error()))
 		return
+	} else if resp.StatusCode != http.StatusOK {
+		logger.Log(logger.WARN, "SERVER RETURNED STATUS " + http.StatusText(resp.StatusCode))
+		w.WriteHeader(resp.StatusCode)
+		return
 	}
+
 	defer resp.Body.Close()
 
 	contents, err := ioutil.ReadAll(resp.Body)

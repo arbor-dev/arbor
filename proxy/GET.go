@@ -47,10 +47,14 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 
 	logger.LogResp(logger.DEBUG, res)
 
-	if err != nil || res.StatusCode != http.StatusOK {
+	if err != nil {
 		// Log the error, but return the output from the service.
 		invalidGET(w, err)
 		logger.Log(logger.ERR, err.Error())
+		return
+	} else if res.StatusCode != http.StatusOK {
+		logger.Log(logger.WARN, "SERVICE RETURNED STATUS " + http.StatusText(res.StatusCode))
+		w.WriteHeader(res.StatusCode)
 		return
 	}
 
