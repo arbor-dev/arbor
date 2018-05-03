@@ -20,6 +20,18 @@ import (
 	"github.com/arbor-dev/arbor/logger"
 )
 
+// DELETE provides a proxy DELETE request allowing authorized clients to make
+// DELETE requests of the microservices
+//
+// Pass the http Request from the client and the ResponseWriter it expects.
+//
+// Pass the target url of the backend service (not the url the client called).
+//
+// Pass the format of the service.
+//
+// Pass a authorization token (optional).
+//
+// Will call the service and return the result to the client.
 func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
 	if !verifyAuthorization(r) {
