@@ -29,4 +29,4 @@ var Timeout int64 = 10
 var AccessControlPolicy = "*"
 
 // Client Authorization Token Field
-var ClientAuthorizationField = "Authorization"
+var ClientAuthorizationHeaderField = "Authorization"
