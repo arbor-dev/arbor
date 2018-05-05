@@ -16,7 +16,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/acm-uiuc/arbor/logger"
+	"github.com/arbor-dev/arbor/logger"
 )
 
 type accessLogger struct {

@@ -14,8 +14,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/acm-uiuc/arbor/logger"
-	"github.com/acm-uiuc/arbor/security"
+	"github.com/arbor-dev/arbor/logger"
+	"github.com/arbor-dev/arbor/security"
 )
 
 func verifyAuthorization(authorization string, remoteAddr string) bool {
@@ -44,7 +44,7 @@ func (e *preprocessingError) Error() string {
 func requestPreprocessing(w http.ResponseWriter, r *http.Request) error {
 	logger.LogReq(logger.DEBUG, r)
 	sanitizeRequest(r)
-	if !verifyAuthorization(r.Header.Get("Authorization"), r.RemoteAddr) {
+	if !verifyAuthorization(r.Header.Get(ClientAuthorizationHeaderField), r.RemoteAddr) {
 		w.WriteHeader(403)
 		return &preprocessingError{-1, "Client Not Authorized"}
 	}
