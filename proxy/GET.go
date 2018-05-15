@@ -55,8 +55,18 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
+	client := &http.Client{
+		Timeout: time.Duration(Timeout) * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
 	res, err := client.Do(req)
+
+	for k, vs := range res.Header {
+		w.Header()[k] = make([]string, len(vs))
+		copy(w.Header()[k], vs)
+	}
 
 	logger.LogResp(logger.DEBUG, res)
 
