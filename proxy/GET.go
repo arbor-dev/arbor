@@ -63,17 +63,16 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	}
 	res, err := client.Do(req)
 
-	for k, vs := range res.Header {
-		w.Header()[k] = make([]string, len(vs))
-		copy(w.Header()[k], vs)
-	}
-
 	logger.LogResp(logger.DEBUG, res)
 
 	if err != nil {
 		// Log the error, but return the output from the service.
 		invalidGET(w, err)
 		logger.Log(logger.ERR, err.Error())
+		return
+	} else if res.StatusCode == http.StatusFound {
+		w.Header().Set("Location", res.Header.Get("Location"))
+		w.WriteHeader(http.StatusFound)
 		return
 	} else if res.StatusCode != http.StatusOK {
 		logger.Log(logger.WARN, "SERVICE RETURNED STATUS " + http.StatusText(res.StatusCode))
@@ -115,7 +114,6 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		textGET(w, url, contents)
 		break
 	}
-
 }
 
 func jsonGET(w http.ResponseWriter, url string, contents []byte) {
