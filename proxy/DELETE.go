@@ -75,13 +75,14 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 		return
 	}
 
+	w.Header().Set("Content-Type", JSONHeader)
+
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
 		invalidDELETE(w, err)
 		logger.Log(logger.ERR, fmt.Sprintf("Failed encode %v", err))
 		return
 	}
 
-	w.Header().Set("Content-Type", JSONHeader)
 	//IF THINGS START BREAKING UNCOMMENT
 	//w.WriteHeader(http.StatusOK)
 }

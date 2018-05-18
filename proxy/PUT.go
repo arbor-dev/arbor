@@ -145,12 +145,14 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 		return
 	}
 
+	w.Header().Set("Content-Type", JSONHeader)
+
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
 		invalidPUT(w, err)
 		logger.Log(logger.ERR, fmt.Sprintf("Failed to encode:%v", err))
 		return
 	}
-	w.Header().Set("Content-Type", JSONHeader)
+
 	//ADD BACK IF THINGS START BREAKING
 	//w.WriteHeader(http.StatusOK)
 }
@@ -193,11 +195,13 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 		return
 	}
 
+	w.Header().Set("Content-Type", JSONHeader)
+
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
 		invalidPUT(w, err)
 		logger.Log(logger.ERR, fmt.Sprintf("Failed encode:%v", err))
 		return
 	}
-	w.Header().Set("Content-Type", JSONHeader)
+
 	w.WriteHeader(http.StatusOK)
 }
