@@ -71,6 +71,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		logger.Log(logger.ERR, err.Error())
 		return
 	} else if res.StatusCode == http.StatusFound {
+		logger.Log(logger.DEBUG, "SERVICE RETURNED REDIRECT")
 		w.Header().Set("Location", res.Header.Get("Location"))
 		w.WriteHeader(http.StatusFound)
 		return

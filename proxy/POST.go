@@ -97,7 +97,12 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
+	client := &http.Client{
+		Timeout: time.Duration(Timeout) * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
 	resp, err := client.Do(req)
 	logger.LogResp(logger.DEBUG, resp)
 
@@ -107,6 +112,11 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		}
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
+		return
+	} else if resp.StatusCode == http.StatusFound {
+		logger.Log(logger.DEBUG, "SERVICE RETURNED REDIRECT")
+		w.Header().Set("Location", resp.Header.Get("Location"))
+		w.WriteHeader(http.StatusFound)
 		return
 	} else if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
 		logger.Log(logger.WARN, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
@@ -154,15 +164,33 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, c
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
+	client := &http.Client{
+		Timeout: time.Duration(Timeout) * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
 	resp, err := client.Do(req)
 	logger.LogResp(logger.DEBUG, resp)
 
-	if err != nil || resp.StatusCode != http.StatusCreated {
+	if err != nil {
+		if resp != nil {
+			log.Println(resp.StatusCode)
+		}
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
+	} else if resp.StatusCode == http.StatusFound {
+		logger.Log(logger.DEBUG, "SERVICE RETURNED REDIRECT")
+		w.Header().Set("Location", resp.Header.Get("Location"))
+		w.WriteHeader(http.StatusFound)
+		return
+	} else if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+		logger.Log(logger.WARN, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
+		w.Header().Set("Content-Type", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+		w.WriteHeader(resp.StatusCode)
 	}
+
 	defer resp.Body.Close()
 
 	contents, err = ioutil.ReadAll(resp.Body)
