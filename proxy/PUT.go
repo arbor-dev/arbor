@@ -130,11 +130,11 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 	logger.LogResp(logger.DEBUG, resp)
 
 	if err != nil {
-		//TODO: INVALID PUT HANDLER 
+		invalidPUT(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	} else if resp.StatusCode == http.StatusFound {
-		logger.Log(logger.DEBUG, "SERVICE RETURNED REDIRECT")
+		logger.Log(logger.DEBUG, "Service Returned Redirect")
 		w.Header().Set("Location", resp.Header.Get("Location"))
 		w.WriteHeader(http.StatusFound)
 		return
@@ -194,17 +194,17 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 	logger.LogResp(logger.DEBUG, resp)
 
 	if err != nil {
-		//TODO: INVALID PUT HANDLER 
+		invalidPUT(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	} else if resp.StatusCode == http.StatusFound {
-		logger.Log(logger.DEBUG, "SERVICE RETURNED REDIRECT")
+		logger.Log(logger.DEBUG, "Service Returned Redirect")
 		w.Header().Set("Location", resp.Header.Get("Location"))
 		w.WriteHeader(http.StatusFound)
 		return
 	} else if resp.StatusCode != http.StatusOK {
 		logger.Log(logger.WARN, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
-		w.Header().Set("Content-Type", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+		w.Header().Set("Content-Type", XMLHeader)
 		w.WriteHeader(resp.StatusCode)
 		return
 	}

@@ -114,7 +114,7 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		logger.Log(logger.ERR, err.Error())
 		return
 	} else if resp.StatusCode == http.StatusFound {
-		logger.Log(logger.DEBUG, "SERVICE RETURNED REDIRECT")
+		logger.Log(logger.DEBUG, "Service Returned Redirect")
 		w.Header().Set("Location", resp.Header.Get("Location"))
 		w.WriteHeader(http.StatusFound)
 		return
@@ -181,7 +181,7 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, c
 		logger.Log(logger.ERR, err.Error())
 		return
 	} else if resp.StatusCode == http.StatusFound {
-		logger.Log(logger.DEBUG, "SERVICE RETURNED REDIRECT")
+		logger.Log(logger.DEBUG, "Service Returned Redirect")
 		w.Header().Set("Location", resp.Header.Get("Location"))
 		w.WriteHeader(http.StatusFound)
 		return
