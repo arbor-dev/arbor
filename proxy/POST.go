@@ -131,13 +131,14 @@ func jsonPOST(r *http.Request, w http.ResponseWriter, url string, token string, 
 		return
 	}
 
+	w.Header().Set("Content-Type", JSONHeader)
+
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", JSONHeader)
 	//NOTE: Apparently not needed but add back in if things break
 	//w.WriteHeader(http.StatusCreated)
 }
@@ -174,12 +175,13 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, c
 		return
 	}
 
+	w.Header().Set("Content-Type", XMLHeader)
+
 	if err := json.NewEncoder(w).Encode(serverData); err != nil {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
-	w.Header().Set("Content-Type", XMLHeader)
 	w.WriteHeader(http.StatusCreated)
 }
 
