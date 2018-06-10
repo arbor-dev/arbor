@@ -43,6 +43,11 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 		return
 	}
 
+	if format == "RAW" {
+		rawPUT(r, w, url, token)
+		return
+	}
+
 	if format != "XML" && format != "JSON" { //TODO: Support Post form data
 		err := errors.New("Unsupported data encoding")
 		invalidPUT(w, err)
@@ -204,4 +209,71 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func rawPUT(r *http.Request, w http.ResponseWriter, url string, token string) {
+	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 16777216))
+
+	if err != nil {
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, err.Error())
+		return
+	}
+
+	if err := r.Body.Close(); err != nil {
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed Reception:%v", err))
+		return
+	}
+
+	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(content))
+
+	for k, vs := range r.Header {
+		req.Header[k] = make([]string, len(vs))
+		copy(req.Header[k], vs)
+	}
+
+	if token != "" {
+		req.Header.Set("Authorization", token)
+	}
+
+	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
+	resp, err := client.Do(req)
+	logger.LogResp(logger.DEBUG, resp)
+
+	if err != nil {
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, err.Error())
+		return
+	} else if resp.StatusCode != http.StatusOK {
+		logger.Log(logger.WARN, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(resp.StatusCode)
+	}
+
+	defer resp.Body.Close()
+
+	contents, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, err.Error())
+		return
+	}
+
+	var serverData interface{}
+	err = json.Unmarshal(contents, &serverData)
+	if err != nil {
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed to decode:%v", err))
+		return
+	}
+
+	w.Header().Set("Content-Type", JSONHeader)
+
+	if err := json.NewEncoder(w).Encode(serverData); err != nil {
+		invalidPUT(w, err)
+		logger.Log(logger.ERR, fmt.Sprintf("Failed to encode:%v", err))
+		return
+	}
 }
