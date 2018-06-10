@@ -55,7 +55,12 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		req.Header.Set("Authorization", token)
 	}
 
-	client := &http.Client{Timeout: time.Duration(Timeout) * time.Second}
+	client := &http.Client{
+		Timeout: time.Duration(Timeout) * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
 	res, err := client.Do(req)
 
 	logger.LogResp(logger.DEBUG, res)
@@ -64,6 +69,11 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		// Log the error, but return the output from the service.
 		invalidGET(w, err)
 		logger.Log(logger.ERR, err.Error())
+		return
+	} else if res.StatusCode == http.StatusFound {
+		logger.Log(logger.DEBUG, "Service Returned Redirect")
+		w.Header().Set("Location", res.Header.Get("Location"))
+		w.WriteHeader(http.StatusFound)
 		return
 	} else if res.StatusCode != http.StatusOK {
 		logger.Log(logger.WARN, "SERVICE RETURNED STATUS " + http.StatusText(res.StatusCode))
@@ -105,7 +115,6 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		textGET(w, url, contents)
 		break
 	}
-
 }
 
 func jsonGET(w http.ResponseWriter, url string, contents []byte) {
