@@ -54,7 +54,7 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
-	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	content, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxRequestSize))
 	if err != nil {
 		invalidPUT(w, err)
 		logger.Log(logger.ERR, err.Error())
@@ -212,7 +212,7 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 }
 
 func rawPUT(r *http.Request, w http.ResponseWriter, url string, token string) {
-	content, err := ioutil.ReadAll(io.LimitReader(r.Body, 16777216))
+	content, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxFileUploadSize))
 
 	if err != nil {
 		invalidPUT(w, err)

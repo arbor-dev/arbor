@@ -49,7 +49,7 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
-	contents, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	contents, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxRequestSize))
 	if err != nil {
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
