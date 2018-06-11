@@ -261,19 +261,13 @@ func rawPUT(r *http.Request, w http.ResponseWriter, url string, token string) {
 		return
 	}
 
-	var serverData interface{}
-	err = json.Unmarshal(contents, &serverData)
+	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+
+	_, err = w.Write(contents)
+
 	if err != nil {
 		invalidPUT(w, err)
-		logger.Log(logger.ERR, fmt.Sprintf("Failed to decode:%v", err))
-		return
-	}
-
-	w.Header().Set("Content-Type", JSONHeader)
-
-	if err := json.NewEncoder(w).Encode(serverData); err != nil {
-		invalidPUT(w, err)
-		logger.Log(logger.ERR, fmt.Sprintf("Failed to encode:%v", err))
+		logger.Log(logger.ERR, fmt.Sprintf("Failed to Write:%v", err))
 		return
 	}
 }
