@@ -50,3 +50,12 @@ func requestPreprocessing(w http.ResponseWriter, r *http.Request) error {
 	}
 	return nil
 }
+
+/*
+	Called if an error is casued while Marshalling / Unmarhsalling data, or making proxy requests.
+*/
+func processUnrecoverableErrors(w http.ResponseWriter, httpStatusCode int, message string) {
+	w.WriteHeader(httpStatusCode)
+	w.Header().Set("Content-Type", TEXTHeader)
+	fmt.Fprintf(w, "%s\n", message)
+}

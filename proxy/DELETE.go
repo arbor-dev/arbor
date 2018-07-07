@@ -59,7 +59,7 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 		logger.Log(logger.ERR, fmt.Sprintf("Hit %s", err.Error()))
 		return
 	} else if resp.StatusCode != http.StatusOK {
-		logger.Log(logger.WARN, "SERVER RETURNED STATUS " + http.StatusText(resp.StatusCode))
+		logger.Log(logger.WARN, "SERVER RETURNED STATUS "+http.StatusText(resp.StatusCode))
 		w.WriteHeader(resp.StatusCode)
 		return
 	}

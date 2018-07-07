@@ -2,11 +2,11 @@ package gateway
 
 import (
 	"fmt"
-	"net/http"
 	"github.com/arbor-dev/arbor"
 	"github.com/arbor-dev/arbor/logger"
 	"github.com/arbor-dev/arbor/proxy"
 	"github.com/arbor-dev/arbor/security"
+	"net/http"
 )
 
 //The Global Collection of Routes, not necessary but good for organization
