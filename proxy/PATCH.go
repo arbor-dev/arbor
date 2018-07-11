@@ -40,7 +40,7 @@ func PATCH(w http.ResponseWriter, url string, format string, token string, r *ht
 		return
 	}
 
-	_, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	_, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxRequestSize))
 	if err != nil {
 		invalidPATCH(w, err)
 		logger.Log(logger.ERR, err.Error())

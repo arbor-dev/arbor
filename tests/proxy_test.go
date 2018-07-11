@@ -5,14 +5,20 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"reflect"
 	"testing"
+	"strconv"
 	"time"
+
+	"gopkg.in/jarcoal/httpmock.v1"
 
 	"github.com/arbor-dev/arbor/examples/gateway"
 	"github.com/arbor-dev/arbor/examples/products"
+	"github.com/arbor-dev/arbor/proxy"
 	"github.com/arbor-dev/arbor/server"
 )
 
@@ -413,4 +419,53 @@ func TestProxyDELETE(t *testing.T) {
 	}
 
 	testSrvs.killTestingServices()
+}
+
+func TestProxyPUTRaw(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	sendingBytes := make([]byte, 8 * 1024 * 1024)
+	rand.Read(sendingBytes)
+
+	httpmock.RegisterResponder("PUT", "http://test.local/upload",
+		func (req *http.Request) (*http.Response, error) {
+			receivedBytes, err := ioutil.ReadAll(req.Body)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if !bytes.Equal(sendingBytes, receivedBytes) {
+				t.Error("Received incorrect bytes")
+			}
+
+			return httpmock.NewStringResponse(200, strconv.Itoa(len(receivedBytes))), nil
+		},
+	)
+
+	recorder := httptest.NewRecorder()
+	req, err := http.NewRequest("PUT", "http://test.local/upload", bytes.NewReader(sendingBytes))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	proxy.PUT(recorder, "http://test.local/upload", "RAW", "", req)
+
+	resp := recorder.Result()
+
+	if resp.StatusCode != http.StatusOK {
+		log.Fatal("Received bad http code")
+	}
+
+	body, err := ioutil.ReadAll(recorder.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if strconv.Itoa(len(sendingBytes)) != string(body[:]) {
+		t.Errorf("Expected %v\nGot %v", strconv.Itoa(len(sendingBytes)), string(body[:]))
+	}
 }

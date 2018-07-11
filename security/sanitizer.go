@@ -19,11 +19,17 @@ import (
 	"github.com/kennygrant/sanitize"
 )
 
+// Defines the maximum size for sanitized requests
+const (
+	MB = 1048576
+	MaxSize = 16 * MB
+)
+
 func SanitizeRequest(r *http.Request) {
 	if !enabled {
 		return
 	}
-	content, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	content, _ := ioutil.ReadAll(io.LimitReader(r.Body, MaxSize))
 	sanitizedHTML := sanitize.HTML(string(content))
 	r.Body = ioutil.NopCloser(strings.NewReader(sanitizedHTML))
 	r.ContentLength = int64(len(sanitizedHTML))
