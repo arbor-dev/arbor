@@ -71,7 +71,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 		// For an error in making the request
 		// Log the error, but return the output from the service.
 		logger.Log(logger.ERR, err.Error())
-		processUnrecoverableErrors(w, http.StatusInternalServerError, "Error making the proxy request.")
+		notifyClientOfRequestError(w, http.StatusInternalServerError, "")
 		return
 	} else if res.StatusCode == http.StatusFound {
 		// For redirects
@@ -85,9 +85,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 
 		if readErr != nil {
 			// 503 Bad Gateway, indicating a proxy / gateway recieved an invalid response from upstream server.
-			w.WriteHeader(http.StatusBadGateway)
-			w.Header().Set("Content-Type", TEXTHeader)
-			fmt.Fprintf(w, "%s\n", "The API Gateway sent an invalid response.")
+			notifyClientOfRequestError(w, http.StatusBadGateway, "")
 			return
 		}
 
@@ -113,9 +111,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 
 	if readErr != nil {
 		// 503 Bad Gateway, indicating a proxy / gateway recieved an invalid response from upstream server.
-		w.WriteHeader(http.StatusBadGateway)
-		w.Header().Set("Content-Type", TEXTHeader)
-		fmt.Fprintf(w, "%s\n", "The API Gateway sent an invalid response.")
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
 		return
 	}
 
@@ -203,12 +199,12 @@ func invalidJsonGET(w http.ResponseWriter, contents []byte, err error) {
 	err = json.Unmarshal(contents, &data)
 
 	if err != nil {
-		processUnrecoverableErrors(w, http.StatusBadGateway, "The API Gateway sent an invalid response.")
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		processUnrecoverableErrors(w, http.StatusBadGateway, "The API Gateway sent an invalid response.")
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
 		return
 	}
 }
@@ -220,12 +216,12 @@ func invalidXmlGET(w http.ResponseWriter, contents []byte, err error) {
 	err = xml.Unmarshal(contents, &data)
 
 	if err != nil {
-		processUnrecoverableErrors(w, http.StatusBadGateway, "The API Gateway sent an invalid response.")
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		processUnrecoverableErrors(w, http.StatusBadGateway, "The API Gateway sent an invalid response.")
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
 		return
 	}
 }

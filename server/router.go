@@ -20,8 +20,8 @@ import (
 )
 
 func notFound(w http.ResponseWriter, r *http.Request) {
-	logRequest(r.Method, r.RequestURI, "UNKNOWN", 404, time.Duration(0))
-	w.WriteHeader(404)
+	logRequest(r.Method, r.RequestURI, "UNKNOWN", http.StatusNotFound, time.Duration(0))
+	w.WriteHeader(http.StatusNotFound)
 	io.WriteString(w, "404 Not Found")
 }
 

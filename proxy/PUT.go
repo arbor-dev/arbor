@@ -97,10 +97,10 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 func invalidPUT(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusUnprocessableEntity)
-	data := map[string]interface{}{"Code": 400, "Text": "Unprocessable Entity", "Specfically": err}
+	data := map[string]interface{}{"Code": http.StatusUnprocessableEntity, "Text": "Unprocessable Entity", "Specfically": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		logger.Log(logger.ERR, err.Error())
-		processUnrecoverableErrors(w, http.StatusBadGateway, "The API Gateway sent an invalid response.") //ASK: SHOULD THIS BE HERE?
+		notifyClientOfRequestError(w, http.StatusBadGateway, "") //ASK: SHOULD THIS BE HERE?
 	}
 }
 
@@ -121,7 +121,7 @@ func unsuccessfulPUT(w http.ResponseWriter, format string, content []byte, err e
 	}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		logger.Log(logger.ERR, err.Error())
-		processUnrecoverableErrors(w, http.StatusBadGateway, "The API Gateway sent an invalid response.")
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
 	}
 }
 
@@ -170,9 +170,7 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 
 		content, readErr := ioutil.ReadAll(resp.Body)
 
-		api_format := "JSON"
-
-		unsuccessfulPUT(w, api_format, content, readErr)
+		unsuccessfulPUT(w, "JSON", content, readErr)
 
 		return
 	}
@@ -245,9 +243,7 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 
 		contents, readErr := ioutil.ReadAll(resp.Body)
 
-		api_format := "XML"
-
-		unsuccessfulPUT(w, api_format, contents, readErr)
+		unsuccessfulPUT(w, "XML", contents, readErr)
 
 		return
 	}

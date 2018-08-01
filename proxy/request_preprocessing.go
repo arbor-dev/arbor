@@ -45,17 +45,30 @@ func requestPreprocessing(w http.ResponseWriter, r *http.Request) error {
 	logger.LogReq(logger.DEBUG, r)
 	sanitizeRequest(r)
 	if !verifyAuthorization(r.Header.Get(ClientAuthorizationHeaderField), r.RemoteAddr) {
-		w.WriteHeader(403)
+		w.WriteHeader(http.StatusForbidden)
 		return &preprocessingError{-1, "Client Not Authorized"}
 	}
 	return nil
 }
 
 /*
-	Called if an error is casued while Marshalling / Unmarhsalling data, or making proxy requests.
+	Called if an error is caused while Marshalling / Unmarshalling data, or making proxy requests.
+	If the message is left blank, and the error code is one of the supported ones, the error
+	message will be pre-filled.
 */
-func processUnrecoverableErrors(w http.ResponseWriter, httpStatusCode int, message string) {
+func notifyClientOfRequestError(w http.ResponseWriter, httpStatusCode int, message string) {
+	if message == "" {
+		switch httpStatusCode {
+		case http.StatusBadGateway:
+			message = "The API Gateway received an invalid response."
+		case http.StatusInternalServerError:
+			message = "The API Gateway encountered an error while making the proxy request."
+		default:
+			message = "Please check the API Gateway logs for more details on the error."
+		}
+	}
 	w.WriteHeader(httpStatusCode)
 	w.Header().Set("Content-Type", TEXTHeader)
 	fmt.Fprintf(w, "%s\n", message)
+	logger.Log(logger.ERR, message)
 }
