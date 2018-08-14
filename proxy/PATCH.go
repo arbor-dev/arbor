@@ -64,8 +64,8 @@ func PATCH(w http.ResponseWriter, url string, format string, token string, r *ht
 
 func invalidPATCH(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(422) // unprocessable entity
-	data := map[string]interface{}{"Code": 400, "Text": "Unprocessable Entity", "Specfically": err}
+	w.WriteHeader(http.StatusUnprocessableEntity)
+	data := map[string]interface{}{"Code": http.StatusUnprocessableEntity, "Text": "Unprocessable Entity", "Specfically": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		panic(err)
 	}

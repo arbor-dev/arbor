@@ -65,26 +65,55 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 
 	logger.LogResp(logger.DEBUG, res)
 
+	origin := r.Header.Get("Origin")
+
 	if err != nil {
+		// For an error in making the request
 		// Log the error, but return the output from the service.
-		invalidGET(w, err)
 		logger.Log(logger.ERR, err.Error())
+		notifyClientOfRequestError(w, http.StatusInternalServerError, "")
 		return
 	} else if res.StatusCode == http.StatusFound {
+		// For redirects
 		logger.Log(logger.DEBUG, "Service Returned Redirect")
 		w.Header().Set("Location", res.Header.Get("Location"))
 		w.WriteHeader(http.StatusFound)
 		return
 	} else if res.StatusCode != http.StatusOK {
-		logger.Log(logger.WARN, "SERVICE RETURNED STATUS " + http.StatusText(res.StatusCode))
+		// For non-200 errors
+		contents, readErr := ioutil.ReadAll(res.Body)
+
+		if readErr != nil {
+			// 503 Bad Gateway, indicating a proxy / gateway recieved an invalid response from upstream server.
+			notifyClientOfRequestError(w, http.StatusBadGateway, "")
+			return
+		}
+
+		logger.Log(logger.WARN, "SERVICE RETURNED STATUS "+http.StatusText(res.StatusCode))
+
 		w.WriteHeader(res.StatusCode)
-		return
+		switch {
+		case contains(JSONHeader, res.Header["Content-Type"]):
+			invalidJsonGET(w, contents, err)
+			return
+		case contains(XMLHeader, res.Header["Content-Type"]):
+			invalidXmlGET(w, contents, err)
+			return
+		default:
+			invalidTextGET(w, contents, err)
+			return
+		}
 	}
 
 	defer res.Body.Close()
-	contents, err := ioutil.ReadAll(res.Body)
 
-	origin := r.Header.Get("Origin")
+	contents, readErr := ioutil.ReadAll(res.Body)
+
+	if readErr != nil {
+		// 503 Bad Gateway, indicating a proxy / gateway recieved an invalid response from upstream server.
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
+		return
+	}
 
 	//TODO: FIGURE OUT ORIGIN RULES
 	if origin != "" {
@@ -96,24 +125,24 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 	switch {
 	case contains(JSONHeader, res.Header["Content-Type"]):
 		jsonGET(w, url, contents)
-		break
+		return
 	case contains(TEXTHeader, res.Header["Content-Type"]):
 		textGET(w, url, contents)
-		break
+		return
 	case contains(HTMLHeader, res.Header["Content-Type"]):
 		textGET(w, url, contents)
-		break
+		return
 	case contains(XMLHeader, res.Header["Content-Type"]):
 		xmlGET(w, url, contents)
-		break
+		return
 	default:
 		if err != nil {
-			invalidGET(w, err)
+			invalidTextGET(w, contents, err)
 			logger.Log(logger.ERR, err.Error())
 			return
 		}
 		textGET(w, url, contents)
-		break
+		return
 	}
 }
 
@@ -121,7 +150,7 @@ func jsonGET(w http.ResponseWriter, url string, contents []byte) {
 	var data interface{}
 	err := json.Unmarshal(contents, &data)
 	if err != nil {
-		invalidGET(w, err)
+		invalidJsonGET(w, contents, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
@@ -129,7 +158,7 @@ func jsonGET(w http.ResponseWriter, url string, contents []byte) {
 	w.Header().Set("Content-Type", JSONHeader)
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		invalidGET(w, err)
+		invalidJsonGET(w, contents, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
@@ -139,7 +168,7 @@ func xmlGET(w http.ResponseWriter, url string, contents []byte) {
 	var data interface{}
 	err := xml.Unmarshal(contents, &data)
 	if err != nil {
-		invalidGET(w, err)
+		invalidXmlGET(w, contents, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
@@ -147,7 +176,7 @@ func xmlGET(w http.ResponseWriter, url string, contents []byte) {
 	w.Header().Set("Content-Type", XMLHeader)
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		invalidGET(w, err)
+		invalidXmlGET(w, contents, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
@@ -156,19 +185,47 @@ func xmlGET(w http.ResponseWriter, url string, contents []byte) {
 func textGET(w http.ResponseWriter, url string, contents []byte) {
 	var err error
 	if err != nil {
-		invalidGET(w, err)
+		invalidTextGET(w, contents, err)
 		logger.Log(logger.ERR, err.Error())
 		return
 	}
 	fmt.Fprintf(w, "%s\n", string(contents))
 }
 
-func invalidGET(w http.ResponseWriter, err error) {
-	// If we didn't find it, 404
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusNotFound)
-	data := map[string]interface{}{"Code": http.StatusNotFound, "Text": "Not Found", "server-err": err}
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		panic(err)
+func invalidJsonGET(w http.ResponseWriter, contents []byte, err error) {
+	w.Header().Set("Content-Type", JSONHeader)
+
+	var data interface{}
+	err = json.Unmarshal(contents, &data)
+
+	if err != nil {
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
+		return
 	}
+
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
+		return
+	}
+}
+
+func invalidXmlGET(w http.ResponseWriter, contents []byte, err error) {
+	w.Header().Set("Content-Type", XMLHeader)
+
+	var data interface{}
+	err = xml.Unmarshal(contents, &data)
+
+	if err != nil {
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
+		return
+	}
+}
+
+func invalidTextGET(w http.ResponseWriter, contents []byte, err error) {
+	w.Write(contents)
 }

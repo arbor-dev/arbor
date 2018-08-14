@@ -215,8 +215,8 @@ func xmlPOST(r *http.Request, w http.ResponseWriter, url string, token string, c
 
 func invalidPOST(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(422) // unprocessable entity
-	data := map[string]interface{}{"Code": 422, "Text": "Unprocessable Entity", "Specfically": err}
+	w.WriteHeader(http.StatusUnprocessableEntity)
+	data := map[string]interface{}{"Code": http.StatusUnprocessableEntity, "Text": "Unprocessable Entity", "Specfically": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		panic(err)
 	}

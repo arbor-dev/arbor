@@ -97,13 +97,36 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 	}
 }
 
+// For PUT with actual processing errors.
+// For unsuccessful PUT requests, use unsuccessfulPUT
 func invalidPUT(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(422) // unprocessable entity
-	data := map[string]interface{}{"Code": 400, "Text": "Unprocessable Entity", "Specfically": err}
+	w.WriteHeader(http.StatusUnprocessableEntity)
+	data := map[string]interface{}{"Code": http.StatusUnprocessableEntity, "Text": "Unprocessable Entity", "Specfically": err}
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		logger.Log(logger.ERR, err.Error())
-		panic(err) //ASK: SHOULD THIS BE HERE?
+		notifyClientOfRequestError(w, http.StatusBadGateway, "") //ASK: SHOULD THIS BE HERE?
+	}
+}
+
+// If the PUT was simply unsuccessful
+func unsuccessfulPUT(w http.ResponseWriter, format string, content []byte, err error) {
+	var data interface{}
+	switch format {
+	case "JSON":
+		json.Unmarshal(content, &data)
+		break
+	case "XML":
+		xml.Unmarshal(content, &data)
+		break
+	default:
+		// Text / HTML
+		w.Write(content)
+		return
+	}
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		logger.Log(logger.ERR, err.Error())
+		notifyClientOfRequestError(w, http.StatusBadGateway, "")
 	}
 }
 
@@ -145,8 +168,15 @@ func jsonPUT(r *http.Request, w http.ResponseWriter, url string, token string, d
 		return
 	} else if resp.StatusCode != http.StatusOK {
 		logger.Log(logger.WARN, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
+
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
 		w.WriteHeader(resp.StatusCode)
+
+		content, readErr := ioutil.ReadAll(resp.Body)
+
+		unsuccessfulPUT(w, "JSON", content, readErr)
+
 		return
 	}
 
@@ -211,8 +241,15 @@ func xmlPUT(r *http.Request, w http.ResponseWriter, url string, token string, da
 		return
 	} else if resp.StatusCode != http.StatusOK {
 		logger.Log(logger.WARN, "SERVICE FAILED - SERVICE RETURNED STATUS "+http.StatusText(resp.StatusCode))
+
 		w.Header().Set("Content-Type", XMLHeader)
+
 		w.WriteHeader(resp.StatusCode)
+
+		contents, readErr := ioutil.ReadAll(resp.Body)
+
+		unsuccessfulPUT(w, "XML", contents, readErr)
+
 		return
 	}
 
