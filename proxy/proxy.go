@@ -27,11 +27,14 @@ func PATCH(w http.ResponseWriter, r *http.Request, url string, format string, to
 func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string, format string, token string) {
 	settings := DefaultProxyRequestSettings
 
+	settings.RequestMiddlewares = append(settings.RequestMiddlewares, PreprocessingMiddleware)
+	settings.RequestMiddlewares = append(settings.RequestMiddlewares, TokenMiddlewareFactory(token))
+
 	switch format {
 	case "JSON":
 		settings.ErrorHandler = JsonErrorHandler
-		settings.RequestMiddlewares = JsonRequestMiddlewares
-		settings.ResponseMiddlewares = JsonResponseMiddlewares
+		settings.RequestMiddlewares = append(settings.RequestMiddlewares, JsonRequestMiddlewares...)
+		settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, JsonResponseMiddlewares...)
 	case "RAW":
 		fallthrough
 	default:
