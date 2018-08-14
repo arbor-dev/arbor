@@ -68,7 +68,6 @@ func notifyClientOfRequestError(w http.ResponseWriter, httpStatusCode int, messa
 		}
 	}
 	w.WriteHeader(httpStatusCode)
-	w.Header().Set("Content-Type", TEXTHeader)
 	fmt.Fprintf(w, "%s\n", message)
 	logger.Log(logger.ERR, message)
 }
