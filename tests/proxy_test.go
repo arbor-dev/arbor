@@ -18,7 +18,7 @@ import (
 
 	"github.com/arbor-dev/arbor/examples/gateway"
 	"github.com/arbor-dev/arbor/examples/products"
-	"github.com/arbor-dev/arbor/proxy"
+	"github.com/arbor-dev/arbor"
 	"github.com/arbor-dev/arbor/server"
 )
 
@@ -451,7 +451,7 @@ func TestProxyPUTRaw(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	proxy.PUT(recorder, "http://test.local/upload", "RAW", "", req)
+	arbor.PUT(recorder, "http://test.local/upload", "RAW", "", req)
 
 	resp := recorder.Result()
 

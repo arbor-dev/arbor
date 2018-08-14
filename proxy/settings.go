@@ -10,6 +10,10 @@
 
 package proxy
 
+import (
+	"net/http"
+)
+
 // JSONHeader is the default header for the JSON content-type
 var JSONHeader = "application/json; charset=UTF-8"
 
@@ -37,3 +41,11 @@ const (
 	MaxRequestSize = 1 * MB
 	MaxFileUploadSize = 16 * MB
 )
+
+var DefaultProxyRequestSettings = ProxyRequestSettings{
+	ErrorHandler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(500)
+	}),
+	RequestMiddlewares: nil,
+	ResponseMiddlewares: nil,
+}
