@@ -115,10 +115,10 @@ func TestProxyPOST(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}
@@ -166,10 +166,10 @@ func TestProxyGET(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}
@@ -256,10 +256,10 @@ func TestProxyPUT(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}
@@ -355,10 +355,10 @@ func TestProxyDELETE(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}

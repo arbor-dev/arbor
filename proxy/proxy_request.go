@@ -64,7 +64,13 @@ func ProxyRequest(w http.ResponseWriter, r *http.Request, url string, settings P
 		return
 	}
 
-	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+	for k, vs := range resp.Header {
+		for _, v := range vs {
+			w.Header().Add(k, v)
+		}
+	}
+
+	w.WriteHeader(resp.StatusCode)
 
 	_, err = w.Write(responseBody)
 
