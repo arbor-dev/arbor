@@ -14,7 +14,7 @@ type ProxyRequestSettings struct {
 	ResponseMiddlewares []http.Handler
 }
 
-func ProxyRequest(w http.ResponseWriter, r *http.Request, url string, settings ProxyRequestSettings) {
+func proxyRequest(w http.ResponseWriter, r *http.Request, url string, settings ProxyRequestSettings) {
 	requestBody, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxFileUploadSize))
 
 	if err != nil {

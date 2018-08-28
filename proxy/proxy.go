@@ -24,6 +24,8 @@ func PATCH(w http.ResponseWriter, r *http.Request, url string, format string, to
 	proxyRequestWithSettings(w, r, url, format, token)
 }
 
+// Proxy the caller's request to the correct service with proxy request settings
+// Settings contain the error handler, request middlewares, and response middlewares
 func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string, format string, token string) {
 	settings := DefaultProxyRequestSettings
 
@@ -40,5 +42,5 @@ func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string
 	default:
 	}
 
-	ProxyRequest(w, r, url, settings)
+	proxyRequest(w, r, url, settings)
 }

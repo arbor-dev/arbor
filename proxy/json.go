@@ -8,8 +8,13 @@ import (
 	"encoding/json"
 )
 
+// A handler for writing errors into the response sent to the caller
 var JsonErrorHandler http.Handler
+
+// A set of middlewares for validating json in the request to a service
 var JsonRequestMiddlewares []http.Handler
+
+// A set of middlewares for validating json in the response from a service
 var JsonResponseMiddlewares []http.Handler
 
 func init() {
