@@ -38,6 +38,15 @@ import (
 // Will call the service and return the result to the client.
 func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
 
+	origin := r.Header.Get("Origin")
+
+	//TODO: FIGURE OUT ORIGIN RULES
+	if origin != "" {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+		w.Header().Set("Access-Control-Allow-Methods", "PUT")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+
 	preprocessing_err := requestPreprocessing(w, r)
 	if preprocessing_err != nil {
 		return
@@ -72,15 +81,6 @@ func PUT(w http.ResponseWriter, url string, format string, token string, r *http
 		invalidPOST(w, err)
 		logger.Log(logger.ERR, err.Error())
 		return
-	}
-
-	origin := r.Header.Get("Origin")
-
-	//TODO: FIGURE OUT ORIGIN RULES
-	if origin != "" {
-		w.Header().Set("Access-Control-Allow-Origin", origin)
-		w.Header().Set("Access-Control-Allow-Methods", "PUT")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	}
 
 	switch format {
