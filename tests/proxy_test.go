@@ -20,6 +20,7 @@ import (
 	"github.com/arbor-dev/arbor/examples/products"
 	"github.com/arbor-dev/arbor/proxy"
 	"github.com/arbor-dev/arbor/server"
+	"github.com/arbor-dev/arbor/logger"
 )
 
 const url string = "http://0.0.0.0:8000"
@@ -425,6 +426,9 @@ func TestProxyPUTRaw(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
+	logLevel := logger.LogLevel
+	logger.LogLevel = logger.FATAL
+
 	sendingBytes := make([]byte, 2 * 1024 * 1024)
 	rand.Read(sendingBytes)
 
@@ -448,6 +452,7 @@ func TestProxyPUTRaw(t *testing.T) {
 	req, err := http.NewRequest("PUT", "http://test.local/upload", bytes.NewReader(sendingBytes))
 
 	if err != nil {
+		logger.LogLevel = logLevel
 		log.Fatal(err)
 	}
 
@@ -456,16 +461,21 @@ func TestProxyPUTRaw(t *testing.T) {
 	resp := recorder.Result()
 
 	if resp.StatusCode != http.StatusOK {
+		logger.LogLevel = logLevel
 		log.Fatal("Received bad http code")
 	}
 
 	body, err := ioutil.ReadAll(recorder.Body)
 
 	if err != nil {
+		logger.LogLevel = logLevel
 		log.Fatal(err)
 	}
 
 	if strconv.Itoa(len(sendingBytes)) != string(body[:]) {
+		logger.LogLevel = logLevel
 		t.Errorf("Expected %v\nGot %v", strconv.Itoa(len(sendingBytes)), string(body[:]))
 	}
+
+	logger.LogLevel = logLevel
 }
