@@ -429,7 +429,7 @@ func TestProxyPUTRaw(t *testing.T) {
 	logLevel := logger.LogLevel
 	logger.LogLevel = logger.FATAL
 
-	sendingBytes := make([]byte, 2 * 1024 * 1024)
+	sendingBytes := make([]byte, 8 * 1024 * 1024)
 	rand.Read(sendingBytes)
 
 	httpmock.RegisterResponder("PUT", "http://test.local/upload",
