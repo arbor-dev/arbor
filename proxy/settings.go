@@ -28,6 +28,9 @@ var Timeout int64 = 10
 // AccessControlPolicy is the default Access control policy
 var AccessControlPolicy = "*"
 
+// AccessControlPolicyHeaders is the default Access control policy headers
+var AccessControlPolicyHeaders = "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Origin"
+
 // Client Authorization Token Field
 var ClientAuthorizationHeaderField = "Authorization"
 
