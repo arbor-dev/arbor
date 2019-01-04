@@ -23,6 +23,9 @@ var AccessControlPolicy = "*"
 // Client Authorization Token Field
 var ClientAuthorizationHeaderField = "Authorization"
 
+// The headers allowed by CORS
+var AccessControlAllowHeaders = "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+
 // Defines the maximum size for requests
 const (
 	MB = 1048576
@@ -35,5 +38,5 @@ var DefaultProxyRequestSettings = ProxyRequestSettings{
 		w.WriteHeader(500)
 	}),
 	RequestMiddlewares: nil,
-	ResponseMiddlewares: nil,
+	ResponseMiddlewares: []http.Handler{CORSMiddleware},
 }
