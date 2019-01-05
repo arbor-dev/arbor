@@ -32,6 +32,8 @@ func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string
 	settings.RequestMiddlewares = append(settings.RequestMiddlewares, PreprocessingMiddleware)
 	settings.RequestMiddlewares = append(settings.RequestMiddlewares, TokenMiddlewareFactory(token))
 
+	settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, CORSMiddleware)
+
 	switch format {
 	case "JSON":
 		settings.ErrorHandler = JsonErrorHandler

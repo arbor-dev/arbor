@@ -15,6 +15,10 @@ type ProxyRequestSettings struct {
 }
 
 func proxyRequest(w http.ResponseWriter, r *http.Request, url string, settings ProxyRequestSettings) {
+	for _, requestMiddleware := range settings.RequestMiddlewares {
+		requestMiddleware.ServeHTTP(w, r)
+	}
+
 	requestBody, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxFileUploadSize))
 
 	if err != nil {
@@ -68,6 +72,10 @@ func proxyRequest(w http.ResponseWriter, r *http.Request, url string, settings P
 		for _, v := range vs {
 			w.Header().Add(k, v)
 		}
+	}
+
+	for _, responseMiddleware := range settings.ResponseMiddlewares {
+		responseMiddleware.ServeHTTP(w, r)
 	}
 
 	w.WriteHeader(resp.StatusCode)

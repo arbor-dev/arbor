@@ -38,5 +38,5 @@ var DefaultProxyRequestSettings = ProxyRequestSettings{
 		w.WriteHeader(500)
 	}),
 	RequestMiddlewares: nil,
-	ResponseMiddlewares: []http.Handler{CORSMiddleware},
+	ResponseMiddlewares: nil,
 }

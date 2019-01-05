@@ -32,6 +32,10 @@ func init() {
 			JsonErrorHandler.ServeHTTP(w, r)
 		}
 
+		if len(body) == 0 {
+			return
+		}
+
 		var jsonBody interface{}
 		err = json.Unmarshal(body, &jsonBody)
 
