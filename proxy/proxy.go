@@ -42,9 +42,9 @@ func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string
 
 	switch format {
 	case "JSON":
-		settings.ErrorHandler = middleware.JsonErrorHandler
-		settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.JsonRequestMiddlewares...)
-		settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, middleware.JsonResponseMiddlewares...)
+		settings.ErrorHandler = middleware.JSONErrorHandler
+		settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.JSONRequestMiddlewares...)
+		settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, middleware.JSONResponseMiddlewares...)
 	case "RAW":
 		fallthrough
 	default:

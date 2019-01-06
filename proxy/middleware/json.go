@@ -10,8 +10,8 @@ import (
 	"github.com/arbor-dev/arbor/proxy/constants"
 )
 
-// JsonErrorHandler is the handler for writing errors into the response sent to the caller
-var JsonErrorHandler = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request) {
+// JSONErrorHandler is the handler for writing errors into the response sent to the caller
+var JSONErrorHandler = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request) {
 	w.WriteHeader(500)
 })
 
@@ -23,7 +23,7 @@ var jsonValidator = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request
 	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 
 	if err != nil {
-		JsonErrorHandler.ServeHTTP(w, r)
+		JSONErrorHandler.ServeHTTP(w, r)
 	}
 
 	if len(body) == 0 {
@@ -34,16 +34,16 @@ var jsonValidator = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request
 	err = json.Unmarshal(body, &jsonBody)
 
 	if err != nil {
-		JsonErrorHandler.ServeHTTP(w, r)
+		JSONErrorHandler.ServeHTTP(w, r)
 	}
 })
 
-// JsonRequestMiddlewares is the set of middlewares for validating json in the request to a service
-var JsonRequestMiddlewares = []http.Handler{
+// JSONRequestMiddlewares is the set of middlewares for validating json in the request to a service
+var JSONRequestMiddlewares = []http.Handler{
 	jsonValidator,
 }
 
-// JsonResponseMiddlewares is the set of middlewares for validating json in the response from a service
-var JsonResponseMiddlewares = []http.Handler{
+// JSONResponseMiddlewares is the set of middlewares for validating json in the response from a service
+var JSONResponseMiddlewares = []http.Handler{
 	jsonValidator,
 }

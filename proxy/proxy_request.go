@@ -10,14 +10,14 @@ import (
 	"github.com/arbor-dev/arbor/proxy/constants"
 )
 
-// ProxyRequestSettings contains the error handler and middlewares to use when proxying a request
-type ProxyRequestSettings struct {
+// RequestSettings contains the error handler and middlewares to use when proxying a request
+type RequestSettings struct {
 	ErrorHandler        http.Handler
 	RequestMiddlewares  []http.Handler
 	ResponseMiddlewares []http.Handler
 }
 
-func proxyRequest(w http.ResponseWriter, r *http.Request, url string, settings ProxyRequestSettings) {
+func proxyRequest(w http.ResponseWriter, r *http.Request, url string, settings RequestSettings) {
 	for _, requestMiddleware := range settings.RequestMiddlewares {
 		requestMiddleware.ServeHTTP(w, r)
 	}

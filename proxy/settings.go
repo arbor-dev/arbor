@@ -18,7 +18,7 @@ import (
 var AccessControlPolicy = "*"
 
 // ProxyMiddlewares is the default error handler and middlewares to use when proxying a request
-var ProxyMiddlewares = ProxyRequestSettings{
+var ProxyMiddlewares = RequestSettings{
 	ErrorHandler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 	}),
