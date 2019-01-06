@@ -28,7 +28,7 @@ func PATCH(w http.ResponseWriter, r *http.Request, url string, format string, to
 // Proxy the caller's request to the correct service with proxy request settings
 // Settings contain the error handler, request middlewares, and response middlewares
 func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string, format string, token string) {
-	settings := DefaultProxyRequestSettings
+	settings := ProxyMiddlewares
 
 	settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.PreprocessingMiddleware)
 	settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.TokenMiddlewareFactory(token))

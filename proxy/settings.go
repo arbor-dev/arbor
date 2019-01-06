@@ -17,7 +17,7 @@ import (
 // AccessControlPolicy is the default Access control policy
 var AccessControlPolicy = "*"
 
-var DefaultProxyRequestSettings = ProxyRequestSettings{
+var ProxyMiddlewares = ProxyRequestSettings{
 	ErrorHandler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 	}),
