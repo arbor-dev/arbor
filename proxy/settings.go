@@ -26,13 +26,6 @@ var ClientAuthorizationHeaderField = "Authorization"
 // The headers allowed by CORS
 var AccessControlAllowHeaders = "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
 
-// Defines the maximum size for requests
-const (
-	MB = 1048576
-	MaxRequestSize = 1 * MB
-	MaxFileUploadSize = 16 * MB
-)
-
 var DefaultProxyRequestSettings = ProxyRequestSettings{
 	ErrorHandler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)

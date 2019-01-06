@@ -6,6 +6,8 @@ import (
 	"io"
 	"time"
 	"bytes"
+
+	"github.com/arbor-dev/arbor/proxy/constants"
 )
 
 type ProxyRequestSettings struct {
@@ -19,7 +21,7 @@ func proxyRequest(w http.ResponseWriter, r *http.Request, url string, settings P
 		requestMiddleware.ServeHTTP(w, r)
 	}
 
-	requestBody, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxFileUploadSize))
+	requestBody, err := ioutil.ReadAll(io.LimitReader(r.Body, constants.MaxFileUploadSize))
 
 	if err != nil {
 		settings.ErrorHandler.ServeHTTP(w, r)

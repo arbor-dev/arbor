@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"net/http"
+	"github.com/arbor-dev/arbor/proxy/middleware"
 )
 
 func GET(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
@@ -36,9 +37,9 @@ func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string
 
 	switch format {
 	case "JSON":
-		settings.ErrorHandler = JsonErrorHandler
-		settings.RequestMiddlewares = append(settings.RequestMiddlewares, JsonRequestMiddlewares...)
-		settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, JsonResponseMiddlewares...)
+		settings.ErrorHandler = middleware.JsonErrorHandler
+		settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.JsonRequestMiddlewares...)
+		settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, middleware.JsonResponseMiddlewares...)
 	case "RAW":
 		fallthrough
 	default:

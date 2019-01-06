@@ -1,4 +1,4 @@
-package proxy
+package middleware
 
 import (
 	"net/http"
@@ -6,6 +6,8 @@ import (
 	"io"
 	"io/ioutil"
 	"encoding/json"
+
+	"github.com/arbor-dev/arbor/proxy/constants"
 )
 
 // A handler for writing errors into the response sent to the caller
@@ -15,7 +17,7 @@ var JsonErrorHandler = http.HandlerFunc(func(w http.ResponseWriter, r* http.Requ
 
 // A handler which validates the request body for valid json
 var jsonValidator = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request) {
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, MaxRequestSize))
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, constants.MaxRequestSize))
 
 	r.Body.Close()
 	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
