@@ -1,0 +1,14 @@
+github.com/golang/snappy v0.0.0-20170215233205-553a64147049 h1:K9KHZbXKpGydfDN0aZrsoHpLJlZsBrGMFWbgLDGnPZk=
+github.com/golang/snappy v0.0.0-20170215233205-553a64147049/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
+github.com/gorilla/context v0.0.0-20160226214623-1ea25387ff6f h1:9oNbS1z4rVpbnkHBdPZU4jo9bSmrLpII768arSyMFgk=
+github.com/gorilla/context v0.0.0-20160226214623-1ea25387ff6f/go.mod h1:kBGZzfjB9CEq2AlWe17Uuf7NDRt0dE0s8S51q0aT7Yg=
+github.com/gorilla/mux v0.0.0-20170922205414-3f19343c7d9c h1:nF3PgzS9upL7Iy1gqhCo1KV8FvEUbARdio1oHiiBqK8=
+github.com/gorilla/mux v0.0.0-20170922205414-3f19343c7d9c/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+github.com/kennygrant/sanitize v1.2.3 h1:lMTHgebyLyRtvNyIAnsKyp0CO/zAS8+YmyWRDJ94WBw=
+github.com/kennygrant/sanitize v1.2.3/go.mod h1:LGsjYYtgxbetdg5owWB2mpgUL6e2nfw2eObZ0u0qvak=
+github.com/syndtr/goleveldb v0.0.0-20170725064836-b89cc31ef797 h1:eDCldGfZxcrXnTnynVsYUmABi9pCd/fhhh6SpKAa2dA=
+github.com/syndtr/goleveldb v0.0.0-20170725064836-b89cc31ef797/go.mod h1:Z4AUp2Km+PwemOoO/VB5AOx9XSsIItzFjoJlOSiYmn0=
+golang.org/x/net v0.0.0-20171004034648-a04bdaca5b32 h1:NjAulLPqFTaOxQu5S4qUMqscSu+mQdu+wMY0nfqSkuk=
+golang.org/x/net v0.0.0-20171004034648-a04bdaca5b32/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+gopkg.in/jarcoal/httpmock.v1 v1.0.0-20180719183105-8007e27cdb32 h1:30DLrQoRqdUHslVMzxuKUnY4GKJGk1/FJtKy3yx4TKE=
+gopkg.in/jarcoal/httpmock.v1 v1.0.0-20180719183105-8007e27cdb32/go.mod h1:d3R+NllX3X5e0zlG1Rful3uLvsGC/Q3OHut5464DEQw=
