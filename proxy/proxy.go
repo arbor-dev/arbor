@@ -30,10 +30,10 @@ func PATCH(w http.ResponseWriter, r *http.Request, url string, format string, to
 func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string, format string, token string) {
 	settings := DefaultProxyRequestSettings
 
-	settings.RequestMiddlewares = append(settings.RequestMiddlewares, PreprocessingMiddleware)
-	settings.RequestMiddlewares = append(settings.RequestMiddlewares, TokenMiddlewareFactory(token))
+	settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.PreprocessingMiddleware)
+	settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.TokenMiddlewareFactory(token))
 
-	settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, CORSMiddleware)
+	settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, middleware.CORSMiddleware)
 
 	switch format {
 	case "JSON":

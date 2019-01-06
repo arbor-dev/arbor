@@ -14,17 +14,8 @@ import (
 	"net/http"
 )
 
-// Timeout is the default request timeout
-var Timeout int64 = 10
-
 // AccessControlPolicy is the default Access control policy
 var AccessControlPolicy = "*"
-
-// Client Authorization Token Field
-var ClientAuthorizationHeaderField = "Authorization"
-
-// The headers allowed by CORS
-var AccessControlAllowHeaders = "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
 
 var DefaultProxyRequestSettings = ProxyRequestSettings{
 	ErrorHandler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
