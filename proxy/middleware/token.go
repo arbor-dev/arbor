@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-// A middleware for injecting tokens into the Authorization header when forwarding to services
+// TokenMiddlewareFactory is the factory for generating the middleware for injecting tokens into the Authorization header when forwarding to services
 var TokenMiddlewareFactory = func(token string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r* http.Request) {
 		// Override the Authorization token if specified,

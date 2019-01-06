@@ -10,6 +10,7 @@ import (
 	"github.com/arbor-dev/arbor/proxy/constants"
 )
 
+// ProxyRequestSettings contains the error handler and middlewares to use when proxying a request
 type ProxyRequestSettings struct {
 	ErrorHandler        http.Handler
 	RequestMiddlewares  []http.Handler

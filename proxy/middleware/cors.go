@@ -5,7 +5,8 @@ import (
 
 	"github.com/arbor-dev/arbor/proxy/constants"
 )
-// A middleware for handling CORS
+
+// CORSMiddleware is the middleware for handling CORS
 var CORSMiddleware = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request) {
 	origin := r.Header.Get("Origin")
 	w.Header().Set("Access-Control-Allow-Origin", origin)

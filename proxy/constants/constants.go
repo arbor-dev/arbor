@@ -10,8 +10,8 @@ const (
 // Timeout is the default request timeout
 var Timeout int64 = 10
 
-// Client Authorization Token Field
+// ClientAuthorizationHeaderField is the header to use for token authorization
 var ClientAuthorizationHeaderField = "Authorization"
 
-// The headers allowed by CORS
+// AccessControlAllowHeaders is the headers allowed by CORS
 var AccessControlAllowHeaders = "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"

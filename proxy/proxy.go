@@ -5,22 +5,27 @@ import (
 	"github.com/arbor-dev/arbor/proxy/middleware"
 )
 
+// GET proxies a GET request
 func GET(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
 	proxyRequestWithSettings(w, r, url, format, token)
 }
 
+// POST proxies a POST request
 func POST(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
 	proxyRequestWithSettings(w, r, url, format, token)
 }
 
+// PUT proxies a PUT request
 func PUT(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
 	proxyRequestWithSettings(w, r, url, format, token)
 }
 
+// DELETE proxies a DELETE request
 func DELETE(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
 	proxyRequestWithSettings(w, r, url, format, token)
 }
 
+// PATCH proxies a PATCH request
 func PATCH(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
 	proxyRequestWithSettings(w, r, url, format, token)
 }

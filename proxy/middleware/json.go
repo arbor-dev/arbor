@@ -10,7 +10,7 @@ import (
 	"github.com/arbor-dev/arbor/proxy/constants"
 )
 
-// A handler for writing errors into the response sent to the caller
+// JsonErrorHandler is the handler for writing errors into the response sent to the caller
 var JsonErrorHandler = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request) {
 	w.WriteHeader(500)
 })
@@ -38,12 +38,12 @@ var jsonValidator = http.HandlerFunc(func(w http.ResponseWriter, r* http.Request
 	}
 })
 
-// A set of middlewares for validating json in the request to a service
+// JsonRequestMiddlewares is the set of middlewares for validating json in the request to a service
 var JsonRequestMiddlewares = []http.Handler{
 	jsonValidator,
 }
 
-// A set of middlewares for validating json in the response from a service
+// JsonResponseMiddlewares is the set of middlewares for validating json in the response from a service
 var JsonResponseMiddlewares = []http.Handler{
 	jsonValidator,
 }
