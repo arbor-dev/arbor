@@ -7,48 +7,47 @@ import (
 
 // GET proxies a GET request
 func GET(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
-	proxyRequestWithSettings(w, r, url, format, token)
+	ProxyRequest(w, r, url, format, token)
 }
 
 // POST proxies a POST request
 func POST(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
-	proxyRequestWithSettings(w, r, url, format, token)
+	ProxyRequest(w, r, url, format, token)
 }
 
 // PUT proxies a PUT request
 func PUT(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
-	proxyRequestWithSettings(w, r, url, format, token)
+	ProxyRequest(w, r, url, format, token)
 }
 
 // DELETE proxies a DELETE request
 func DELETE(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
-	proxyRequestWithSettings(w, r, url, format, token)
+	ProxyRequest(w, r, url, format, token)
 }
 
 // PATCH proxies a PATCH request
 func PATCH(w http.ResponseWriter, r *http.Request, url string, format string, token string) {
-	proxyRequestWithSettings(w, r, url, format, token)
+	ProxyRequest(w, r, url, format, token)
 }
 
-// Proxy the caller's request to the correct service with proxy request settings
-// Settings contain the error handler, request middlewares, and response middlewares
-func proxyRequestWithSettings(w http.ResponseWriter, r* http.Request, url string, format string, token string) {
-	settings := ProxyMiddlewares
+// ProxyRequest proxies the caller's request based on the url, format, and token
+func ProxyRequest(w http.ResponseWriter, r* http.Request, url string, format string, token string) {
+	middlewares := ProxyMiddlewares
 
-	settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.PreprocessingMiddleware)
-	settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.TokenMiddlewareFactory(token))
+	middlewares.RequestMiddlewares = append(middlewares.RequestMiddlewares, middleware.PreprocessingMiddleware)
+	middlewares.RequestMiddlewares = append(middlewares.RequestMiddlewares, middleware.TokenMiddlewareFactory(token))
 
-	settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, middleware.CORSMiddleware)
+	middlewares.ResponseMiddlewares = append(middlewares.ResponseMiddlewares, middleware.CORSMiddleware)
 
 	switch format {
 	case "JSON":
-		settings.ErrorHandler = middleware.JSONErrorHandler
-		settings.RequestMiddlewares = append(settings.RequestMiddlewares, middleware.JSONRequestMiddlewares...)
-		settings.ResponseMiddlewares = append(settings.ResponseMiddlewares, middleware.JSONResponseMiddlewares...)
+		middlewares.ErrorHandler = middleware.JSONErrorHandler
+		middlewares.RequestMiddlewares = append(middlewares.RequestMiddlewares, middleware.JSONRequestMiddlewares...)
+		middlewares.ResponseMiddlewares = append(middlewares.ResponseMiddlewares, middleware.JSONResponseMiddlewares...)
 	case "RAW":
 		fallthrough
 	default:
 	}
 
-	proxyRequest(w, r, url, settings)
+	ProxyRequestWithMiddlewares(w, r, url, middlewares)
 }
