@@ -32,6 +32,13 @@ func PATCH(w http.ResponseWriter, r *http.Request, url string, format string, to
 
 // ProxyRequest proxies the caller's request based on the url, format, and token
 func ProxyRequest(w http.ResponseWriter, r* http.Request, url string, format string, token string) {
+	middlewares := ProxyMiddlewaresFactory(format, token)
+
+	ProxyRequestWithMiddlewares(w, r, url, middlewares)
+}
+
+// ProxyMiddlewaresFactory a set of middlewares based on the provided format and token
+func ProxyMiddlewaresFactory(format string, token string) MiddlewareSet {
 	middlewares := ProxyMiddlewares
 
 	middlewares.RequestMiddlewares = append(middlewares.RequestMiddlewares, middleware.PreprocessingMiddleware)
@@ -49,5 +56,5 @@ func ProxyRequest(w http.ResponseWriter, r* http.Request, url string, format str
 	default:
 	}
 
-	ProxyRequestWithMiddlewares(w, r, url, middlewares)
+	return middlewares
 }
