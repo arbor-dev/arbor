@@ -18,6 +18,7 @@ import (
 
 	"github.com/arbor-dev/arbor/services"
 	"github.com/arbor-dev/arbor/proxy"
+	"github.com/arbor-dev/arbor/proxy/constants"
 	"github.com/gorilla/mux"
 )
 
@@ -32,7 +33,7 @@ func corsPreflight(methods []string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", proxy.AccessControlPolicy)
 		w.Header().Set("Access-Control-Allow-Methods", allowedMethods)
-		w.Header().Set("Access-Control-Allow-Headers", proxy.AccessControlPolicyHeaders)
+		w.Header().Set("Access-Control-Allow-Headers", constants.AccessControlAllowHeaders)
 		w.WriteHeader(http.StatusOK)
 	}
 }
