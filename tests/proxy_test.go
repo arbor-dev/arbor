@@ -18,7 +18,7 @@ import (
 
 	"github.com/arbor-dev/arbor/examples/gateway"
 	"github.com/arbor-dev/arbor/examples/products"
-	"github.com/arbor-dev/arbor/proxy"
+	"github.com/arbor-dev/arbor"
 	"github.com/arbor-dev/arbor/server"
 	"github.com/arbor-dev/arbor/logger"
 )
@@ -116,10 +116,10 @@ func TestProxyPOST(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}
@@ -167,10 +167,10 @@ func TestProxyGET(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}
@@ -257,10 +257,10 @@ func TestProxyPUT(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}
@@ -356,10 +356,10 @@ func TestProxyDELETE(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusCreated {
 		t.Error(
 			"For", res,
-			"expected", http.StatusOK,
+			"expected", http.StatusCreated,
 			"got", res.StatusCode,
 		)
 	}
@@ -456,7 +456,7 @@ func TestProxyPUTRaw(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	proxy.PUT(recorder, "http://test.local/upload", "RAW", "", req)
+	arbor.PUT(recorder, "http://test.local/upload", "RAW", "", req)
 
 	resp := recorder.Result()
 
