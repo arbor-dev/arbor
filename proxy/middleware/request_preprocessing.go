@@ -8,7 +8,7 @@
 * this license in a file with the distribution.
 **/
 
-package proxy
+package middleware
 
 import (
 	"fmt"
@@ -16,6 +16,7 @@ import (
 
 	"github.com/arbor-dev/arbor/logger"
 	"github.com/arbor-dev/arbor/security"
+	"github.com/arbor-dev/arbor/proxy/constants"
 )
 
 func verifyAuthorization(authorization string, remoteAddr string) bool {
@@ -44,7 +45,7 @@ func (e *preprocessingError) Error() string {
 func requestPreprocessing(w http.ResponseWriter, r *http.Request) error {
 	logger.LogReq(logger.DEBUG, r)
 	sanitizeRequest(r)
-	if !verifyAuthorization(r.Header.Get(ClientAuthorizationHeaderField), r.RemoteAddr) {
+	if !verifyAuthorization(r.Header.Get(constants.ClientAuthorizationHeaderField), r.RemoteAddr) {
 		w.WriteHeader(http.StatusForbidden)
 		return &preprocessingError{-1, "Client Not Authorized"}
 	}
@@ -68,7 +69,6 @@ func notifyClientOfRequestError(w http.ResponseWriter, httpStatusCode int, messa
 		}
 	}
 	w.WriteHeader(httpStatusCode)
-	w.Header().Set("Content-Type", TEXTHeader)
 	fmt.Fprintf(w, "%s\n", message)
 	logger.Log(logger.ERR, message)
 }
