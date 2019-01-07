@@ -13,9 +13,6 @@ package proxy
 import (
 	"encoding/json"
 	"errors"
-	"net/http"
-
-	"github.com/arbor-dev/arbor/security"
 )
 
 func contains(a string, list []string) bool {
@@ -60,18 +57,4 @@ func extract(a interface{}, b string) (val string, err error) {
 		return c[b].(string), nil
 	}
 	return "", errors.New("key does not exist")
-}
-
-func verifyAuthorization(r *http.Request) bool {
-	authToken := r.Header.Get("Authorization")
-	//IsAuthorizedClient Handles empty token
-	auth, err := security.IsAuthorizedClient(authToken)
-	if err != nil {
-		return false
-	}
-	return auth
-}
-
-func sanitizeRequest(r *http.Request) {
-	security.SanitizeRequest(r)
 }

@@ -14,7 +14,7 @@ import (
 	"fmt"
 )
 
-// Add a Authroized API Client to Arbor
+// Add a Authorized API Client to Arbor
 // Will return an API key on successful addition
 // Will return DB error if there is an issue
 func AddClient(name string) (string, error) {
@@ -42,7 +42,6 @@ func IsAuthorizedClient(token string) (bool, error) {
 	if namestr == "" {
 		return false, fmt.Errorf("Not a valid token")
 	}
-
 	accessLog.log(namestr, token)
 	return true, nil
 }

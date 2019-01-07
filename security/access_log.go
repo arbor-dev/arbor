@@ -15,6 +15,8 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"github.com/arbor-dev/arbor/logger"
 )
 
 type accessLogger struct {
@@ -47,6 +49,7 @@ func (l *accessLogger) log(name string, token string) error {
 	str := fmt.Sprintf("%s %s %s\n", t.Format("2006-01-02 15:04:05 +0800"), name, token)
 	_, err := (*l.accessLog).WriteString(str)
 	err = (*l.accessLog).Sync()
+	logger.Log(logger.DEBUG, str)
 	return err
 }
 

@@ -18,7 +18,7 @@ import (
 //
 // Will call the service and return the result to the client.
 func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
-	proxy.DELETE(w, url, format, token, r)
+	proxy.DELETE(w, r, url, format, token)
 }
 
 // GET provides a proxy GET request allowing authorized clients to make GET requests of the microservices
@@ -33,10 +33,10 @@ func DELETE(w http.ResponseWriter, url string, format string, token string, r *h
 //
 // Will call the service and return the result to the client.
 func GET(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
-	proxy.GET(w, url, format, token, r)
+	proxy.GET(w, r, url, format, token)
 }
 
-// PATCH provides a proxy PATCH request allowing authorized clients to make PATHC requests of the microservices
+// PATCH provides a proxy PATCH request allowing authorized clients to make PATCH requests of the microservices
 //
 // Pass the http Request from the client and the ResponseWriter it expects.
 //
@@ -48,7 +48,7 @@ func GET(w http.ResponseWriter, url string, format string, token string, r *http
 //
 // Will call the service and return the result to the client.
 func PATCH(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
-	proxy.PATCH(w, url, format, token, r)
+	proxy.PATCH(w, r, url, format, token)
 }
 
 // POST provides a proxy POST request allowing authorized clients to make POST requests of the microservices
@@ -63,7 +63,7 @@ func PATCH(w http.ResponseWriter, url string, format string, token string, r *ht
 //
 // Will call the service and return the result to the client.
 func POST(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
-	proxy.POST(w, url, format, token, r)
+	proxy.POST(w, r, url, format, token)
 }
 
 // PUT provides a proxy PUT request allowing authorized clients to make PUT requests of the microservices
@@ -78,5 +78,5 @@ func POST(w http.ResponseWriter, url string, format string, token string, r *htt
 //
 // Will call the service and return the result to the client.
 func PUT(w http.ResponseWriter, url string, format string, token string, r *http.Request) {
-	proxy.PUT(w, url, format, token, r)
+	proxy.PUT(w, r, url, format, token)
 }
