@@ -1,13 +1,16 @@
 package proxy
 
 import (
-	"net/http"
-	"io/ioutil"
-	"io"
-	"time"
 	"bytes"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"time"
 
 	"github.com/arbor-dev/arbor/proxy/constants"
+	"github.com/koding/websocketproxy"
 )
 
 // MiddlewareSet contains the error handler and middlewares to use when proxying a request
@@ -15,6 +18,41 @@ type MiddlewareSet struct {
 	ErrorHandler        http.Handler
 	RequestMiddlewares  []http.Handler
 	ResponseMiddlewares []http.Handler
+}
+
+// ProxyWebsocketWithMiddlewares proxies the provided request using the given middlewares and upgrades the request to a websocket
+func ProxyWebsocketWithMiddlewares(w http.ResponseWriter, r *http.Request, url_str string, proxyMiddlewares MiddlewareSet) {
+	for _, requestMiddleware := range proxyMiddlewares.RequestMiddlewares {
+		requestMiddleware.ServeHTTP(w, r)
+	}
+
+	u, err := url.Parse(url_str)
+
+	fmt.Println(url_str)
+
+	if err != nil {
+		proxyMiddlewares.ErrorHandler.ServeHTTP(w, r)
+		return
+	}
+
+	websocketproxy.NewProxy(u).ServeHTTP(w, r)
+}
+
+func copyHeader(dst, src http.Header) {
+	for k, vv := range src {
+		for _, v := range vv {
+			dst.Add(k, v)
+		}
+	}
+}
+
+func copyResponse(rw http.ResponseWriter, resp *http.Response) error {
+	copyHeader(rw.Header(), resp.Header)
+	rw.WriteHeader(resp.StatusCode)
+	defer resp.Body.Close()
+
+	_, err := io.Copy(rw, resp.Body)
+	return err
 }
 
 // ProxyRequestWithMiddlewares proxies the provided request using the given middlewares
