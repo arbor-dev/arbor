@@ -134,6 +134,23 @@ Pass a authorization token (optional).
 
 Will call the service and return the result to the client.
 
+#### func ProxyWebsocket
+```go
+func ProxyWebsocket(w http.ResponseWriter, url string, format string, token string, r *http.Request)
+```
+Establishes a websocket proxy between a client and a microservice
+
+Pass the http Request from the client and the ResponseWriter it expects.
+
+Pass the target url of the backend service (not the url the client called).
+
+Pass the format of the service.
+
+Pass a authorization token (optional).
+
+Will first attempt to establish a websocket connection on microservice, then upgrade the client connection.
+Returns once the websocket connection closes.
+
 #### func  RegisterClient
 
 ```go
