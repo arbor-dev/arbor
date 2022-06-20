@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 )
 
 type App struct {
@@ -49,6 +50,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/products/{id:[0-9]+}", a.getProduct).Methods("GET")
 	a.Router.HandleFunc("/products/{id:[0-9]+}", a.updateProduct).Methods("PUT")
 	a.Router.HandleFunc("/products/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
+	a.Router.HandleFunc("/ws/{id:[0-9]+}", a.PriceUpdater).Methods("GET")
 }
 
 func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
@@ -138,6 +140,51 @@ func (a *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
+}
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+func (a *App) PriceUpdater(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid Product ID")
+		fmt.Println(err.Error())
+		return
+	}
+
+	p := product{ID: id}
+	p, err = a.Model.getProduct(p)
+
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, "Product not found")
+		fmt.Println(err.Error())
+		return
+	}
+
+	conn, err := upgrader.Upgrade(w, r, nil)
+
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	conn.WriteMessage(websocket.TextMessage, []byte(strconv.FormatFloat((float64)(p.Price), 'f', 2, 32)))
+
+	// This function basically would add the connection and its associated item id to a map (unique id
+	// for each connection) atomically and would spawn a goroutine in order to listen for incoming messages
+	// from the client
+
+	// Given this example, the server should broadcast to all the connections in the array whenever
+	// a price is updated
+	// The goroutine would wait until the client sends back a close message, on which it will remove the
+	// connection from the array
+
+	// Currently in this unimplemented version, the socket will get closed by this server and behaves
+	// similarly to a normal HTTP request
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string) {

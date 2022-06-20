@@ -10,17 +10,18 @@ import (
 	"net/http/httptest"
 	"os"
 	"reflect"
-	"testing"
 	"strconv"
+	"testing"
 	"time"
 
 	"gopkg.in/jarcoal/httpmock.v1"
 
+	"github.com/arbor-dev/arbor"
 	"github.com/arbor-dev/arbor/examples/gateway"
 	"github.com/arbor-dev/arbor/examples/products"
-	"github.com/arbor-dev/arbor"
-	"github.com/arbor-dev/arbor/server"
 	"github.com/arbor-dev/arbor/logger"
+	"github.com/arbor-dev/arbor/server"
+	"github.com/gorilla/websocket"
 )
 
 const url string = "http://0.0.0.0:8000"
@@ -429,11 +430,11 @@ func TestProxyPUTRaw(t *testing.T) {
 	logLevel := logger.LogLevel
 	logger.LogLevel = logger.FATAL
 
-	sendingBytes := make([]byte, 8 * 1024 * 1024)
+	sendingBytes := make([]byte, 8*1024*1024)
 	rand.Read(sendingBytes)
 
 	httpmock.RegisterResponder("PUT", "http://test.local/upload",
-		func (req *http.Request) (*http.Response, error) {
+		func(req *http.Request) (*http.Response, error) {
 			receivedBytes, err := ioutil.ReadAll(req.Body)
 
 			if err != nil {
@@ -478,4 +479,81 @@ func TestProxyPUTRaw(t *testing.T) {
 	}
 
 	logger.LogLevel = logLevel
+}
+
+func TestProxyWebsocket(t *testing.T) {
+	os.Args = []string{"tests", "-u"}
+	testSrvs := newTestingServices()
+	defer testSrvs.killTestingServices()
+
+	p := &product{
+		ID:    0,
+		Name:  "Test Product",
+		Price: 9.99,
+	}
+
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(p)
+
+	res, err := http.Post(url+"/product", "application/json; charset=utf-8", b)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.StatusCode != http.StatusCreated {
+		t.Error(
+			"For", res,
+			"expected", http.StatusCreated,
+			"got", res.StatusCode,
+		)
+	}
+
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	serverP := new(product)
+	jsonErr := json.Unmarshal(body, &serverP)
+	if jsonErr != nil {
+		testSrvs.killTestingServices()
+		t.Error(readErr)
+		return
+	}
+
+	if !reflect.DeepEqual(p, serverP) {
+		t.Error(
+			"For", serverP,
+			"expected", p,
+			"got", serverP,
+		)
+	}
+
+	conn, _, err := websocket.DefaultDialer.Dial("ws://0.0.0.0:8000/ws/0", nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer conn.Close()
+
+	msg_type, msg, err := conn.ReadMessage()
+
+	if msg_type != websocket.TextMessage {
+		t.Error(
+			"For message type",
+			"expected", websocket.TextMessage,
+			"got", msg_type,
+		)
+	}
+
+	if !reflect.DeepEqual(msg, []byte("9.99")) {
+		t.Error(
+			"For message content",
+			"expected", []byte("9.99"),
+			"got", msg,
+		)
+	}
 }
