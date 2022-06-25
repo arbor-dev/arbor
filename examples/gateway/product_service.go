@@ -7,7 +7,8 @@ import (
 )
 
 //URL of the Product Service API
-const productServiceURL string = "http://0.0.0.0:5000"
+const productServiceHTTPURL string = "http://0.0.0.0:5000"
+const prodcutServiceWSURL string = "ws://0.0.0.0:5000"
 
 //Data format of the API
 const productServiceFormat string = "JSON"
@@ -45,25 +46,35 @@ var productServiceRoutes = arbor.RouteCollection{
 		Pattern: "/products/{id:[0-9]+}",
 		Handler: deleteProduct,
 	},
+	arbor.Route{
+		Name:    "PriceUpdater",
+		Method:  "GET",
+		Pattern: "/ws/{id:[0-9]+}",
+		Handler: websocketPriceUpdater,
+	},
 }
 
 //Handlers
 func getProducts(w http.ResponseWriter, r *http.Request) {
-	arbor.GET(w, productServiceURL+r.URL.String(), productServiceFormat, "", r)
+	arbor.GET(w, productServiceHTTPURL+r.URL.String(), productServiceFormat, "", r)
 }
 
 func createProduct(w http.ResponseWriter, r *http.Request) {
-	arbor.POST(w, productServiceURL+r.URL.String(), productServiceFormat, "", r)
+	arbor.POST(w, productServiceHTTPURL+r.URL.String(), productServiceFormat, "", r)
 }
 
 func getProduct(w http.ResponseWriter, r *http.Request) {
-	arbor.GET(w, productServiceURL+r.URL.String(), productServiceFormat, "", r)
+	arbor.GET(w, productServiceHTTPURL+r.URL.String(), productServiceFormat, "", r)
 }
 
 func updateProduct(w http.ResponseWriter, r *http.Request) {
-	arbor.PUT(w, productServiceURL+r.URL.String(), productServiceFormat, "", r)
+	arbor.PUT(w, productServiceHTTPURL+r.URL.String(), productServiceFormat, "", r)
 }
 
 func deleteProduct(w http.ResponseWriter, r *http.Request) {
-	arbor.DELETE(w, productServiceURL+r.URL.String(), productServiceFormat, "", r)
+	arbor.DELETE(w, productServiceHTTPURL+r.URL.String(), productServiceFormat, "", r)
+}
+
+func websocketPriceUpdater(w http.ResponseWriter, r *http.Request) {
+	arbor.ProxyWebsocket(w, prodcutServiceWSURL+r.URL.String(), productServiceFormat, "", r)
 }

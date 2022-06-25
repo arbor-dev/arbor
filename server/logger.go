@@ -11,7 +11,10 @@
 package server
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
@@ -21,6 +24,14 @@ import (
 type StatusResponseWriter struct {
 	http.ResponseWriter
 	status int
+}
+
+func (w *StatusResponseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	h, ok := w.ResponseWriter.(http.Hijacker)
+	if !ok {
+		return nil, nil, errors.New("hijack not supported")
+	}
+	return h.Hijack()
 }
 
 func (rec *StatusResponseWriter) WriteHeader(code int) {

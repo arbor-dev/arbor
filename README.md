@@ -65,11 +65,22 @@ AS OF 10/28/15
  **/
  func DELETE(w http.ResponseWriter, url string, format string, token string, r *http.Request)
 ```
+```go
+/**
+ *  Pass the http Request from the client and the ResponseWriter it expects.
+ *  Pass the target url of the backend service (not the url the client called).
+ *  Pass a authorization token (optional).
+ *  Will first attempt to establish a websocket connection on microservice, then
+ *  upgrade the client connection.
+ *  Returns once either websocket connection closes.
+ **/
+func ProxyWebsocket(w http.ResponseWriter, url string, format string, token string, r *http.Request)
+```
 
 All secret data should be kept in a file called config.go in the config directory
 
 ### Install 
-> Minimum supported version is Go 1.8 
+> Minimum supported version is Go 1.13
 
 ```sh
 go get -u github.com/arbor-dev/arbor/...
